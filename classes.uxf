@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>520</x>
+      <y>120</y>
+      <w>248</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+Observer
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1320</x>
+      <y>312</y>
+      <w>400</w>
+      <h>376</h>
+    </coordinates>
+    <panel_attributes>ElevatorSystem
+--
+- mElevator : IElevator
+- mElevators : Elevator[]
+
+- mFloorHeight : int
+- mFloorNum : int
+
+- mPollingThread : Thread
+
+# mUpButtons : int[]
+# mDownButtons : int[]
+
+--
++ setCommitedDirection(int elevator, int direction)
++ setServicesFloors(int elevator, int floor, boolean enable)
++ setTarget(int elevator, int target)
+
++ getTargetFloor(int elevator)
++ getDirection(int elevator)
++ getAcceleration(int elevator)
++ getButtonStatus(int elevator) : boolean[]
++ getDoorstatus(int elevator)
++ getFloor(int elevator)
++ getFloorButton(boolean up, boolean pressed)
++ getPosition(int elevator)
++ getSpeed(int elevator)
++ getWeight(int elevator)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1768</x>
+      <y>320</y>
+      <w>280</w>
+      <h>304</h>
+    </coordinates>
+    <panel_attributes>Elevator
+--
+- mElevator : IElevator
+- mNumber : int
+- mCapacity : int
+
+# mTargetFloor : int
+# mDirection : int
+# mAcceleration : int
+# mButtonStatus : boolean[]
+# mDoorstatus : int
+# mFloor : int
+# mPosition : int
+# mSpeed : int
+# mWeight : int
+# mServicesFloors : boolean[]
+
+--
++GetterForMembers()
++setTargetFloor(int floor)
++setCommitedDirection(int direction)
++setServicesFloors(int floor, boolean enable)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1464</x>
+      <y>136</y>
+      <w>112</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Observable
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1712</x>
+      <y>344</y>
+      <w>72</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=*</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>576</y>
+      <w>312</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>ElevatorAlgorithm
+--
+
+--
++ ProcessInputs(IElevatorSystemModel)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>336</y>
+      <w>312</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>ElevatorControl
+--
+- mManual : boolean
+- mAlgo : ElevatorAlgorithm
+- mView : ElevatorView
+- mElevatorSystem : ElevatorSystem
+--
++ setManualMode()
++ setAutomaticMode()
++ setAlgo(ElevatorAlogrithm algo)
+
++ setTarget(int elevator, int floor)
++ setServicesFloor(int elevator, int floor, boolean enable)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>104</x>
+      <y>240</y>
+      <w>168</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>ElevatorView
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>432</x>
+      <y>384</y>
+      <w>64</w>
+      <h>248</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>60.0;290.0;10.0;290.0;10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>264</x>
+      <y>296</y>
+      <w>232</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>270.0;90.0;220.0;90.0;220.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>784</x>
+      <y>392</y>
+      <w>552</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;670.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1296</x>
+      <y>256</y>
+      <w>808</w>
+      <h>528</h>
+    </coordinates>
+    <panel_attributes>Model
+--
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>432</x>
+      <y>248</y>
+      <w>736</w>
+      <h>536</h>
+    </coordinates>
+    <panel_attributes>Controller
+--
+bg=#a0a0a0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>320</w>
+      <h>784</h>
+    </coordinates>
+    <panel_attributes>View
+--
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>784</x>
+      <y>648</y>
+      <w>552</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;uses&gt;&gt;</panel_attributes>
+    <additional_attributes>670.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>624</x>
+      <y>160</y>
+      <w>24</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1512</x>
+      <y>176</y>
+      <w>24</w>
+      <h>152</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+</diagram>
