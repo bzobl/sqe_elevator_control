@@ -67,4 +67,6 @@ public interface IElevatorView
 	 * @param l action listener
 	 */
 	public void removeModeButtonListener(ActionListener l);
+
+	int getElevatorNumber();
 }

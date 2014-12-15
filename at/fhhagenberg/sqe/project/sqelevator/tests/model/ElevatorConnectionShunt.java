@@ -5,11 +5,13 @@ import java.rmi.RemoteException;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 
-final class ElevatorConnectionShunt implements IElevator {
+public final class ElevatorConnectionShunt implements IElevator {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
 	private final int CAPACITY;
+	
+	public int NUM_ELEVATORS = 1;
 	
 	// Self shunt variables
 	public int CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
@@ -77,7 +79,7 @@ final class ElevatorConnectionShunt implements IElevator {
 
 	@Override
 	public int getElevatorNum() throws RemoteException {
-		return 1;
+		return NUM_ELEVATORS;
 	}
 
 	@Override

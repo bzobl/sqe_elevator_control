@@ -6,8 +6,6 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.model;
 
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Observable;
 import java.util.Observer;
@@ -33,7 +31,7 @@ public class ElevatorSystem extends Observable {
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
 
-	public ElevatorSystem(IElevator connection, PollingTask p_task) throws java.rmi.RemoteException, MalformedURLException, NotBoundException {
+	public ElevatorSystem(IElevator connection, PollingTask p_task) throws RemoteException {
         ElevatorConnection = connection;
 
 		NUM_FLOORS = ElevatorConnection.getFloorNum();

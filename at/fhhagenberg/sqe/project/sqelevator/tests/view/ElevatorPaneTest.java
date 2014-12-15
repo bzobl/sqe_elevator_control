@@ -33,7 +33,7 @@ public class ElevatorPaneTest extends ComponentTestFixture
 	@Before
 	public void setUp() throws Exception
 	{
-		ElevatorPanel elevatorPanel = new ElevatorPanel(2);
+		ElevatorPanel elevatorPanel = new ElevatorPanel(1, 2);
 		showFrame(elevatorPanel);
 	
 		mElevatorView = elevatorPanel;

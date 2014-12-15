@@ -19,7 +19,7 @@ public class PollingTask extends TimerTask {
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
 	private ElevatorSystem mElevators;
-	private Timer mTimer;
+	private Timer mTimer = new Timer();
 	
 	@Override
 	public void run() {

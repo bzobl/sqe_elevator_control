@@ -30,6 +30,11 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	 * number of floors
 	 */
 	private final int NUMBER_OF_FLOORS;
+
+	/**
+	 * number of this elevator
+	 */
+	private int NUMBER_ELEVATOR;
 	
 	/**
 	 * text fields from front end
@@ -71,12 +76,14 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 
 	/**
 	 * Create the panel.
+	 * @param floors 
 	 * 
 	 * @numFloors number of floors
 	 */
-	public ElevatorPanel(int numFloors)
+	public ElevatorPanel(int num, int floors)
 	{
-		NUMBER_OF_FLOORS = numFloors;
+		NUMBER_ELEVATOR = num;
+		NUMBER_OF_FLOORS = floors;
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 80, 60, 70, 60, 0 };
@@ -220,6 +227,12 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		{
 			addFloor(i);
 		}
+	}
+	
+	@Override
+	public int getElevatorNumber()
+	{
+		return NUMBER_ELEVATOR;
 	}
 
 	@Override
