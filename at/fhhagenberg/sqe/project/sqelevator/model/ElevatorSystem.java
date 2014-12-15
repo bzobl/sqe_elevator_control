@@ -66,12 +66,15 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 	
-	public void pollingComplete() {
-		// will only be triggered if this object was changed
-        notifyObservers(new Integer(SYSTEM_PROPERTY_CHANGED));
-		
-		for (int e = 0; e < NUM_ELEVATORS; e++) {
-			Elevators[e].notifyObservers(new Integer(ELEVATOR_PROPERTY_CHANGED));
+	private void checkElevator(int elevator) throws ElevatorException {
+		if ((elevator < 0) || (elevator >= NUM_ELEVATORS)) {
+			throw new ElevatorException(elevator);
+		}
+	}
+
+	private void checkFloor(int floor) throws FloorException {
+		if ((floor < 0) || (floor >= NUM_FLOORS)) {
+			throw new FloorException(floor);
 		}
 	}
 
@@ -85,15 +88,22 @@ public class ElevatorSystem extends Observable {
 		return Elevators[num];
 	}
 
-	private void checkElevator(int elevator) throws ElevatorException {
-		if ((elevator < 0) || (elevator >= NUM_ELEVATORS)) {
-			throw new ElevatorException(elevator);
+	public boolean getFloorButton(int floor, boolean up) throws FloorException {
+		checkFloor(floor);
+
+		if (up) {
+			return mUpButtons[floor];
+		} else {
+			return mDownButtons[floor];
 		}
 	}
 
-	private void checkFloor(int floor) throws FloorException {
-		if ((floor < 0) || (floor >= NUM_FLOORS)) {
-			throw new FloorException(floor);
+	public void pollingComplete() {
+		// will only be triggered if this object was changed
+        notifyObservers(new Integer(SYSTEM_PROPERTY_CHANGED));
+		
+		for (int e = 0; e < NUM_ELEVATORS; e++) {
+			Elevators[e].notifyObservers(new Integer(ELEVATOR_PROPERTY_CHANGED));
 		}
 	}
 
@@ -105,6 +115,14 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 
+	protected void setDownButton(int floor, boolean pressed) {
+		assert(floor < mDownButtons.length);
+		if (mDownButtons[floor] != pressed) {
+			setChanged();
+			mDownButtons[floor] = pressed;
+		}
+	}
+
 	public void setServicesFloors(int elevator, int floor, boolean enable) {
 		try {
 			ElevatorConnection.setServicesFloors(elevator, floor, enable);
@@ -112,7 +130,7 @@ public class ElevatorSystem extends Observable {
 			LOG.warning("RMI interface not connected");
 		}
 	}
-
+	
 	public void setTarget(int elevator, int target) {
 		try {
 			ElevatorConnection.setTarget(elevator, target);
@@ -121,84 +139,11 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 
-	public int getTargetFloor(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getTargetFloor();
-	}
-
-	public int getDirection(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getDirection();
-	}
-
-	public int getAcceleration(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getAcceleration();
-	}
-
-	public boolean getButtonStatus(int elevator, int floor) throws ElevatorException, FloorException {
-		checkElevator(elevator);
-		checkFloor(floor);
-
-        return Elevators[elevator].getButtonStatus(floor);
-	}
-
-	public int getDoorstatus(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getDoorstatus();
-	}
-
-	public int getFloor(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getFloor();
-	}
-
-	public boolean getFloorButton(int floor, boolean up) throws FloorException {
-		checkFloor(floor);
-
-		if (up) {
-			return mUpButtons[floor];
-		} else {
-			return mDownButtons[floor];
-		}
-	}
-
-	public int getPosition(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getPosition();
-	}
-
-	public int getSpeed(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getSpeed();
-	}
-
-	public int getWeight(int elevator) throws ElevatorException {
-		checkElevator(elevator);
-
-        return Elevators[elevator].getWeight();
-	}
-	
 	protected void setUpButton(int floor, boolean pressed) {
 		assert(floor < mUpButtons.length);
 		if (mUpButtons[floor] != pressed) {
 			setChanged();
 			mUpButtons[floor] = pressed;
-		}
-	}
-
-	protected void setDownButton(int floor, boolean pressed) {
-		assert(floor < mDownButtons.length);
-		if (mDownButtons[floor] != pressed) {
-			setChanged();
-			mDownButtons[floor] = pressed;
 		}
 	}
 }

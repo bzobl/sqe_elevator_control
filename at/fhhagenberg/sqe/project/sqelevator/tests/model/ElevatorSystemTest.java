@@ -2,8 +2,9 @@
 package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.net.MalformedURLException;
@@ -91,34 +92,11 @@ public class ElevatorSystemTest extends PollingTask
 		assertEquals(mShunt.Speed, elev.getSpeed());
 		assertEquals(mShunt.Weight, elev.getWeight());
 
-		for (int floor = 0; floor < FLOOR_NUM; floor++) {
-			assertEquals(mShunt.ElevatorButton[floor], elev.getButtonStatus(floor));
-			assertEquals(mShunt.ServicesFloors[floor], elev.getServicesFloors(floor));
-		}
-	}
-
-	private void checkElevatorPropertiesViaSystem(int num) {
 		try {
-			assertEquals(mShunt.Target, mSystem.getTargetFloor(num));
-			assertEquals(mShunt.CommitedDirection, mSystem.getDirection(num));
-			assertEquals(mShunt.ElevatorAccel, mSystem.getAcceleration(num));
-			assertEquals(mShunt.Doorstatus, mSystem.getDoorstatus(num));
-			assertEquals(mShunt.Floor, mSystem.getFloor(num));
-			assertEquals(mShunt.Position, mSystem.getPosition(num));
-			assertEquals(mShunt.Speed, mSystem.getSpeed(num));
-			assertEquals(mShunt.Weight, mSystem.getWeight(num));
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-
-        try {
-        	for (int floor = 0; floor < FLOOR_NUM; floor++) {
-      			assertEquals(mShunt.ElevatorButton[floor], mSystem.getButtonStatus(num, floor));
-		      	//TODO
-		      	//assertEquals(mShunt.ServicesFloors[floor], mSystem.getServicesFloors(num, floor));
-	      	}
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
+			for (int floor = 0; floor < FLOOR_NUM; floor++) {
+				assertEquals(mShunt.ElevatorButton[floor], elev.getButtonStatus(floor));
+				assertEquals(mShunt.ServicesFloors[floor], elev.getServicesFloors(floor));
+			}
 		} catch (FloorException e) {
 			fail("caught Floor Exception: " + e.getMessage());
 		}
@@ -129,14 +107,13 @@ public class ElevatorSystemTest extends PollingTask
 		if (elev != null) {
 			checkElevatorProperties(elev);
 		}
+
 		try {
 			elev = mSystem.getElevator(num);
 			checkElevatorProperties(elev);
 		} catch (ElevatorException e) {
 			fail("caught Elevator Exception: " + e.getMessage());
 		}
-		
-		checkElevatorPropertiesViaSystem(num);
 	}
 
 
@@ -314,5 +291,61 @@ public class ElevatorSystemTest extends PollingTask
 		mShunt.Target = 0;
 		poll();
 		checkElevator(0, false);
+	}
+	
+	@Test
+	public void testSetTarget() {
+		mSystem.setTarget(0, 1);
+		assertEquals(1, mShunt.SetTarget);
+
+		mSystem.setTarget(0, 2);
+		assertEquals(2, mShunt.SetTarget);
+
+		mSystem.setTarget(0, 0);
+		assertEquals(0, mShunt.SetTarget);
+	}
+	
+	@Test
+	public void testSetServicesFloor() {
+		mSystem.setServicesFloors(0, 1, false);
+		assertFalse(mShunt.SetServicesFloor[1]);
+
+		mSystem.setServicesFloors(0, 1, true);
+		assertTrue(mShunt.SetServicesFloor[1]);
+
+		mSystem.setServicesFloors(0, 2, true);
+		assertTrue(mShunt.SetServicesFloor[2]);
+	}
+	
+	@Test
+	public void testSetCommitedDirection() {
+		mSystem.setCommitedDirection(0, IElevator.ELEVATOR_DIRECTION_UP);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+
+		mSystem.setCommitedDirection(0, IElevator.ELEVATOR_DIRECTION_DOWN);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);
+
+		mSystem.setCommitedDirection(0, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mShunt.SetCommitedDirection);
+	}
+	
+	@Test
+	public void testFloorButtonException() {
+		try {
+			mSystem.getFloorButton(4, true);
+			fail("No floor exception thrown");
+		} catch (FloorException e) {
+			assertEquals("Floor 4 is invalid", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testGetElevatorException() {
+		try {
+			mSystem.getElevator(2);
+			fail("No elevator exception thrown");
+		} catch (ElevatorException e) {
+			assertEquals("Elevator 2 is invalid", e.getMessage());
+		}
 	}
 }

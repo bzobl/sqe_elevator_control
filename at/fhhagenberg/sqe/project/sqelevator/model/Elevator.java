@@ -23,15 +23,15 @@ public class Elevator extends Observable {
 	public final int NUM;
 	public final int CAPACITY;
 	
-	private int mTargetFloor = 0;
-	private int mDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 	private int mAcceleration = 0;
-	private boolean mButtonStatus[];
+	private int mDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 	private int mDoorstatus = IElevator.ELEVATOR_DOORS_OPEN;
 	private int mFloor = 0;
 	private int mPosition = 0;
 	private int mSpeed = 0;
+	private int mTargetFloor = 0;
 	private int mWeight = 0;
+	private boolean mButtonStatus[];
 	private boolean mServicesFloors[];
 	
 	public Elevator(int num, int capacity, int floors) {
@@ -46,21 +46,24 @@ public class Elevator extends Observable {
 			mServicesFloors[i] = true;
 		}
 	}
-
-	public int getTargetFloor() {
-		return mTargetFloor;
-	}
-
-	public int getDirection() {
-		return mDirection;
+	
+	private void checkFloor(int floor) throws FloorException {
+		if (floor >= mServicesFloors.length) {
+			throw new FloorException(floor);
+		}
 	}
 
 	public int getAcceleration() {
 		return mAcceleration;
 	}
 
-	public boolean getButtonStatus(int floor) {
+	public boolean getButtonStatus(int floor) throws FloorException {
+		checkFloor(floor);
 		return mButtonStatus[floor];
+	}
+
+	public int getDirection() {
+		return mDirection;
 	}
 
 	public int getDoorstatus() {
@@ -75,22 +78,35 @@ public class Elevator extends Observable {
 		return mPosition;
 	}
 
+	public boolean getServicesFloors(int floor) throws FloorException {
+		checkFloor(floor);
+		return mServicesFloors[floor];
+	}
+
 	public int getSpeed() {
 		return mSpeed;
+	}
+
+	public int getTargetFloor() {
+		return mTargetFloor;
 	}
 
 	public int getWeight() {
 		return mWeight;
 	}
 
-	public boolean getServicesFloors(int floor) {
-		return mServicesFloors[floor];
+	protected void setAcceleration(int acceleration) {
+		if (mAcceleration != acceleration) {
+			setChanged();
+			mAcceleration = acceleration;
+		}
 	}
 
-	protected void setTargetFloor(int targetFloor) {
-		if (targetFloor != mTargetFloor) {
+	protected void setButtonStatus(int floor, boolean buttonStatus) throws FloorException {
+		checkFloor(floor);
+		if (mButtonStatus[floor] != buttonStatus) {
 			setChanged();
-			mTargetFloor = targetFloor;
+			mButtonStatus[floor] = buttonStatus;
 		}
 	}
 
@@ -101,21 +117,6 @@ public class Elevator extends Observable {
 		}
 	}
 
-	protected void setAcceleration(int acceleration) {
-		if (mAcceleration != acceleration) {
-			setChanged();
-			mAcceleration = acceleration;
-		}
-	}
-
-	protected void setButtonStatus(int floor, boolean buttonStatus) {
-		assert(floor < mButtonStatus.length);
-		if (mButtonStatus[floor] != buttonStatus) {
-			setChanged();
-			mButtonStatus[floor] = buttonStatus;
-		}
-	}
-
 	protected void setDoorstatus(int doorstatus) {
 		if (mDoorstatus != doorstatus) {
 			setChanged();
@@ -123,7 +124,8 @@ public class Elevator extends Observable {
 		}
 	}
 
-	protected void setFloor(int floor) {
+	protected void setFloor(int floor) throws FloorException {
+		checkFloor(floor);
 		if (mFloor != floor) {
 			setChanged();
 			mFloor = floor;
@@ -137,6 +139,14 @@ public class Elevator extends Observable {
 		}
 	}
 
+	protected void setServicesFloors(int floor, boolean servicesFloors) throws FloorException {
+		checkFloor(floor);
+		if (mServicesFloors[floor] != servicesFloors) {
+			setChanged();
+			mServicesFloors[floor] = servicesFloors;
+		}
+	}
+
 	protected void setSpeed(int speed) {
 		if (mSpeed != speed) {
 			setChanged();
@@ -144,18 +154,18 @@ public class Elevator extends Observable {
 		}
 	}
 
+	protected void setTargetFloor(int targetFloor) throws FloorException {
+		checkFloor(targetFloor);
+		if (targetFloor != mTargetFloor) {
+			setChanged();
+			mTargetFloor = targetFloor;
+		}
+	}
+
 	protected void setWeight(int weight) {
 		if (mWeight != weight) {
 			setChanged();
 			mWeight = weight;
-		}
-	}
-
-	protected void setServicesFloors(int floor, boolean servicesFloors) {
-		assert(floor < mServicesFloors.length);
-		if (mServicesFloors[floor] != servicesFloors) {
-			setChanged();
-			mServicesFloors[floor] = servicesFloors;
 		}
 	}
 }

@@ -19,23 +19,8 @@ public class PollingTask extends TimerTask {
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
 	private ElevatorSystem mElevators;
-	private Timer timer;
+	private Timer mTimer;
 	
-	public void setElevatorSystem(ElevatorSystem sys)
-	{
-		mElevators = sys;
-	}
-	
-	public void startPolling(long period)
-	{
-		timer.scheduleAtFixedRate(this, 0, period);
-	}
-	
-	public void stopPolling()
-	{
-		timer.cancel();
-	}
-
 	@Override
 	public void run() {
 		if (mElevators == null) {
@@ -68,10 +53,26 @@ public class PollingTask extends TimerTask {
 				}
 			}
 		} catch (RemoteException e) {
-			e.printStackTrace();
-			LOG.warning("Elevator Connection lost");
+			LOG.warning("Elevator Connection lost: " + e.getMessage());
+		} catch (FloorException e) {
+			LOG.warning("Accessed invalid floor: " + e.getMessage());
 		}
 		
 		mElevators.pollingComplete();
+	}
+	
+	public void setElevatorSystem(ElevatorSystem sys)
+	{
+		mElevators = sys;
+	}
+	
+	public void startPolling(long period)
+	{
+		mTimer.scheduleAtFixedRate(this, 0, period);
+	}
+
+	public void stopPolling()
+	{
+		mTimer.cancel();
 	}
 }
