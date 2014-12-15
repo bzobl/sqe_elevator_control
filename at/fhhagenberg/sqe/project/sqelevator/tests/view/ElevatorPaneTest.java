@@ -180,11 +180,11 @@ public class ElevatorPaneTest extends ComponentTestFixture
 		IFloorView v;
 		v = mElevatorView.getFloorView(0);
 		assertNotNull(v);
-		assertEquals(0, v.GetFloorNumber());
+		assertEquals(0, v.getFloorNumber());
 		
 		v = mElevatorView.getFloorView(1);
 		assertNotNull(v);
-		assertEquals(1, v.GetFloorNumber());
+		assertEquals(1, v.getFloorNumber());
 	}
 	
 	@Test

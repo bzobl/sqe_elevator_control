@@ -54,7 +54,7 @@ public class FloorPanelCallButton extends ComponentTestFixture
 				mActionCounter++;
 			}
 		};
-		mFloorPanel.AddCallButtonListener(l);
+		mFloorPanel.addCallButtonListener(l);
 		
 		assertEquals(0,  mActionCounter);
         mCallButton.doClick();

@@ -230,7 +230,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		{
 			if (c instanceof IFloorView)
 			{
-				if (((IFloorView) c).GetFloorNumber() == num)
+				if (((IFloorView) c).getFloorNumber() == num)
 				{
 					return (IFloorView) c;
 				}
@@ -288,13 +288,13 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	}
 
 	@Override
-	public void AddModeButtonListener(ActionListener l)
+	public void addModeButtonListener(ActionListener l)
 	{
 		mModeButton.addActionListener(l);
 	}
 
 	@Override
-	public void RemoveModeButtonListener(ActionListener l)
+	public void removeModeButtonListener(ActionListener l)
 	{
 		mModeButton.removeActionListener(l);
 	}

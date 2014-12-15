@@ -11,7 +11,7 @@ public interface IFloorView
 	 *            any of FLOOR_BUTTON_xxx
 	 * @return true, if active, else false
 	 */
-	public boolean GetFloorButton(int btn);
+	public boolean getFloorButton(int btn);
 
 	/**
 	 * set status of floor buttons.
@@ -21,7 +21,7 @@ public interface IFloorView
 	 * @param status
 	 *            true to set active, else false.
 	 */
-	public void SetFloorButton(int btn, boolean status);
+	public void setFloorButton(int btn, boolean status);
 
 	/**
 	 * add action listener for call button.
@@ -29,7 +29,7 @@ public interface IFloorView
 	 * @param l
 	 *            action listener
 	 */
-	public void AddCallButtonListener(ActionListener l);
+	public void addCallButtonListener(ActionListener l);
 
 	/**
 	 * remove action listener from call button
@@ -37,7 +37,7 @@ public interface IFloorView
 	 * @param l
 	 *            action listener
 	 */
-	public void RemoveCallButtonListener(ActionListener l);
+	public void removeCallButtonListener(ActionListener l);
 
 	/**
 	 * set move status for elevator. See MOVE_STATUS_xxx for valid states.
@@ -45,14 +45,14 @@ public interface IFloorView
 	 * @param moveStatus
 	 *            state to set.
 	 */
-	public void SetMoveStatus(int moveStatus);
+	public void setMoveStatus(int moveStatus);
 
 	/**
 	 * Get current move status.
 	 * 
 	 * @return any of MOVE_STATUS_xxx
 	 */
-	public int GetMoveStatus();
+	public int getMoveStatus();
 
 	/**
 	 * enables or disables call button.
@@ -60,7 +60,7 @@ public interface IFloorView
 	 * @param on
 	 *            enable if true, disable if false
 	 */
-	public void EnableCallButton(boolean on);
+	public void enableCallButton(boolean on);
 
 	/**
 	 * set status for elevator icon. see ELEVATOR_STATUS_xxx for valid states.
@@ -68,19 +68,19 @@ public interface IFloorView
 	 * @param elevatorStatus
 	 *            status to set.
 	 */
-	public void SetElevatorStatus(int elevatorStatus);
+	public void setElevatorStatus(int elevatorStatus);
 
 	/**
 	 * get current elevator icon status.
 	 * 
 	 * @return any of ELEVATOR_STATUS_xxx
 	 */
-	public int GetElevatorStatus();
+	public int getElevatorStatus();
 
 	/**
 	 * floor number of current floor
 	 */
-	public int GetFloorNumber();
+	public int getFloorNumber();
 
 	/**
 	 * add action listener to the services button
@@ -88,7 +88,7 @@ public interface IFloorView
 	 * @param l
 	 *            action listener
 	 */
-	public void AddServiceButtonListener(ActionListener l);
+	public void addServiceButtonListener(ActionListener l);
 
 	/**
 	 * remove a action listener from the services button
@@ -96,7 +96,7 @@ public interface IFloorView
 	 * @param l
 	 *            action listener
 	 */
-	public void RemoveServiceButtonListener(ActionListener l);
+	public void removeServiceButtonListener(ActionListener l);
 
 	/**
 	 * set the services status
@@ -104,12 +104,12 @@ public interface IFloorView
 	 * @param on
 	 *            status
 	 */
-	public void SetServiceStatus(boolean on);
+	public void setServiceStatus(boolean on);
 
 	/**
 	 * get the services status of the floor
 	 */
-	public boolean GetServiceStatus();
+	public boolean getServiceStatus();
 
 	/**
 	 * different elevator modes. ELEVATOR_STATUS_CLOSED: doors are closed

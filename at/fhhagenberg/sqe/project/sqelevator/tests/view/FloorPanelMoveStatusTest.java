@@ -41,43 +41,43 @@ public class FloorPanelMoveStatusTest extends ComponentTestFixture
 	@Test
 	public void testInitialStatus() 
 	{
-		int status = mFloorPanel.GetMoveStatus();	
+		int status = mFloorPanel.getMoveStatus();	
 		assertEquals(FloorPanel.MOVE_STATUS_AWAY, status);
 	}
 
 	public void testEachStatus() 
 	{
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_AWAY);
-		assertEquals(FloorPanel.MOVE_STATUS_AWAY, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_AWAY);
+		assertEquals(FloorPanel.MOVE_STATUS_AWAY, mFloorPanel.getMoveStatus());
 
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_DOWN);
-		assertEquals(FloorPanel.MOVE_STATUS_DOWN, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_DOWN);
+		assertEquals(FloorPanel.MOVE_STATUS_DOWN, mFloorPanel.getMoveStatus());
 
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_STANDING);
-		assertEquals(FloorPanel.MOVE_STATUS_STANDING, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_STANDING);
+		assertEquals(FloorPanel.MOVE_STATUS_STANDING, mFloorPanel.getMoveStatus());
 
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_UP);
-		assertEquals(FloorPanel.MOVE_STATUS_UP, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_UP);
+		assertEquals(FloorPanel.MOVE_STATUS_UP, mFloorPanel.getMoveStatus());
 	}
 	
 	public void testStatusImages()  
 	{
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_AWAY);
-		assertEquals(FloorPanel.MOVE_STATUS_AWAY, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_AWAY);
+		assertEquals(FloorPanel.MOVE_STATUS_AWAY, mFloorPanel.getMoveStatus());
 		assertFalse(mUpDownImage.isVisible());
 
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_DOWN);
-		assertEquals(FloorPanel.MOVE_STATUS_DOWN, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_DOWN);
+		assertEquals(FloorPanel.MOVE_STATUS_DOWN, mFloorPanel.getMoveStatus());
 		assertTrue(mUpDownImage.getIcon().toString().contains(FILENAME_MOVE_STATUS_DOWN));
 		assertTrue(mUpDownImage.isVisible());
 		
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_STANDING);
-		assertEquals(FloorPanel.MOVE_STATUS_STANDING, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_STANDING);
+		assertEquals(FloorPanel.MOVE_STATUS_STANDING, mFloorPanel.getMoveStatus());
 		assertTrue(mUpDownImage.getIcon().toString().contains(FILENAME_MOVE_STATUS_STANDING));
 		assertTrue(mUpDownImage.isVisible());
 
-		mFloorPanel.SetMoveStatus(FloorPanel.MOVE_STATUS_UP);
-		assertEquals(FloorPanel.MOVE_STATUS_UP, mFloorPanel.GetMoveStatus());
+		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_UP);
+		assertEquals(FloorPanel.MOVE_STATUS_UP, mFloorPanel.getMoveStatus());
 		assertTrue(mUpDownImage.getIcon().toString().contains(FILENAME_MOVE_STATUS_UP));
 		assertTrue(mUpDownImage.isVisible());
 	}

@@ -82,19 +82,19 @@ public class FloorPanel extends JPanel implements IFloorView
 	private final int FLOOR_NUMBER;
 
 	@Override
-	public int GetFloorNumber()
+	public int getFloorNumber()
 	{
 		return FLOOR_NUMBER;
 	}
 
 	@Override
-	public void EnableCallButton(boolean on)
+	public void enableCallButton(boolean on)
 	{
 		mCallButton.setEnabled(on);
 	}
 
 	@Override
-	public void SetElevatorStatus(int elevatorStatus)
+	public void setElevatorStatus(int elevatorStatus)
 	{
 		mElevatorStatus = elevatorStatus;
 
@@ -137,13 +137,13 @@ public class FloorPanel extends JPanel implements IFloorView
 	}
 
 	@Override
-	public int GetElevatorStatus()
+	public int getElevatorStatus()
 	{
 		return mElevatorStatus;
 	}
 
 	@Override
-	public void SetMoveStatus(int moveStatus)
+	public void setMoveStatus(int moveStatus)
 	{
 		mMoveStatus = moveStatus;
 
@@ -181,19 +181,19 @@ public class FloorPanel extends JPanel implements IFloorView
 	}
 
 	@Override
-	public int GetMoveStatus()
+	public int getMoveStatus()
 	{
 		return mMoveStatus;
 	}
 
 	@Override
-	public void AddCallButtonListener(ActionListener l)
+	public void addCallButtonListener(ActionListener l)
 	{
 		mCallButton.addActionListener(l);
 	}
 
 	@Override
-	public void RemoveCallButtonListener(ActionListener l)
+	public void removeCallButtonListener(ActionListener l)
 	{
 		mCallButton.removeActionListener(l);
 	}
@@ -204,7 +204,7 @@ public class FloorPanel extends JPanel implements IFloorView
 	private boolean mFloorButtonStates[] = new boolean[2];
 
 	@Override
-	public void SetFloorButton(int btn, boolean status)
+	public void setFloorButton(int btn, boolean status)
 	{
 		if (btn == FLOOR_BUTTON_DOWN)
 		{
@@ -241,7 +241,7 @@ public class FloorPanel extends JPanel implements IFloorView
 	}
 
 	@Override
-	public boolean GetFloorButton(int btn)
+	public boolean getFloorButton(int btn)
 	{
 		if (btn == FLOOR_BUTTON_DOWN)
 		{
@@ -331,21 +331,21 @@ public class FloorPanel extends JPanel implements IFloorView
 		gbc_mFloorDown.gridy = 2;
 		add(mFloorDown, gbc_mFloorDown);
 
-		SetFloorButton(FLOOR_BUTTON_DOWN, false);
-		SetFloorButton(FLOOR_BUTTON_UP, false);
-		SetElevatorStatus(mElevatorStatus);
-		SetMoveStatus(mMoveStatus);
+		setFloorButton(FLOOR_BUTTON_DOWN, false);
+		setFloorButton(FLOOR_BUTTON_UP, false);
+		setElevatorStatus(mElevatorStatus);
+		setMoveStatus(mMoveStatus);
 	}
 
 	@Override
-	public void AddServiceButtonListener(ActionListener l)
+	public void addServiceButtonListener(ActionListener l)
 	{
 		// TODO Auto-generated method stub
 		assert false : "not yet implemented";
 	}
 
 	@Override
-	public void RemoveServiceButtonListener(ActionListener l)
+	public void removeServiceButtonListener(ActionListener l)
 	{
 		// TODO Auto-generated method stub
 		assert false : "not yet implemented";
@@ -353,14 +353,14 @@ public class FloorPanel extends JPanel implements IFloorView
 	}
 
 	@Override
-	public void SetServiceStatus(boolean on)
+	public void setServiceStatus(boolean on)
 	{
 		// TODO Auto-generated method stub
 		assert false : "not yet implemented";
 	}
 
 	@Override
-	public boolean GetServiceStatus()
+	public boolean getServiceStatus()
 	{
 		// TODO Auto-generated method stub
 		assert false : "not yet implemented";

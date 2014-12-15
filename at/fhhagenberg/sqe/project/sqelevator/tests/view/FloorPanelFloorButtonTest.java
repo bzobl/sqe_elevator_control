@@ -53,37 +53,37 @@ public class FloorPanelFloorButtonTest extends ComponentTestFixture
 	{
 		assertTrue(mFloorUpImage.isVisible());
 		assertTrue(mFloorUpImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_UP_OFF));
-		assertFalse(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_UP));
+		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_UP));
 		
 		assertTrue(mFloorDownImage.isVisible());
 		assertTrue(mFloorDownImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_DOWN_OFF));
-		assertFalse(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
+		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
 	}
 
 	public void testUpButton() 
 	{
 		assertTrue(mFloorUpImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_UP_OFF));
-		assertFalse(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_UP));
-		mFloorPanel.SetFloorButton(FloorPanel.FLOOR_BUTTON_UP, true);
+		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_UP));
+		mFloorPanel.setFloorButton(FloorPanel.FLOOR_BUTTON_UP, true);
 		assertTrue(mFloorUpImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_UP_ON));
-		assertTrue(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_UP));
+		assertTrue(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_UP));
 
-		mFloorPanel.SetFloorButton(FloorPanel.FLOOR_BUTTON_UP, false);
+		mFloorPanel.setFloorButton(FloorPanel.FLOOR_BUTTON_UP, false);
 		assertTrue(mFloorUpImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_UP_OFF));
-		assertFalse(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_UP));
+		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_UP));
 	}
 	
 	public void testDownButton() 
 	{
 		assertTrue(mFloorDownImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_DOWN_OFF));
-		assertFalse(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
-		mFloorPanel.SetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN, true);
+		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
+		mFloorPanel.setFloorButton(FloorPanel.FLOOR_BUTTON_DOWN, true);
 		assertTrue(mFloorDownImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_DOWN_ON));
-		assertTrue(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
+		assertTrue(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
 
-		mFloorPanel.SetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN, false);
+		mFloorPanel.setFloorButton(FloorPanel.FLOOR_BUTTON_DOWN, false);
 		assertTrue(mFloorDownImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_DOWN_OFF));
-		assertFalse(mFloorPanel.GetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
+		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
 	}
 	
 	// TODO:

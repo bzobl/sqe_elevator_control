@@ -60,11 +60,11 @@ public interface IElevatorView
 	 * add a action listener to the mode button
 	 * @param l	action listener
 	 */
-	public void AddModeButtonListener(ActionListener l);
+	public void addModeButtonListener(ActionListener l);
 	
 	/**
 	 * remove a action listener from the mode button
 	 * @param l action listener
 	 */
-	public void RemoveModeButtonListener(ActionListener l);
+	public void removeModeButtonListener(ActionListener l);
 }

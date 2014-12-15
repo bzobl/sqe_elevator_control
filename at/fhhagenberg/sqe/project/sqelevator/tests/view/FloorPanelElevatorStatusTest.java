@@ -42,51 +42,51 @@ public class FloorPanelElevatorStatusTest extends ComponentTestFixture
 	@Test
 	public void testInitialStatus() 
 	{
-		int status = mFloorPanel.GetElevatorStatus();	
+		int status = mFloorPanel.getElevatorStatus();	
 		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, status);
 	}
 
 	public void testEachStatus() 
 	{
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_AWAY);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_AWAY);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, mFloorPanel.getElevatorStatus());
 
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSED);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSED, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSED);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSED, mFloorPanel.getElevatorStatus());
 
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSING);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSING, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSING);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSING, mFloorPanel.getElevatorStatus());
 
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENED);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENED, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENED);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENED, mFloorPanel.getElevatorStatus());
 
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.getElevatorStatus());
 	}
 	
 	public void testStatusImages() 
 	{
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_AWAY);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_AWAY);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, mFloorPanel.getElevatorStatus());
 		assertFalse(mElevatorImage.isVisible());
 
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSED);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSED, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSED);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSED, mFloorPanel.getElevatorStatus());
 		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_CLOSED));
 		assertTrue(mElevatorImage.isVisible());
 		
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSING);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSING, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSING);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSING, mFloorPanel.getElevatorStatus());
 		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_CLOSING));
 		assertTrue(mElevatorImage.isVisible());
 
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENED);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENED, mFloorPanel.GetElevatorStatus());
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENED);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENED, mFloorPanel.getElevatorStatus());
 		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OPENED));
 		assertTrue(mElevatorImage.isVisible());
 		
-		mFloorPanel.SetElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);
-		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.GetElevatorStatus());		
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.getElevatorStatus());		
 		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OPENING));
 		assertTrue(mElevatorImage.isVisible());
 	}
