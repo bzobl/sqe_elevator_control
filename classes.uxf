@@ -5,7 +5,7 @@
     <id>UMLClass</id>
     <coordinates>
       <x>624</x>
-      <y>144</y>
+      <y>120</y>
       <w>248</w>
       <h>48</h>
     </coordinates>
@@ -18,7 +18,7 @@ Observer
     <id>UMLClass</id>
     <coordinates>
       <x>1424</x>
-      <y>336</y>
+      <y>312</y>
       <w>400</w>
       <h>376</h>
     </coordinates>
@@ -56,7 +56,7 @@ Observer
     <id>UMLClass</id>
     <coordinates>
       <x>1872</x>
-      <y>344</y>
+      <y>320</y>
       <w>280</w>
       <h>304</h>
     </coordinates>
@@ -89,7 +89,7 @@ Observer
     <id>UMLClass</id>
     <coordinates>
       <x>1568</x>
-      <y>160</y>
+      <y>136</y>
       <w>112</w>
       <h>48</h>
     </coordinates>
@@ -101,7 +101,7 @@ Observer
     <id>Relation</id>
     <coordinates>
       <x>1816</x>
-      <y>368</y>
+      <y>344</y>
       <w>72</w>
       <h>32</h>
     </coordinates>
@@ -114,7 +114,7 @@ m2=*</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>584</x>
-      <y>600</y>
+      <y>576</y>
       <w>312</w>
       <h>152</h>
     </coordinates>
@@ -129,7 +129,7 @@ m2=*</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>584</x>
-      <y>360</y>
+      <y>336</y>
       <w>312</w>
       <h>200</h>
     </coordinates>
@@ -152,7 +152,7 @@ m2=*</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>240</x>
-      <y>88</y>
+      <y>64</y>
       <w>168</w>
       <h>152</h>
     </coordinates>
@@ -165,7 +165,7 @@ m2=*</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>536</x>
-      <y>408</y>
+      <y>384</y>
       <w>64</w>
       <h>248</h>
     </coordinates>
@@ -176,7 +176,7 @@ m2=*</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>400</x>
-      <y>144</y>
+      <y>120</y>
       <w>200</w>
       <h>264</h>
     </coordinates>
@@ -187,7 +187,7 @@ m2=*</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>888</x>
-      <y>416</y>
+      <y>392</y>
       <w>552</w>
       <h>24</h>
     </coordinates>
@@ -198,7 +198,7 @@ m2=*</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>1400</x>
-      <y>280</y>
+      <y>256</y>
       <w>808</w>
       <h>528</h>
     </coordinates>
@@ -211,7 +211,7 @@ bg=green</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>536</x>
-      <y>272</y>
+      <y>248</y>
       <w>736</w>
       <h>536</h>
     </coordinates>
@@ -224,7 +224,7 @@ bg=#a0a0a0</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>0</x>
-      <y>24</y>
+      <y>0</y>
       <w>424</w>
       <h>784</h>
     </coordinates>
@@ -237,7 +237,7 @@ bg=yellow</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>888</x>
-      <y>672</y>
+      <y>648</y>
       <w>552</w>
       <h>32</h>
     </coordinates>
@@ -249,7 +249,7 @@ bg=yellow</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>728</x>
-      <y>184</y>
+      <y>160</y>
       <w>24</w>
       <h>192</h>
     </coordinates>
@@ -260,7 +260,7 @@ bg=yellow</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1616</x>
-      <y>200</y>
+      <y>176</y>
       <w>24</w>
       <h>152</h>
     </coordinates>
@@ -271,31 +271,29 @@ bg=yellow</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>32</x>
-      <y>344</y>
+      <y>320</y>
       <w>256</w>
       <h>264</h>
     </coordinates>
     <panel_attributes>FloorPanel
 --
-+ FloorPanel(int num)
-+ EnableCallButton(boolean on)
-+ SetElevatorStatus(enum elevatorStatus)
-+ GetElevatorStatus()
-+ SetMoveStatus(enum moveStatus)
-+ GetMoveStatus()
-+ AddCallButtonListener(...)
-+ RemoveCallButtonListener(...)
-+ SetFloorButton(int btn, boolean status)
++ FloorPanel(int floorNumber)
 + GetFloorButton(int btn) : boolean
-+ GetFloorNumber() : int
++ SetFloorButton(int btn, boolean status)
++ AddCallButtonListener(ActionListener l)
++ RemoveCallButtonListener(ActionListener l)
++ SetMoveStatus(int moveStatus)
++ GetMoveStatus()
++ EnableCallButton(boolean on)
++ SetElevatorStatus(int elevatorStatus)
++ GetElevatorStatus()
 
-
+/ Not yet implemented
 + AddServiceButtonListener(...)
 + RemoveServiceButtonListener(...)
+/
 --
-- mFloorNumber : int
-- mIsServiced : boolean
-</panel_attributes>
++ FLOOR_NUMBER : int</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

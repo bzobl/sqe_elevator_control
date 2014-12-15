@@ -2,8 +2,6 @@ package at.fhhagenberg.sqe.project.sqelevator.view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -47,8 +45,10 @@ public class TestGui extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		//contentPane.add(new ElevatorPanel());
+		contentPane.add(new ElevatorPanel(5));
 		
+		
+		/*
 		final FloorPanel floor = new FloorPanel(1);
 		ActionListener l = new ActionListener()
 		{
@@ -62,7 +62,9 @@ public class TestGui extends JFrame
 			}
 		};
 		floor.AddCallButtonListener(l);
-		contentPane.add(floor);
+		*/
+		
+//		contentPane.add(floor);
 		
 		setContentPane(contentPane);
 	}
