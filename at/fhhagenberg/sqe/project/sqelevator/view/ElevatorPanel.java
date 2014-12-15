@@ -1,23 +1,20 @@
 package at.fhhagenberg.sqe.project.sqelevator.view;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.GridBagConstraints;
 
 public class ElevatorPanel extends JScrollPane
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5003028963381832505L;
+	
 	private JPanel mPane;
 	private final int MAX_FLOORS = 3;
 	

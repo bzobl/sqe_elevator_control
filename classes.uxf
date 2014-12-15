@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>520</x>
-      <y>120</y>
+      <x>624</x>
+      <y>144</y>
       <w>248</w>
       <h>48</h>
     </coordinates>
@@ -17,8 +17,8 @@ Observer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1320</x>
-      <y>312</y>
+      <x>1424</x>
+      <y>336</y>
       <w>400</w>
       <h>376</h>
     </coordinates>
@@ -55,8 +55,8 @@ Observer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1768</x>
-      <y>320</y>
+      <x>1872</x>
+      <y>344</y>
       <w>280</w>
       <h>304</h>
     </coordinates>
@@ -88,8 +88,8 @@ Observer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1464</x>
-      <y>136</y>
+      <x>1568</x>
+      <y>160</y>
       <w>112</w>
       <h>48</h>
     </coordinates>
@@ -100,8 +100,8 @@ Observer
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1712</x>
-      <y>344</y>
+      <x>1816</x>
+      <y>368</y>
       <w>72</w>
       <h>32</h>
     </coordinates>
@@ -113,8 +113,8 @@ m2=*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>576</y>
+      <x>584</x>
+      <y>600</y>
       <w>312</w>
       <h>152</h>
     </coordinates>
@@ -128,8 +128,8 @@ m2=*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>336</y>
+      <x>584</x>
+      <y>360</y>
       <w>312</w>
       <h>200</h>
     </coordinates>
@@ -151,8 +151,8 @@ m2=*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>104</x>
-      <y>240</y>
+      <x>240</x>
+      <y>88</y>
       <w>168</w>
       <h>152</h>
     </coordinates>
@@ -164,8 +164,8 @@ m2=*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>432</x>
-      <y>384</y>
+      <x>536</x>
+      <y>408</y>
       <w>64</w>
       <h>248</h>
     </coordinates>
@@ -175,19 +175,19 @@ m2=*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>264</x>
-      <y>296</y>
-      <w>232</w>
-      <h>88</h>
+      <x>400</x>
+      <y>144</y>
+      <w>200</w>
+      <h>264</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>270.0;90.0;220.0;90.0;220.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>230.0;310.0;180.0;310.0;180.0;230.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>392</y>
+      <x>888</x>
+      <y>416</y>
       <w>552</w>
       <h>24</h>
     </coordinates>
@@ -197,8 +197,8 @@ m2=*</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>1296</x>
-      <y>256</y>
+      <x>1400</x>
+      <y>280</y>
       <w>808</w>
       <h>528</h>
     </coordinates>
@@ -210,8 +210,8 @@ bg=green</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>432</x>
-      <y>248</y>
+      <x>536</x>
+      <y>272</y>
       <w>736</w>
       <h>536</h>
     </coordinates>
@@ -224,8 +224,8 @@ bg=#a0a0a0</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>0</x>
-      <y>0</y>
-      <w>320</w>
+      <y>24</y>
+      <w>424</w>
       <h>784</h>
     </coordinates>
     <panel_attributes>View
@@ -236,8 +236,8 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>648</y>
+      <x>888</x>
+      <y>672</y>
       <w>552</w>
       <h>32</h>
     </coordinates>
@@ -248,8 +248,8 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>624</x>
-      <y>160</y>
+      <x>728</x>
+      <y>184</y>
       <w>24</w>
       <h>192</h>
     </coordinates>
@@ -259,12 +259,43 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1512</x>
-      <y>176</y>
+      <x>1616</x>
+      <y>200</y>
       <w>24</w>
       <h>152</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>32</x>
+      <y>344</y>
+      <w>256</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>FloorPanel
+--
++ FloorPanel(int num)
++ EnableCallButton(boolean on)
++ SetElevatorStatus(enum elevatorStatus)
++ GetElevatorStatus()
++ SetMoveStatus(enum moveStatus)
++ GetMoveStatus()
++ AddCallButtonListener(...)
++ RemoveCallButtonListener(...)
++ SetFloorButton(int btn, boolean status)
++ GetFloorButton(int btn) : boolean
++ GetFloorNumber() : int
+
+
++ AddServiceButtonListener(...)
++ RemoveServiceButtonListener(...)
+--
+- mFloorNumber : int
+- mIsServiced : boolean
+</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
