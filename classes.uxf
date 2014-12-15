@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="13.1">
-  <zoom_level>8</zoom_level>
+  <zoom_level>4</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>520</x>
-      <y>120</y>
-      <w>248</w>
-      <h>48</h>
+      <x>492</x>
+      <y>40</y>
+      <w>52</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 Observer
@@ -17,81 +17,103 @@ Observer
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1320</x>
-      <y>312</y>
-      <w>400</w>
-      <h>376</h>
+      <x>660</x>
+      <y>196</y>
+      <w>172</w>
+      <h>208</h>
     </coordinates>
     <panel_attributes>ElevatorSystem
 --
-- mElevator : IElevator
-- mElevators : Elevator[]
+_+ SYSTEM_PROPERTY_CHANGED : int_
+_+ ELEVATOR_PROPERTY_CHANGED : int_
 
-- mFloorHeight : int
-- mFloorNum : int
++ NUM_ELEVATORS : int
++ NUM_FLOORS : int
++ FLOOR_HEIGHT : int
 
-- mPollingThread : Thread
+# ElevatorConnection : IElevator
+# Elevators : Elevator[]
 
-# mUpButtons : int[]
-# mDownButtons : int[]
+- mUpButtons : boolean[]
+- mDownButtons : boolean[]
 
 --
+ElevatorSystem(IElevator conn, PollingTask p_task)
++ addObserver(Observer o)
+
+- checkElevator(int num)
+- checkFloor(int floor)
+
++ getElevator(int num) : Elevator
++ getFloorButton(boolean up, boolean pressed) : boolean
+
++ pollingComplete()
+
 + setCommitedDirection(int elevator, int direction)
++ setDownButton(int floor, boolean pressed)
 + setServicesFloors(int elevator, int floor, boolean enable)
 + setTarget(int elevator, int target)
-
-+ getTargetFloor(int elevator)
-+ getDirection(int elevator)
-+ getAcceleration(int elevator)
-+ getButtonStatus(int elevator) : boolean[]
-+ getDoorstatus(int elevator)
-+ getFloor(int elevator)
-+ getFloorButton(boolean up, boolean pressed)
-+ getPosition(int elevator)
-+ getSpeed(int elevator)
-+ getWeight(int elevator)</panel_attributes>
++ setUpButton(int floor, boolean pressed)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1768</x>
-      <y>320</y>
-      <w>280</w>
-      <h>304</h>
+      <x>904</x>
+      <y>200</y>
+      <w>140</w>
+      <h>268</h>
     </coordinates>
     <panel_attributes>Elevator
 --
-- mElevator : IElevator
-- mNumber : int
-- mCapacity : int
+- NUM : int
+- CAPACITY : int
 
-# mTargetFloor : int
-# mDirection : int
-# mAcceleration : int
-# mButtonStatus : boolean[]
-# mDoorstatus : int
-# mFloor : int
-# mPosition : int
-# mSpeed : int
-# mWeight : int
-# mServicesFloors : boolean[]
+- mAcceleration : int
+- mDirection : int
+- mDoorstatus : int
+- mFloor : int
+- mPosition : int
+- mSpeed : int
+- mTargetFloor : int
+- mWeight : int
+- mButtonStatus : boolean[]
+- mServicesFloors : boolean[]
 
 --
-+GetterForMembers()
-+setTargetFloor(int floor)
-+setCommitedDirection(int direction)
-+setServicesFloors(int floor, boolean enable)
-</panel_attributes>
++ Elevator(int num, int capacity, int floors)
+- checkFloor(int floor)
+
++ getAccerleration() : int
++ getButtonStatus(int floor) : boolean
++ getDirection() : int
++ getDoorstatus() : int
++ getFloor() : int
++ getPosition() : int
++ getServicesFloors(int floor) : int
++ getSpeed() : int
++ getTargetFloor() : int
++ get Weight() : int
+
+# setAcceleration(int acc)
+# setButtonStatus(int floor, boolean)
+# setDirection(int dir)
+# setDoorstatus(int doorstatus)
+# setFloor(int floor)
+# setPosition(int position)
+# setServicesFloors(int floor, boolean enabled)
+# setSpeed(int speed)
+# setTargetFloor(int target)
+# setWeight(int weight)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1464</x>
-      <y>136</y>
-      <w>112</w>
-      <h>48</h>
+      <x>564</x>
+      <y>48</y>
+      <w>56</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>Observable
 --</panel_attributes>
@@ -100,23 +122,23 @@ Observer
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1712</x>
-      <y>344</y>
-      <w>72</w>
-      <h>32</h>
+      <x>828</x>
+      <y>212</y>
+      <w>84</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m1=1
 m2=*</panel_attributes>
-    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;190.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>576</y>
-      <w>312</w>
-      <h>152</h>
+      <x>240</x>
+      <y>328</y>
+      <w>156</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes>ElevatorAlgorithm
 --
@@ -128,10 +150,10 @@ m2=*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>480</x>
-      <y>336</y>
-      <w>312</w>
-      <h>200</h>
+      <x>240</x>
+      <y>208</y>
+      <w>156</w>
+      <h>100</h>
     </coordinates>
     <panel_attributes>ElevatorControl
 --
@@ -151,10 +173,10 @@ m2=*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>104</x>
-      <y>240</y>
-      <w>168</w>
-      <h>152</h>
+      <x>52</x>
+      <y>160</y>
+      <w>84</w>
+      <h>76</h>
     </coordinates>
     <panel_attributes>ElevatorView
 --
@@ -164,10 +186,10 @@ m2=*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>432</x>
-      <y>384</y>
-      <w>64</w>
-      <h>248</h>
+      <x>216</x>
+      <y>232</y>
+      <w>32</w>
+      <h>124</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;&gt;</panel_attributes>
     <additional_attributes>60.0;290.0;10.0;290.0;10.0;10.0;60.0;10.0</additional_attributes>
@@ -175,10 +197,10 @@ m2=*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>264</x>
-      <y>296</y>
-      <w>232</w>
-      <h>88</h>
+      <x>132</x>
+      <y>188</y>
+      <w>116</w>
+      <h>44</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>270.0;90.0;220.0;90.0;220.0;10.0;10.0;10.0</additional_attributes>
@@ -186,10 +208,10 @@ m2=*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>392</y>
-      <w>552</w>
-      <h>24</h>
+      <x>392</x>
+      <y>236</y>
+      <w>276</w>
+      <h>12</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;670.0;10.0</additional_attributes>
@@ -197,23 +219,10 @@ m2=*</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>1296</x>
-      <y>256</y>
-      <w>808</w>
-      <h>528</h>
-    </coordinates>
-    <panel_attributes>Model
---
-bg=green</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLPackage</id>
-    <coordinates>
-      <x>432</x>
-      <y>248</y>
-      <w>736</w>
-      <h>536</h>
+      <x>216</x>
+      <y>164</y>
+      <w>368</w>
+      <h>268</h>
     </coordinates>
     <panel_attributes>Controller
 --
@@ -224,9 +233,9 @@ bg=#a0a0a0</panel_attributes>
     <id>UMLPackage</id>
     <coordinates>
       <x>0</x>
-      <y>0</y>
-      <w>320</w>
-      <h>784</h>
+      <y>40</y>
+      <w>160</w>
+      <h>392</h>
     </coordinates>
     <panel_attributes>View
 --
@@ -236,10 +245,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>784</x>
-      <y>648</y>
-      <w>552</w>
-      <h>32</h>
+      <x>392</x>
+      <y>364</y>
+      <w>276</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 &lt;&lt;uses&gt;&gt;</panel_attributes>
@@ -248,23 +257,113 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>624</x>
-      <y>160</y>
-      <w>24</w>
-      <h>192</h>
+      <x>312</x>
+      <y>60</y>
+      <w>212</w>
+      <h>156</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;220.0</additional_attributes>
+    <additional_attributes>510.0;10.0;510.0;320.0;10.0;320.0;10.0;370.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1512</x>
-      <y>176</y>
-      <w>24</w>
-      <h>152</h>
+      <x>588</x>
+      <y>60</y>
+      <w>180</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;220.0;430.0;220.0;430.0;340.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>756</x>
+      <y>144</y>
+      <w>228</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;550.0;10.0;550.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>716</x>
+      <y>440</y>
+      <w>128</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>PollingTask
+--
+- mElevators : ElevatorSystem
+- mTimer : Timer
+--
++ run()
++ setElevatorSystem(ElevatorSystem sys)
++ startPolling(long period)
++ stopPolling()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>640</x>
+      <y>48</y>
+      <w>52</w>
+      <h>16</h>
+    </coordinates>
+    <panel_attributes>TimerTask
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>664</x>
+      <y>60</y>
+      <w>216</w>
+      <h>388</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;180.0;520.0;180.0;520.0;890.0;340.0;890.0;340.0;950.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>676</x>
+      <y>400</y>
+      <w>48</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;130.0;10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>644</x>
+      <y>176</y>
+      <w>416</w>
+      <h>340</h>
+    </coordinates>
+    <panel_attributes>Model
+--
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>476</x>
+      <y>20</y>
+      <w>236</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>java.util
+--
+bg=blue</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
