@@ -23,9 +23,9 @@ public class ElevatorSystem extends Observable {
 	public static final int SYSTEM_PROPERTY_CHANGED = -1;
 	public static final int ELEVATOR_PROPERTY_CHANGED = -2;
 
-	private final int NUM_ELEVATORS;
-	private final int NUM_FLOORS;
-	private final int FLOOR_HEIGHT;
+	public final int NUM_ELEVATORS;
+	public final int NUM_FLOORS;
+	public final int FLOOR_HEIGHT;
 
 	protected IElevator ElevatorConnection;
 	protected Elevator Elevators[];
@@ -73,18 +73,6 @@ public class ElevatorSystem extends Observable {
 		for (int e = 0; e < NUM_ELEVATORS; e++) {
 			Elevators[e].notifyObservers(new Integer(ELEVATOR_PROPERTY_CHANGED));
 		}
-	}
-	
-	public int getFloorHeight() {
-		return FLOOR_HEIGHT;
-	}
-
-	public int getNumFloors() {
-		return NUM_FLOORS;
-	}
-
-	public int getNumElevators() {
-		return NUM_ELEVATORS;
 	}
 
 	/**

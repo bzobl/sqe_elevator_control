@@ -3,6 +3,7 @@ package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.net.MalformedURLException;
@@ -61,130 +62,89 @@ public class ElevatorSystemTest extends PollingTask
 		run();
 	}
 
-	Elevator checkElevator(int num)
+	private Elevator checkObserverUpdate(int num, boolean changed)
 	{
+		if (!changed) {
+			assertNull(mLastObservable);
+			assertNull(mObserverArgument);
+			return null;
+		}
 		assertEquals(new Integer(ElevatorSystem.ELEVATOR_PROPERTY_CHANGED), mObserverArgument);
 		assertTrue(mLastObservable instanceof Elevator);
 
 		Elevator elev = (Elevator) mLastObservable;
 		assertEquals(num, elev.NUM);
 		
+		mLastObservable = null;
+		mObserverArgument = null;
+		
 		return elev;
 	}
 	
-	private void checkDirection(int num, int direction) {
-		Elevator elev = checkElevator(num);
+	private void checkElevatorProperties(Elevator elev) {
+		assertEquals(mShunt.Target, elev.getTargetFloor());
+		assertEquals(mShunt.CommitedDirection, elev.getDirection());
+		assertEquals(mShunt.ElevatorAccel, elev.getAcceleration());
+		assertEquals(mShunt.Doorstatus, elev.getDoorstatus());
+		assertEquals(mShunt.Floor, elev.getFloor());
+		assertEquals(mShunt.Position, elev.getPosition());
+		assertEquals(mShunt.Speed, elev.getSpeed());
+		assertEquals(mShunt.Weight, elev.getWeight());
 
-		try {
-			assertEquals(direction, mSystem.getDirection(num));
-			assertEquals(direction, elev.getDirection());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-	}
-	
-	private void checkAcceleration(int num, int accel) {
-		Elevator elev = checkElevator(num);
-
-		try {
-			assertEquals(accel, mSystem.getAcceleration(num));
-			assertEquals(accel, elev.getAcceleration());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
+		for (int floor = 0; floor < FLOOR_NUM; floor++) {
+			assertEquals(mShunt.ElevatorButton[floor], elev.getButtonStatus(floor));
+			assertEquals(mShunt.ServicesFloors[floor], elev.getServicesFloors(floor));
 		}
 	}
 
-	private void checkElevatorButton(int num, int floor, boolean pressed) {
-		Elevator elev = checkElevator(num);
-
+	private void checkElevatorPropertiesViaSystem(int num) {
 		try {
-			assertEquals(pressed, mSystem.getButtonStatus(num, floor));
-			assertEquals(pressed, elev.getButtonStatus(floor));
+			assertEquals(mShunt.Target, mSystem.getTargetFloor(num));
+			assertEquals(mShunt.CommitedDirection, mSystem.getDirection(num));
+			assertEquals(mShunt.ElevatorAccel, mSystem.getAcceleration(num));
+			assertEquals(mShunt.Doorstatus, mSystem.getDoorstatus(num));
+			assertEquals(mShunt.Floor, mSystem.getFloor(num));
+			assertEquals(mShunt.Position, mSystem.getPosition(num));
+			assertEquals(mShunt.Speed, mSystem.getSpeed(num));
+			assertEquals(mShunt.Weight, mSystem.getWeight(num));
+		} catch (ElevatorException e) {
+			fail("caught Elevator Exception: " + e.getMessage());
+		}
+
+        try {
+        	for (int floor = 0; floor < FLOOR_NUM; floor++) {
+      			assertEquals(mShunt.ElevatorButton[floor], mSystem.getButtonStatus(num, floor));
+		      	//TODO
+		      	//assertEquals(mShunt.ServicesFloors[floor], mSystem.getServicesFloors(num, floor));
+	      	}
 		} catch (ElevatorException e) {
 			fail("caught Elevator Exception: " + e.getMessage());
 		} catch (FloorException e) {
 			fail("caught Floor Exception: " + e.getMessage());
 		}
 	}
-
-	private void checkElevatorDoorstatus(int num, int status) {
-		Elevator elev = checkElevator(num);
-
-		try {
-			assertEquals(status, mSystem.getDoorstatus(num));
-			assertEquals(status, elev.getDoorstatus());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-	}
-
-	private void checkElevatorFloor(int num, int floor) {
-		Elevator elev = checkElevator(num);
-
-		try {
-			assertEquals(floor, mSystem.getFloor(num));
-			assertEquals(floor, elev.getFloor());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-	}
-
-	private void checkElevatorPosition(int num, int position) {
-		Elevator elev = checkElevator(num);
-
-		try {
-			assertEquals(position, mSystem.getPosition(num));
-			assertEquals(position, elev.getPosition());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-	}
-
-	private void checkElevatorWeight(int num, int weight) {
-		Elevator elev = checkElevator(num);
-
-		try {
-			assertEquals(weight, mSystem.getWeight(num));
-			assertEquals(weight, elev.getWeight());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-	}
-
-	private void checkElevatorSpeed(int num, int speed) {
-		Elevator elev = checkElevator(num);
-
-		try {
-			assertEquals(speed, mSystem.getSpeed(num));
-			assertEquals(speed, elev.getSpeed());
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
-		}
-	}
 	
-	private void checkElevatorServices(int num, int floor, boolean enabled) {
-		Elevator elev = checkElevator(num);
-
-		//TODO test serviced floors from system
-		assertEquals(enabled, elev.getServicesFloors(floor));
-	}
-
-	private void checkElevatorTarget(int num, int floor) {
-		Elevator elev = checkElevator(num);
-
+	private void checkElevator(int num, boolean observer_expected) {
+		Elevator elev = checkObserverUpdate(num, observer_expected);
+		if (elev != null) {
+			checkElevatorProperties(elev);
+		}
 		try {
-			assertEquals(floor, mSystem.getTargetFloor(num));
-			assertEquals(floor, elev.getTargetFloor());
+			elev = mSystem.getElevator(num);
+			checkElevatorProperties(elev);
 		} catch (ElevatorException e) {
 			fail("caught Elevator Exception: " + e.getMessage());
 		}
+		
+		checkElevatorPropertiesViaSystem(num);
 	}
+
 
 	@Test
 	public void testConstants() {
-		assertEquals(1, mSystem.getNumElevators());
-		assertEquals(FLOOR_HEIGHT, mSystem.getFloorHeight());
-		assertEquals(FLOOR_NUM, mSystem.getNumFloors());
+		assertEquals(1, mSystem.NUM_ELEVATORS);
+		assertEquals(FLOOR_NUM, mSystem.NUM_FLOORS);
+		assertEquals(FLOOR_HEIGHT, mSystem.FLOOR_HEIGHT);
 		try {
 			assertEquals(CAPACITY, mSystem.getElevator(0).CAPACITY);
 		} catch (ElevatorException e) {
@@ -196,118 +156,163 @@ public class ElevatorSystemTest extends PollingTask
 	public void testElevatorDirection() {
 		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_DOWN;
 		poll();
-		checkDirection(0, IElevator.ELEVATOR_DIRECTION_DOWN);
+		checkElevator(0,true);
 
 		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UP;
 		poll();
-		checkDirection(0, IElevator.ELEVATOR_DIRECTION_UP);
+		checkElevator(0, true);
 
 		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		poll();
-		checkDirection(0, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+		checkElevator(0, true);
+
+		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		poll();
+		checkElevator(0, false);
 	}
 
 	@Test
 	public void testElevatorAcceleration() {
 		mShunt.ElevatorAccel = 100;
 		poll();
-		checkAcceleration(0, 100);
+		checkElevator(0, true);
 
 		mShunt.ElevatorAccel = -1;
 		poll();
-		checkAcceleration(0, -1);
+		checkElevator(0, true);
 		
 		mShunt.ElevatorAccel = 0;
 		poll();
-		checkAcceleration(0, 0);
+		checkElevator(0, true);
+
+		mShunt.ElevatorAccel = 0;
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testElevatorButton() {
 		mShunt.ElevatorButton[0] = true;
 		poll();
-		checkElevatorButton(0, 0, true);
+		checkElevator(0, true);
 
 		mShunt.ElevatorButton[2] = true;
 		poll();
-		checkElevatorButton(0, 2, true);
+		checkElevator(0, true);
 
 		mShunt.ElevatorButton[1] = true;
 		poll();
-		checkElevatorButton(0, 1, true);
+		checkElevator(0, true);
 
 		mShunt.ElevatorButton[0] = false;
 		poll();
-		checkElevatorButton(0, 0, false);
+		checkElevator(0, true);
+
+		mShunt.ElevatorButton[1] = true;
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testDoorStatus() {
 		mShunt.Doorstatus = IElevator.ELEVATOR_DOORS_OPENING;
 		poll();
-		checkElevatorDoorstatus(0, IElevator.ELEVATOR_DOORS_OPENING);
+		checkElevator(0, true);
 
 		mShunt.Doorstatus = IElevator.ELEVATOR_DOORS_CLOSING;
 		poll();
-		checkElevatorDoorstatus(0, IElevator.ELEVATOR_DOORS_CLOSING);
+		checkElevator(0, true);
+
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testFloor() {
 		mShunt.Floor = 1;
 		poll();
-		checkElevatorFloor(0, 1);
+		checkElevator(0, true);
 		
 		mShunt.Floor = 2;
 		poll();
-		checkElevatorFloor(0, 2);
+		checkElevator(0, true);
 
 		mShunt.Floor = 0;
 		poll();
-		checkElevatorFloor(0, 0);
+		checkElevator(0, true);
+
+		mShunt.Floor = 0;
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testPosition() {
 		mShunt.Position = 54;
 		poll();
-		checkElevatorPosition(0, 54);
+		checkElevator(0, true);
+
+		mShunt.Position = 54;
+		poll();
+		checkElevator(0, false);
+
+		mShunt.Position = 53;
+		poll();
+		checkElevator(0, true);
 	}
 	
 	@Test
 	public void testSpeed() {
 		mShunt.Speed = 99;
 		poll();
-		checkElevatorSpeed(0, 99);
+		checkElevator(0, true);
+
+		mShunt.Speed = 98;
+		poll();
+		checkElevator(0, true);
+
+		mShunt.Speed = 98;
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testWeight() {
 		mShunt.Weight = 412;
 		poll();
-		checkElevatorWeight(0, 412);
+		checkElevator(0, true);
+
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testServicesFloors() {
-		mShunt.ServicesFloors[0] = true;
+		mShunt.ServicesFloors[0] = false;
 		poll();
-		checkElevatorServices(0, 0, true);
+		checkElevator(0, true);
 		
+		mShunt.ServicesFloors[1] = true;
+		poll();
+		checkElevator(0, false);
 	}
 	
 	@Test
 	public void testTarget() {
 		mShunt.Target = 2;
 		poll();
-		checkElevatorTarget(0, 2);
+		checkElevator(0, true);
 
 		mShunt.Target = 1;
 		poll();
-		checkElevatorTarget(0, 1);
+		checkElevator(0, true);
 
 		mShunt.Target = 0;
 		poll();
-		checkElevatorTarget(0, 0);
+		checkElevator(0, true);
+
+		mShunt.Target = 0;
+		poll();
+		checkElevator(0, false);
 	}
 }

@@ -9,21 +9,21 @@ final class ElevatorConnectionShunt implements IElevator {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
+	private final int CAPACITY;
 	
 	// Self shunt variables
-	public int CommitedDirection;
-	public int ElevatorAccel;
-	public boolean[] ElevatorButton;
-	public int Doorstatus;
-	public int Floor;
-	public int Position;
-	public int Speed;
-	public int Weight;
-	public int Capacity;
+	public int CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+	public int Doorstatus = IElevator.ELEVATOR_DOORS_OPEN;
+	public int ElevatorAccel = 0;
+	public int Floor = 0;
+	public int Position = 0;
+	public int Speed = 0;
+	public int Target = 0;
+	public int Weight = 0;
 	public boolean[] FloorButtonDown;
 	public boolean[] FloorButtonUp;
 	public boolean[] ServicesFloors;
-	public int Target;
+	public boolean[] ElevatorButton;
 
 	public int SetCommitedDirection;
 	public boolean[] SetServicesFloor;
@@ -33,13 +33,20 @@ final class ElevatorConnectionShunt implements IElevator {
 		FLOOR_NUM = floors;
 		FLOOR_HEIGHT = height;
 		CLOCK_TICK = period;
-		Capacity = capacity;
+		CAPACITY = capacity;
 		
 		ElevatorButton = new boolean[FLOOR_NUM];
 		FloorButtonDown = new boolean[FLOOR_NUM];
 		FloorButtonUp = new boolean[FLOOR_NUM];
 		ServicesFloors = new boolean[FLOOR_NUM];
 		SetServicesFloor = new boolean[FLOOR_NUM];
+
+		for (int i = 0; i < floors; i++) {
+			FloorButtonDown[i] = false;
+			FloorButtonUp[i] = false;
+			ElevatorButton[i] = false;
+			ServicesFloors[i] = true;
+		}
 	}
 	
 	@Override
@@ -90,7 +97,7 @@ final class ElevatorConnectionShunt implements IElevator {
 
 	@Override
 	public int getElevatorCapacity(int elevatorNumber) throws RemoteException {
-		return Capacity;
+		return CAPACITY;
 	}
 
 	@Override

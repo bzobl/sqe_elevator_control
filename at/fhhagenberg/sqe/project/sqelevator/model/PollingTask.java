@@ -46,12 +46,12 @@ public class PollingTask extends TimerTask {
 
 		IElevator conn = mElevators.ElevatorConnection;
 		try {
-			for (int floor = 0; floor < mElevators.getNumFloors(); floor++) {
+			for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
 				mElevators.setUpButton(floor, conn.getFloorButtonUp(floor));
 				mElevators.setDownButton(floor, conn.getFloorButtonDown(floor));
 			}
 	
-			for (int num = 0; num < mElevators.getNumElevators(); num++) {
+			for (int num = 0; num < mElevators.NUM_ELEVATORS; num++) {
 				Elevator elevator = mElevators.Elevators[num];
 				elevator.setDirection(conn.getCommittedDirection(num));
 				elevator.setAcceleration(conn.getElevatorAccel(num));
@@ -62,7 +62,7 @@ public class PollingTask extends TimerTask {
 				elevator.setWeight(conn.getElevatorWeight(num));
 				elevator.setTargetFloor(conn.getTarget(num));
 
-				for (int floor = 0; floor < mElevators.getNumFloors(); floor++) {
+				for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
 					elevator.setButtonStatus(floor, conn.getElevatorButton(num, floor));
                     elevator.setServicesFloors(floor, conn.getServicesFloors(num, floor));
 				}
