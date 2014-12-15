@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.awt.GridBagLayout;
 
 public class TestGui extends JFrame
 {
@@ -45,7 +46,11 @@ public class TestGui extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		contentPane.add(new ElevatorPanel(5));
+		ElevatorPanel elevatorPanel = new ElevatorPanel(5);
+		GridBagLayout gridBagLayout = (GridBagLayout) elevatorPanel.getLayout();
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		contentPane.add(elevatorPanel);
 		
 		
 		/*

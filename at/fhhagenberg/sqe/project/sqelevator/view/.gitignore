@@ -3,3 +3,5 @@
 /TestGui.class
 /FloorPanel.class
 /TestGui$2.class
+/IFloorView.class
+/IElevatorView.class

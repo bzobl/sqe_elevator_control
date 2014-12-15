@@ -11,13 +11,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-public class FloorPanel extends JPanel
+public class FloorPanel extends JPanel implements IFloorView
 {
 	/**
 	 * id for serialization
 	 */
 	private static final long serialVersionUID = -6790668946717203148L;
-	
+
 	/**
 	 * path to the elevator icons
 	 */
@@ -45,12 +45,12 @@ public class FloorPanel extends JPanel
 	 * call toggle button
 	 */
 	private JToggleButton mCallButton;
-	
+
 	/**
 	 * label with elevator image
 	 */
 	private JLabel mElevatorImage;
-	
+
 	/**
 	 * label with moving up/down image
 	 */
@@ -60,7 +60,7 @@ public class FloorPanel extends JPanel
 	 * label with floor button up image
 	 */
 	private JLabel mFloorUp;
-	
+
 	/**
 	 * label with floor button down image
 	 */
@@ -79,11 +79,21 @@ public class FloorPanel extends JPanel
 	/**
 	 * floor number as shown in label
 	 */
-	public final int FLOOR_NUMBER;
+	private final int FLOOR_NUMBER;
+
+	/**
+	 * floor number of current floor
+	 */
+	public int GetFloorNumber()
+	{
+		return FLOOR_NUMBER;
+	}
 
 	/**
 	 * enables or disables call button.
-	 * @param on	enable if true, disable if false
+	 * 
+	 * @param on
+	 *            enable if true, disable if false
 	 */
 	public void EnableCallButton(boolean on)
 	{
@@ -91,22 +101,10 @@ public class FloorPanel extends JPanel
 	}
 
 	/**
-	 * different elevator modes.
-	 * ELEVATOR_STATUS_CLOSED: doors are closed
-	 * ELEVATOR_STATUS_CLOSING: doors are closing
-	 * ELEVATOR_STATUS_OPENED:  doors are opened
-	 * ELEVATOR_STATUS_OPENING: doors are opening
-	 * ELEVATOR_STATUS_AWAY: elevator is not in this floor. icon is hidden.
-	 */
-	public final static int ELEVATOR_STATUS_CLOSED = 0;
-	public final static int ELEVATOR_STATUS_CLOSING = 1;
-	public final static int ELEVATOR_STATUS_OPENED = 2;
-	public final static int ELEVATOR_STATUS_OPENING = 3;
-	public final static int ELEVATOR_STATUS_AWAY = 4;
-
-	/**
 	 * set status for elevator icon. see ELEVATOR_STATUS_xxx for valid states.
-	 * @param elevatorStatus	status to set.
+	 * 
+	 * @param elevatorStatus
+	 *            status to set.
 	 */
 	public void SetElevatorStatus(int elevatorStatus)
 	{
@@ -152,7 +150,8 @@ public class FloorPanel extends JPanel
 
 	/**
 	 * get current elevator icon status.
-	 * @return	any of ELEVATOR_STATUS_xxx
+	 * 
+	 * @return any of ELEVATOR_STATUS_xxx
 	 */
 	public int GetElevatorStatus()
 	{
@@ -160,27 +159,17 @@ public class FloorPanel extends JPanel
 	}
 
 	/**
-	 * move status of elevator.
-	 * MOVE_STATUS_UP: elevator is moving to upper floor.
-	 * MOVE_STATUS_DOWN: elevator is moving to lower floor.
-	 * MOVE_STATUS_STANDING: elevator is in current floor and does not move.
-	 * MOVE_STATUS_AWAY: elevator is not in this floor. icon is hidden.
-	 */
-	public final static int MOVE_STATUS_UP = 0;
-	public final static int MOVE_STATUS_DOWN = 1;
-	public final static int MOVE_STATUS_STANDING = 2;
-	public final static int MOVE_STATUS_AWAY = 3;
-
-	/**
 	 * set move status for elevator. See MOVE_STATUS_xxx for valid states.
-	 * @param moveStatus	state to set.
+	 * 
+	 * @param moveStatus
+	 *            state to set.
 	 */
 	public void SetMoveStatus(int moveStatus)
 	{
 		mMoveStatus = moveStatus;
-		
+
 		System.out.println(mMovingImage.getIcon().toString());
-		
+
 		switch (moveStatus)
 		{
 			case MOVE_STATUS_UP:
@@ -214,7 +203,8 @@ public class FloorPanel extends JPanel
 
 	/**
 	 * Get current move status.
-	 * @return	any of MOVE_STATUS_xxx
+	 * 
+	 * @return any of MOVE_STATUS_xxx
 	 */
 	public int GetMoveStatus()
 	{
@@ -223,7 +213,9 @@ public class FloorPanel extends JPanel
 
 	/**
 	 * add action listener for call button.
-	 * @param l	action listener
+	 * 
+	 * @param l
+	 *            action listener
 	 */
 	public void AddCallButtonListener(ActionListener l)
 	{
@@ -232,18 +224,14 @@ public class FloorPanel extends JPanel
 
 	/**
 	 * remove action listener from call button
-	 * @param l action listener
+	 * 
+	 * @param l
+	 *            action listener
 	 */
 	public void RemoveCallButtonListener(ActionListener l)
 	{
 		mCallButton.removeActionListener(l);
 	}
-
-	/**
-	 * floor buttons
-	 */
-	public final static int FLOOR_BUTTON_UP = 0;
-	public final static int FLOOR_BUTTON_DOWN = 1;
 
 	/**
 	 * current status of floor buttons
@@ -252,8 +240,11 @@ public class FloorPanel extends JPanel
 
 	/**
 	 * set status of floor buttons.
-	 * @param btn	any of FLOOR_BUTTON_xxx
-	 * @param status	true to set active, else false.
+	 * 
+	 * @param btn
+	 *            any of FLOOR_BUTTON_xxx
+	 * @param status
+	 *            true to set active, else false.
 	 */
 	public void SetFloorButton(int btn, boolean status)
 	{
@@ -293,8 +284,10 @@ public class FloorPanel extends JPanel
 
 	/**
 	 * get current status of a floor button.
-	 * @param btn	any of FLOOR_BUTTON_xxx
-	 * @return	true, if active, else false
+	 * 
+	 * @param btn
+	 *            any of FLOOR_BUTTON_xxx
+	 * @return true, if active, else false
 	 */
 	public boolean GetFloorButton(int btn)
 	{
@@ -324,7 +317,7 @@ public class FloorPanel extends JPanel
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowHeights = new int[] { 35, 30, 0 };
-		gridBagLayout.columnWidths = new int[] { 45, 75, 39, 75 };
+		gridBagLayout.columnWidths = new int[] { 45, 75, 40, 75 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0 };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0 };
 		setLayout(gridBagLayout);
@@ -388,5 +381,35 @@ public class FloorPanel extends JPanel
 		SetFloorButton(FLOOR_BUTTON_UP, false);
 		SetElevatorStatus(mElevatorStatus);
 		SetMoveStatus(mMoveStatus);
+	}
+
+	@Override
+	public void AddServiceButtonListener(ActionListener l)
+	{
+		// TODO Auto-generated method stub
+		assert false : "not yet implemented";
+	}
+
+	@Override
+	public void RemoveServiceButtonListener(ActionListener l)
+	{
+		// TODO Auto-generated method stub
+		assert false : "not yet implemented";
+
+	}
+
+	@Override
+	public void SetServiceStatus(boolean on)
+	{
+		// TODO Auto-generated method stub
+		assert false : "not yet implemented";
+	}
+
+	@Override
+	public boolean GetServiceStatus()
+	{
+		// TODO Auto-generated method stub
+		assert false : "not yet implemented";
+		return false;
 	}
 }
