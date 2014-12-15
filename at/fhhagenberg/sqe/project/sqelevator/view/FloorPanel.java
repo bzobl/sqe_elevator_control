@@ -43,7 +43,9 @@ public class FloorPanel extends JPanel
 	private JRadioButton mFloorButtonUp;
 	private JRadioButton mFloorButtonDown;
 	
-	private int mElevatorStatus = 1;
+	private int mElevatorStatus = ELEVATOR_STATUS_AWAY;
+	
+	private int mMoveStatus = MOVE_STATUS_AWAY;
 	
 	public final int FLOOR_NUMBER;
 	
@@ -101,8 +103,47 @@ public class FloorPanel extends JPanel
 		return mElevatorStatus;
 	}
 	
-	//SetMoveStatus(enum moveStatus)
-	//GetMoveStatus()
+	public final static int MOVE_STATUS_UP = 1;
+	public final static int MOVE_STATUS_DOWN = 2;
+	public final static int MOVE_STATUS_STANDING = 3;
+	public final static int MOVE_STATUS_AWAY = 4;
+	
+	public void SetMoveStatus(int moveStatus)
+	{
+		mMoveStatus = moveStatus;
+		
+		switch(moveStatus)
+		{			
+			case MOVE_STATUS_UP:
+				mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_UP)));
+				mUpDownImage.setVisible(true);
+				break;
+				
+			case MOVE_STATUS_DOWN:
+				mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_DOWN)));
+				mUpDownImage.setVisible(true);
+				break;
+				
+			case MOVE_STATUS_STANDING:
+				mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_NONE)));
+				mUpDownImage.setVisible(true);
+				break;
+				
+			case MOVE_STATUS_AWAY:
+				mUpDownImage.setVisible(false);
+				break;
+				
+			default:
+				assert false : "Unexpected move status";
+				mMoveStatus = MOVE_STATUS_AWAY;
+				break;
+		}
+	}
+	
+	public int GetMoveStatus()
+	{
+		return mMoveStatus;
+	}
 	
 	public void AddCallButtonListener(ActionListener l)
 	{
@@ -219,5 +260,8 @@ public class FloorPanel extends JPanel
 		gbc_rdbtnDown.gridx = 3;
 		gbc_rdbtnDown.gridy = 2;
 		add(mFloorButtonDown, gbc_rdbtnDown);
+		
+		SetElevatorStatus(mElevatorStatus);
+		SetMoveStatus(mMoveStatus);
 	}
 }

@@ -6,12 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
-
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 
 public class TestGui extends JFrame
 {
@@ -60,6 +56,7 @@ public class TestGui extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				floor.SetElevatorStatus((floor.GetElevatorStatus() % 5) + 1);
+				floor.SetMoveStatus((floor.GetMoveStatus() % 4) + 1);
 			}
 		};
 		floor.AddCallButtonListener(l);
