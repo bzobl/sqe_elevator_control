@@ -7,7 +7,6 @@
 package at.fhhagenberg.sqe.project.sqelevator.model;
 
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Observable;
@@ -20,32 +19,34 @@ public class ElevatorSystem extends Observable {
 	
 	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
 
+	private static final int SYSTEM_PROPERTY_CHANGED = -1;
+
 	private final int NUM_ELEVATORS;
 	private final int NUM_FLOORS;
 	private final int FLOOR_HEIGHT;
 
-	private IElevator mElevatorConnection;
-	private Elevator mElevators[];
+	protected IElevator ElevatorConnection;
+	protected Elevator Elevators[];
 
-	private Thread mPollingThread;
+	private boolean mUpButtons[];
+	private boolean mDownButtons[];
 
-	protected boolean mUpButtons[];
-	protected boolean mDownButtons[];
+	private boolean mChanged;
 	
-	public ElevatorSystem(String elevator_url) throws java.rmi.RemoteException, MalformedURLException, NotBoundException {
-        mElevatorConnection = (IElevator) Naming.lookup(elevator_url);
+	public ElevatorSystem(IElevator connection, PollingTask p_task) throws java.rmi.RemoteException, MalformedURLException, NotBoundException {
+        ElevatorConnection = connection;
 
-		NUM_FLOORS = mElevatorConnection.getFloorNum();
-		FLOOR_HEIGHT = mElevatorConnection.getFloorHeight();
-		NUM_ELEVATORS = mElevatorConnection.getElevatorNum();
+		NUM_FLOORS = ElevatorConnection.getFloorNum();
+		FLOOR_HEIGHT = ElevatorConnection.getFloorHeight();
+		NUM_ELEVATORS = ElevatorConnection.getElevatorNum();
 
-		mElevators = new Elevator[NUM_ELEVATORS];
+		Elevators = new Elevator[NUM_ELEVATORS];
 		mUpButtons = new boolean[NUM_FLOORS];
 		mDownButtons = new boolean[NUM_FLOORS];
 		
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
-			int capacity = mElevatorConnection.getElevatorCapacity(i);
-			mElevators[i] = new Elevator(capacity, NUM_FLOORS);
+			int capacity = ElevatorConnection.getElevatorCapacity(i);
+			Elevators[i] = new Elevator(capacity, NUM_FLOORS);
 		}
 
 		for (int i = 0; i < NUM_FLOORS; i++) {
@@ -53,7 +54,8 @@ public class ElevatorSystem extends Observable {
 			mDownButtons[i] = false;
 		}
 
-		//TODO implement PollingThread oder einfach timer mit aufruf von pollfunktion, is wahrscheinlich einfacher
+		p_task.setElevatorSystem(this);
+		p_task.startPolling(ElevatorConnection.getClockTick());
 	}
 	
 	public int getFloorHeight() {
@@ -68,92 +70,80 @@ public class ElevatorSystem extends Observable {
 		return NUM_ELEVATORS;
 	}
 
-	private void checkElevator(int elevator) throws ElevatorException
-	{
+	private void checkElevator(int elevator) throws ElevatorException {
 		if ((elevator < 0) || (elevator >= NUM_ELEVATORS)) {
 			throw new ElevatorException(elevator);
 		}
 	}
 
-	private void checkFloor(int floor) throws FloorException
-	{
+	private void checkFloor(int floor) throws FloorException {
 		if ((floor < 0) || (floor >= NUM_FLOORS)) {
 			throw new FloorException(floor);
 		}
 	}
 
-	public void setCommitedDirection(int elevator, int direction)
-	{
+	public void setCommitedDirection(int elevator, int direction) {
 		try {
-			mElevatorConnection.setCommittedDirection(elevator, direction);
+			ElevatorConnection.setCommittedDirection(elevator, direction);
 		} catch (RemoteException e) {
 			LOG.warning("RMI interface not connected");
 		}
 	}
 
-	public void setServicesFloors(int elevator, int floor, boolean enable)
-	{
+	public void setServicesFloors(int elevator, int floor, boolean enable) {
 		try {
-			mElevatorConnection.setServicesFloors(elevator, floor, enable);
+			ElevatorConnection.setServicesFloors(elevator, floor, enable);
 		} catch (RemoteException e) {
 			LOG.warning("RMI interface not connected");
 		}
 	}
 
-	public void setTarget(int elevator, int target)
-	{
+	public void setTarget(int elevator, int target) {
 		try {
-			mElevatorConnection.setTarget(elevator, target);
+			ElevatorConnection.setTarget(elevator, target);
 		} catch (RemoteException e) {
 			LOG.warning("RMI interface not connected");
 		}
 	}
 
-	public int getTargetFloor(int elevator) throws ElevatorException
-	{
+	public int getTargetFloor(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getTargetFloor();
+        return Elevators[elevator].getTargetFloor();
 	}
 
-	public int getDirection(int elevator) throws ElevatorException
-	{
+	public int getDirection(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getDirection();
+        return Elevators[elevator].getDirection();
 	}
 
-	public int getAcceleration(int elevator) throws ElevatorException
-	{
+	public int getAcceleration(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getAcceleration();
+        return Elevators[elevator].getAcceleration();
 	}
 
-	public boolean getButtonStatus(int elevator, int floor) throws ElevatorException, FloorException
-	{
+	public boolean getButtonStatus(int elevator, int floor) throws ElevatorException, FloorException {
 		checkElevator(elevator);
 		checkFloor(floor);
 
-        return mElevators[elevator].getButtonStatus(floor);
+        return Elevators[elevator].getButtonStatus(floor);
 	}
 
-	public int getDoorstatus(int elevator) throws ElevatorException
-	{
+	public int getDoorstatus(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getDoorstatus();
+        return Elevators[elevator].getDoorstatus();
 	}
 
-	public int getFloor(int elevator) throws ElevatorException
-	{
+	public int getFloor(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getFloor();
+        return Elevators[elevator].getFloor();
 	}
 
-	public boolean getFloorButton(int floor, boolean up) throws FloorException
-	{
+	public boolean getFloorButton(int floor, boolean up) throws FloorException {
 		checkFloor(floor);
 
 		if (up) {
@@ -163,24 +153,52 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 
-	public int getPosition(int elevator) throws ElevatorException
-	{
+	public int getPosition(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getPosition();
+        return Elevators[elevator].getPosition();
 	}
 
-	public int getSpeed(int elevator) throws ElevatorException
-	{
+	public int getSpeed(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getSpeed();
+        return Elevators[elevator].getSpeed();
 	}
 
-	public int getWeight(int elevator) throws ElevatorException
-	{
+	public int getWeight(int elevator) throws ElevatorException {
 		checkElevator(elevator);
 
-        return mElevators[elevator].getWeight();
+        return Elevators[elevator].getWeight();
+	}
+	
+	protected void setUpButton(int floor, boolean pressed) {
+		assert(floor < mUpButtons.length);
+		if (mUpButtons[floor] != pressed) {
+			mChanged = true;
+			mUpButtons[floor] = pressed;
+		}
+	}
+
+	protected void setDownButton(int floor, boolean pressed) {
+		assert(floor < mDownButtons.length);
+		if (mDownButtons[floor] != pressed) {
+			mChanged = true;
+			mDownButtons[floor] = pressed;
+		}
+	}
+	
+	public void pollingComplete() {
+		if (mChanged) {
+			hasChanged();
+			notifyObservers(new Integer(SYSTEM_PROPERTY_CHANGED));
+		}
+		
+		for (int e = 0; e < NUM_ELEVATORS; e++) {
+			if (Elevators[e].hasChanged()) {
+				hasChanged();
+				notifyObservers(new Integer(e));
+			}
+		}
+		
 	}
 }
