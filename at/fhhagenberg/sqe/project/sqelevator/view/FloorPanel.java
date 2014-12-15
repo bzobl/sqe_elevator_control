@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.JCheckBox;
 
 public class FloorPanel extends JPanel implements IFloorView
 {
@@ -25,6 +26,8 @@ public class FloorPanel extends JPanel implements IFloorView
 	private final String SRC_ELEVATOR_OPENING = "/img/ellevator_door_opening_small.png";
 	private final String SRC_ELEVATOR_CLOSED = "/img/ellevator_door_closed_small.png";
 	private final String SRC_ELEVATOR_CLOSING = "/img/ellevator_door_closing_small.png";
+	private final String SRC_ELEVATOR_TARGET = "/img/ellevator_target_small.png";
+	private final String SRC_ELEVATOR_OUT_OF_ORDER = "/img/ellevator_ooo_small.png";
 
 	/**
 	 * path to the (moving) arrow icons
@@ -46,6 +49,11 @@ public class FloorPanel extends JPanel implements IFloorView
 	 */
 	private JToggleButton mCallButton;
 
+	/**
+	 * check box serviced
+	 */
+	private JCheckBox chckbxServiced;
+	
 	/**
 	 * label with elevator image
 	 */
@@ -124,6 +132,18 @@ public class FloorPanel extends JPanel implements IFloorView
 				mElevatorImage.setVisible(true);
 				break;
 
+			case ELEVATOR_STATUS_TARGET:
+				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ELEVATOR_TARGET)));
+				mElevatorImage.setVisible(true);
+				break;
+
+			case ELEVATOR_STATUS_OUT_OF_ORDER:
+				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ELEVATOR_OUT_OF_ORDER)));
+				mElevatorImage.setVisible(true);
+				break;
+				
 			case ELEVATOR_STATUS_AWAY:
 				mElevatorImage.setVisible(false);
 				break;
@@ -277,8 +297,9 @@ public class FloorPanel extends JPanel implements IFloorView
 		JLabel lblFloorNumber = new JLabel(String.valueOf(floorNumber));
 		lblFloorNumber.setFont(new Font("Dialog", Font.BOLD, 24));
 		GridBagConstraints gbc_lblFloorNumber = new GridBagConstraints();
-		gbc_lblFloorNumber.gridheight = 3;
-		gbc_lblFloorNumber.insets = new Insets(0, 0, 0, 5);
+		gbc_lblFloorNumber.anchor = GridBagConstraints.SOUTH;
+		gbc_lblFloorNumber.gridheight = 2;
+		gbc_lblFloorNumber.insets = new Insets(0, 0, 5, 5);
 		gbc_lblFloorNumber.gridx = 0;
 		gbc_lblFloorNumber.gridy = 0;
 		add(lblFloorNumber, gbc_lblFloorNumber);
@@ -321,6 +342,14 @@ public class FloorPanel extends JPanel implements IFloorView
 		gbc_mFloorUp.gridx = 3;
 		gbc_mFloorUp.gridy = 1;
 		add(mFloorUp, gbc_mFloorUp);
+		
+		chckbxServiced = new JCheckBox("serviced");
+		chckbxServiced.setSelected(true);
+		GridBagConstraints gbc_chckbxServiced = new GridBagConstraints();
+		gbc_chckbxServiced.insets = new Insets(0, 0, 0, 5);
+		gbc_chckbxServiced.gridx = 0;
+		gbc_chckbxServiced.gridy = 2;
+		add(chckbxServiced, gbc_chckbxServiced);
 
 		mFloorDown = new JLabel("");
 		mFloorDown.setIcon(new ImageIcon(FloorPanel.class
@@ -340,30 +369,24 @@ public class FloorPanel extends JPanel implements IFloorView
 	@Override
 	public void addServiceButtonListener(ActionListener l)
 	{
-		// TODO Auto-generated method stub
-		assert false : "not yet implemented";
+		chckbxServiced.addActionListener(l);
 	}
 
 	@Override
 	public void removeServiceButtonListener(ActionListener l)
 	{
-		// TODO Auto-generated method stub
-		assert false : "not yet implemented";
-
+		chckbxServiced.removeActionListener(l);
 	}
 
 	@Override
 	public void setServiceStatus(boolean on)
 	{
-		// TODO Auto-generated method stub
-		assert false : "not yet implemented";
+		chckbxServiced.setSelected(on);
 	}
 
 	@Override
 	public boolean getServiceStatus()
 	{
-		// TODO Auto-generated method stub
-		assert false : "not yet implemented";
-		return false;
+		return chckbxServiced.isSelected();
 	}
 }

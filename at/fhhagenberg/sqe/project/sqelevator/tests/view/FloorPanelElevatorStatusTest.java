@@ -20,6 +20,8 @@ public class FloorPanelElevatorStatusTest extends ComponentTestFixture
 	private final String FILENAME_ELEVATOR_OPENING = "ellevator_door_opening_small.png";
 	private final String FILENAME_ELEVATOR_CLOSED = "ellevator_door_closed_small.png";
 	private final String FILENAME_ELEVATOR_CLOSING = "ellevator_door_closing_small.png";
+	private final String FILENAME_ELEVATOR_OUT_OF_ORDER = "ellevator_ooo_small.png";
+	private final String FILENAME_ELEVATOR_TARGET = "ellevator_target_small.png";
 
 	private FloorPanel mFloorPanel;
 	private JLabel mElevatorImage;
@@ -62,6 +64,12 @@ public class FloorPanelElevatorStatusTest extends ComponentTestFixture
 
 		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);
 		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.getElevatorStatus());
+		
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER, mFloorPanel.getElevatorStatus());
+		
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_TARGET);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_TARGET, mFloorPanel.getElevatorStatus());
 	}
 	
 	public void testStatusImages() 
@@ -88,6 +96,16 @@ public class FloorPanelElevatorStatusTest extends ComponentTestFixture
 		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);
 		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.getElevatorStatus());		
 		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OPENING));
+		assertTrue(mElevatorImage.isVisible());
+		
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER, mFloorPanel.getElevatorStatus());		
+		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OUT_OF_ORDER));
+		assertTrue(mElevatorImage.isVisible());
+		
+		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_TARGET);
+		assertEquals(FloorPanel.ELEVATOR_STATUS_TARGET, mFloorPanel.getElevatorStatus());		
+		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_TARGET));
 		assertTrue(mElevatorImage.isVisible());
 	}
 }

@@ -64,4 +64,29 @@ public class FloorPanelCallButton extends ComponentTestFixture
 		assertEquals(2, mActionCounter);
 		assertFalse(mCallButton.isSelected());
 	}
+	
+	@Test
+	public void testCallButtonRemoveListener() 
+	{
+		ActionListener l = new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				mActionCounter++;
+			}
+		};
+		mFloorPanel.addCallButtonListener(l);
+		
+		assertEquals(0,  mActionCounter);
+        mCallButton.doClick();
+		assertEquals(1, mActionCounter);
+		assertTrue(mCallButton.isSelected());
+		
+		mFloorPanel.removeCallButtonListener(l);
+		
+        mCallButton.doClick();
+		assertEquals(1, mActionCounter);
+		assertFalse(mCallButton.isSelected());
+	}
 }

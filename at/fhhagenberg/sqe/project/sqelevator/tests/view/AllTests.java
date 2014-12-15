@@ -11,7 +11,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	FloorPanelElevatorStatusTest.class,
 	FloorPanelFloorButtonTest.class,
 	FloorPanelMoveStatusTest.class,
-	ElevatorPaneTest.class
+	ElevatorPaneTest.class,
+	FloorPanelServicedTest.class
 })
 
 public class AllTests {

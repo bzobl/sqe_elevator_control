@@ -122,6 +122,8 @@ public interface IFloorView
 	public final static int ELEVATOR_STATUS_OPENED = 2;
 	public final static int ELEVATOR_STATUS_OPENING = 3;
 	public final static int ELEVATOR_STATUS_AWAY = 4;
+	public final static int ELEVATOR_STATUS_TARGET = 5;
+	public final static int ELEVATOR_STATUS_OUT_OF_ORDER = 6;
 
 	/**
 	 * move status of elevator. MOVE_STATUS_UP: elevator is moving to upper
