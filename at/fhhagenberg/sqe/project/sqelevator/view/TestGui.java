@@ -24,8 +24,11 @@ public class TestGui extends JFrame
 			{
 				try
 				{
-					TestGui frame = new TestGui();
+					MainView frame = new MainView(3);
 					frame.setVisible(true);
+					
+					//TestGui frame = new TestGui();
+					//frame.setVisible(true);
 				}
 				catch (Exception e)
 				{
@@ -47,9 +50,9 @@ public class TestGui extends JFrame
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		ElevatorPanel elevatorPanel = new ElevatorPanel(5);
-		GridBagLayout gridBagLayout = (GridBagLayout) elevatorPanel.getLayout();
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		//GridBagLayout gridBagLayout = (GridBagLayout) elevatorPanel.getLayout();
+		//gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		//gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
 		contentPane.add(elevatorPanel);
 		
 		

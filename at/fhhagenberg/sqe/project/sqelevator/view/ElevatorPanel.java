@@ -80,10 +80,10 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 80, 60, 70, 60, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 65, 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 20, 5, 25, 25, 25, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0,
 				Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0,
+		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 
@@ -200,7 +200,6 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc.insets = new Insets(0, 0, 5, 0);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.NORTH;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.ipady = 5;
 		gbc.gridwidth = 4;
