@@ -55,17 +55,16 @@ public class TestGui extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				floor.SetElevatorStatus((floor.GetElevatorStatus() % 5) + 1);
-				floor.SetMoveStatus((floor.GetMoveStatus() % 4) + 1);
+				floor.SetElevatorStatus(((floor.GetElevatorStatus() + 1) % 5));
+				floor.SetMoveStatus(((floor.GetMoveStatus() + 1) % 4));
+				floor.SetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN, !floor.GetFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
+				floor.SetFloorButton(FloorPanel.FLOOR_BUTTON_UP, !floor.GetFloorButton(FloorPanel.FLOOR_BUTTON_UP));
 			}
 		};
 		floor.AddCallButtonListener(l);
 		contentPane.add(floor);
 		
 		setContentPane(contentPane);
-		
-		
-		
 	}
 
 }

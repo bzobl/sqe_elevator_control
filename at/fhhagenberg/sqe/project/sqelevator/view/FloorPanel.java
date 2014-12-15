@@ -1,266 +1,391 @@
 package at.fhhagenberg.sqe.project.sqelevator.view;
 
-import javax.swing.JPanel;
-
-import java.awt.GridBagLayout;
-
-import javax.swing.JLabel;
-
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JToggleButton;
-import javax.swing.JRadioButton;
-import javax.swing.SwingConstants;
-
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
-
-import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
-
-import com.sun.istack.internal.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 public class FloorPanel extends JPanel
 {
-	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
+	/**
+	 * id for serialization
+	 */
+	private static final long serialVersionUID = -6790668946717203148L;
 	
+	/**
+	 * path to the elevator icons
+	 */
 	private final String SRC_ELEVATOR_OPENED = "/img/ellevator_door_opened_small.png";
 	private final String SRC_ELEVATOR_OPENING = "/img/ellevator_door_opening_small.png";
 	private final String SRC_ELEVATOR_CLOSED = "/img/ellevator_door_closed_small.png";
 	private final String SRC_ELEVATOR_CLOSING = "/img/ellevator_door_closing_small.png";
-	
+
+	/**
+	 * path to the (moving) arrow icons
+	 */
 	private final String SRC_ARROW_UP = "/img/upArrow_small.png";
 	private final String SRC_ARROW_DOWN = "/img/downArrow_small.png";
 	private final String SRC_ARROW_NONE = "/img/standing_small.png";
-	
+
+	/**
+	 * path to the floor button icons
+	 */
+	private final String SRC_FLOOR_BTN_UP_OFF = "/img/colorArrowUp_off_small.png";
+	private final String SRC_FLOOR_BTN_UP_ON = "/img/colorArrowUp_small.png";
+	private final String SRC_FLOOR_BTN_DOWN_OFF = "/img/colorArrowDown_off_small.png";
+	private final String SRC_FLOOR_BTN_DOWN_ON = "/img/colorArrowDown_small.png";
+
+	/**
+	 * call toggle button
+	 */
 	private JToggleButton mCallButton;
+	
+	/**
+	 * label with elevator image
+	 */
 	private JLabel mElevatorImage;
-	private JLabel mUpDownImage;
-	private JRadioButton mFloorButtonUp;
-	private JRadioButton mFloorButtonDown;
 	
+	/**
+	 * label with moving up/down image
+	 */
+	private JLabel mMovingImage;
+
+	/**
+	 * label with floor button up image
+	 */
+	private JLabel mFloorUp;
+	
+	/**
+	 * label with floor button down image
+	 */
+	private JLabel mFloorDown;
+
+	/**
+	 * current elevator status. see ELEVATOR_STATUS_xxx for valid states.
+	 */
 	private int mElevatorStatus = ELEVATOR_STATUS_AWAY;
-	
+
+	/**
+	 * current moving status. see MOVE_STATUS_xxx for valid states.
+	 */
 	private int mMoveStatus = MOVE_STATUS_AWAY;
-	
+
+	/**
+	 * floor number as shown in label
+	 */
 	public final int FLOOR_NUMBER;
-	
+
+	/**
+	 * enables or disables call button.
+	 * @param on	enable if true, disable if false
+	 */
 	public void EnableCallButton(boolean on)
 	{
 		mCallButton.setEnabled(on);
 	}
-	
-	public final static int ELEVATOR_STATUS_CLOSED = 1; 
-	public final static int ELEVATOR_STATUS_CLOSING = 2; 
-	public final static int ELEVATOR_STATUS_OPENED = 3; 
-	public final static int ELEVATOR_STATUS_OPENING = 4; 
-	public final static int ELEVATOR_STATUS_AWAY = 5; 
-	
+
+	/**
+	 * different elevator modes.
+	 * ELEVATOR_STATUS_CLOSED: doors are closed
+	 * ELEVATOR_STATUS_CLOSING: doors are closing
+	 * ELEVATOR_STATUS_OPENED:  doors are opened
+	 * ELEVATOR_STATUS_OPENING: doors are opening
+	 * ELEVATOR_STATUS_AWAY: elevator is not in this floor. icon is hidden.
+	 */
+	public final static int ELEVATOR_STATUS_CLOSED = 0;
+	public final static int ELEVATOR_STATUS_CLOSING = 1;
+	public final static int ELEVATOR_STATUS_OPENED = 2;
+	public final static int ELEVATOR_STATUS_OPENING = 3;
+	public final static int ELEVATOR_STATUS_AWAY = 4;
+
+	/**
+	 * set status for elevator icon. see ELEVATOR_STATUS_xxx for valid states.
+	 * @param elevatorStatus	status to set.
+	 */
 	public void SetElevatorStatus(int elevatorStatus)
 	{
 		mElevatorStatus = elevatorStatus;
-		
+
 		switch (elevatorStatus)
 		{
 			case ELEVATOR_STATUS_CLOSED:
-				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ELEVATOR_CLOSED)));
+				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ELEVATOR_CLOSED)));
 				mElevatorImage.setVisible(true);
 				break;
-				
+
 			case ELEVATOR_STATUS_CLOSING:
-				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ELEVATOR_CLOSING)));
+				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ELEVATOR_CLOSING)));
 				mElevatorImage.setVisible(true);
 				break;
-				
+
 			case ELEVATOR_STATUS_OPENED:
-				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ELEVATOR_OPENED)));
+				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ELEVATOR_OPENED)));
 				mElevatorImage.setVisible(true);
 				break;
-				
+
 			case ELEVATOR_STATUS_OPENING:
-				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ELEVATOR_OPENING)));
+				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ELEVATOR_OPENING)));
 				mElevatorImage.setVisible(true);
 				break;
 
 			case ELEVATOR_STATUS_AWAY:
 				mElevatorImage.setVisible(false);
 				break;
-				
+
 			default:
 				assert false : "Unexpected elevator status";
-				
+
 				mElevatorStatus = ELEVATOR_STATUS_AWAY;
 				break;
 		}
 	}
-	
+
+	/**
+	 * get current elevator icon status.
+	 * @return	any of ELEVATOR_STATUS_xxx
+	 */
 	public int GetElevatorStatus()
 	{
 		return mElevatorStatus;
 	}
-	
-	public final static int MOVE_STATUS_UP = 1;
-	public final static int MOVE_STATUS_DOWN = 2;
-	public final static int MOVE_STATUS_STANDING = 3;
-	public final static int MOVE_STATUS_AWAY = 4;
-	
+
+	/**
+	 * move status of elevator.
+	 * MOVE_STATUS_UP: elevator is moving to upper floor.
+	 * MOVE_STATUS_DOWN: elevator is moving to lower floor.
+	 * MOVE_STATUS_STANDING: elevator is in current floor and does not move.
+	 * MOVE_STATUS_AWAY: elevator is not in this floor. icon is hidden.
+	 */
+	public final static int MOVE_STATUS_UP = 0;
+	public final static int MOVE_STATUS_DOWN = 1;
+	public final static int MOVE_STATUS_STANDING = 2;
+	public final static int MOVE_STATUS_AWAY = 3;
+
+	/**
+	 * set move status for elevator. See MOVE_STATUS_xxx for valid states.
+	 * @param moveStatus	state to set.
+	 */
 	public void SetMoveStatus(int moveStatus)
 	{
 		mMoveStatus = moveStatus;
 		
-		switch(moveStatus)
-		{			
+		System.out.println(mMovingImage.getIcon().toString());
+		
+		switch (moveStatus)
+		{
 			case MOVE_STATUS_UP:
-				mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_UP)));
-				mUpDownImage.setVisible(true);
+				mMovingImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ARROW_UP)));
+				mMovingImage.setVisible(true);
 				break;
-				
+
 			case MOVE_STATUS_DOWN:
-				mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_DOWN)));
-				mUpDownImage.setVisible(true);
+				mMovingImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ARROW_DOWN)));
+				mMovingImage.setVisible(true);
 				break;
-				
+
 			case MOVE_STATUS_STANDING:
-				mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_NONE)));
-				mUpDownImage.setVisible(true);
+				mMovingImage.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_ARROW_NONE)));
+				mMovingImage.setVisible(true);
 				break;
-				
+
 			case MOVE_STATUS_AWAY:
-				mUpDownImage.setVisible(false);
+				mMovingImage.setVisible(false);
 				break;
-				
+
 			default:
 				assert false : "Unexpected move status";
 				mMoveStatus = MOVE_STATUS_AWAY;
 				break;
 		}
 	}
-	
+
+	/**
+	 * Get current move status.
+	 * @return	any of MOVE_STATUS_xxx
+	 */
 	public int GetMoveStatus()
 	{
 		return mMoveStatus;
 	}
-	
+
+	/**
+	 * add action listener for call button.
+	 * @param l	action listener
+	 */
 	public void AddCallButtonListener(ActionListener l)
 	{
 		mCallButton.addActionListener(l);
 	}
-	
+
+	/**
+	 * remove action listener from call button
+	 * @param l action listener
+	 */
 	public void RemoveCallButtonListener(ActionListener l)
 	{
 		mCallButton.removeActionListener(l);
 	}
-	
-	public final static int FLOOR_BUTTON_UP = 1;
-	public final static int FLOOR_BUTTON_DOWN = 2;
-	
+
+	/**
+	 * floor buttons
+	 */
+	public final static int FLOOR_BUTTON_UP = 0;
+	public final static int FLOOR_BUTTON_DOWN = 1;
+
+	/**
+	 * current status of floor buttons
+	 */
+	private boolean mFloorButtonStates[] = new boolean[2];
+
+	/**
+	 * set status of floor buttons.
+	 * @param btn	any of FLOOR_BUTTON_xxx
+	 * @param status	true to set active, else false.
+	 */
 	public void SetFloorButton(int btn, boolean status)
 	{
 		if (btn == FLOOR_BUTTON_DOWN)
 		{
-			mFloorButtonDown.setSelected(status);
+			mFloorButtonStates[btn] = status;
+			if (status)
+			{
+				mFloorDown.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_FLOOR_BTN_DOWN_ON)));
+			}
+			else
+			{
+				mFloorDown.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_FLOOR_BTN_DOWN_OFF)));
+			}
 		}
 		else if (btn == FLOOR_BUTTON_UP)
 		{
-			mFloorButtonUp.setSelected(status);
+			mFloorButtonStates[btn] = status;
+			if (status)
+			{
+				mFloorUp.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_FLOOR_BTN_UP_ON)));
+			}
+			else
+			{
+				mFloorUp.setIcon(new ImageIcon(FloorPanel.class
+						.getResource(SRC_FLOOR_BTN_UP_OFF)));
+			}
 		}
 		else
 		{
 			assert false : "Unexpected floor button";
 		}
 	}
-	
+
+	/**
+	 * get current status of a floor button.
+	 * @param btn	any of FLOOR_BUTTON_xxx
+	 * @return	true, if active, else false
+	 */
 	public boolean GetFloorButton(int btn)
 	{
 		if (btn == FLOOR_BUTTON_DOWN)
 		{
-			return mFloorButtonDown.isSelected();
+			return mFloorButtonStates[btn];
 		}
 		else if (btn == FLOOR_BUTTON_UP)
 		{
-			return mFloorButtonUp.isSelected();
+			return mFloorButtonStates[btn];
 		}
 		else
 		{
 			assert false : "Unexpected floor button";
-			
+
 			// makes compiler happy!
 			return false;
 		}
-	}	
-	
+	}
+
 	/**
-	 * Create the panel.
+	 * Create the panel and initialize states.
 	 */
 	public FloorPanel(int floorNumber)
 	{
 		FLOOR_NUMBER = floorNumber;
-		
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{45, 75, 39, 75};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0};
+		gridBagLayout.rowHeights = new int[] { 35, 30, 0 };
+		gridBagLayout.columnWidths = new int[] { 45, 75, 39, 75 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0 };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0 };
 		setLayout(gridBagLayout);
-		
+
 		JLabel lblFloorNumber = new JLabel(String.valueOf(floorNumber));
 		lblFloorNumber.setFont(new Font("Dialog", Font.BOLD, 24));
 		GridBagConstraints gbc_lblFloorNumber = new GridBagConstraints();
 		gbc_lblFloorNumber.gridheight = 3;
-		gbc_lblFloorNumber.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFloorNumber.insets = new Insets(0, 0, 0, 5);
 		gbc_lblFloorNumber.gridx = 0;
 		gbc_lblFloorNumber.gridy = 0;
 		add(lblFloorNumber, gbc_lblFloorNumber);
-		
+
 		mElevatorImage = new JLabel("");
-		mElevatorImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ELEVATOR_OPENING)));
+		mElevatorImage.setIcon(new ImageIcon(FloorPanel.class
+				.getResource(SRC_ELEVATOR_OPENING)));
 		mElevatorImage.setName("elevatorImage");
 		GridBagConstraints gbc_lblElevatorImage = new GridBagConstraints();
 		gbc_lblElevatorImage.gridheight = 3;
-		gbc_lblElevatorImage.insets = new Insets(0, 0, 5, 5);
+		gbc_lblElevatorImage.insets = new Insets(0, 0, 0, 5);
 		gbc_lblElevatorImage.gridx = 1;
 		gbc_lblElevatorImage.gridy = 0;
 		add(mElevatorImage, gbc_lblElevatorImage);
-		
-		mUpDownImage = new JLabel("");
-		mUpDownImage.setIcon(new ImageIcon(FloorPanel.class.getResource(SRC_ARROW_DOWN)));
-		mUpDownImage.setName("upDownImage");
+
+		mMovingImage = new JLabel("");
+		mMovingImage.setIcon(new ImageIcon(FloorPanel.class
+				.getResource(SRC_ARROW_DOWN)));
+		mMovingImage.setName("upDownImage");
 		GridBagConstraints gbc_lblUpDownImage = new GridBagConstraints();
-		gbc_lblUpDownImage.insets = new Insets(0, 0, 5, 5);
+		gbc_lblUpDownImage.insets = new Insets(0, 0, 0, 5);
 		gbc_lblUpDownImage.gridheight = 3;
 		gbc_lblUpDownImage.gridx = 2;
 		gbc_lblUpDownImage.gridy = 0;
-		add(mUpDownImage, gbc_lblUpDownImage);
-		
+		add(mMovingImage, gbc_lblUpDownImage);
+
 		mCallButton = new JToggleButton("Call");
 		GridBagConstraints gbc_tglbtnCall = new GridBagConstraints();
-		gbc_tglbtnCall.anchor = GridBagConstraints.SOUTH;
 		gbc_tglbtnCall.insets = new Insets(0, 0, 5, 0);
 		gbc_tglbtnCall.gridx = 3;
 		gbc_tglbtnCall.gridy = 0;
 		add(mCallButton, gbc_tglbtnCall);
-		
-		mFloorButtonUp = new JRadioButton("UP");
-		mFloorButtonUp.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_rdbtnUp = new GridBagConstraints();
-		gbc_rdbtnUp.anchor = GridBagConstraints.SOUTHWEST;
-		gbc_rdbtnUp.insets = new Insets(0, 0, 5, 0);
-		gbc_rdbtnUp.gridx = 3;
-		gbc_rdbtnUp.gridy = 1;
-		add(mFloorButtonUp, gbc_rdbtnUp);
-		
-		mFloorButtonDown = new JRadioButton("DOWN");
-		mFloorButtonDown.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_rdbtnDown = new GridBagConstraints();
-		gbc_rdbtnDown.anchor = GridBagConstraints.NORTHWEST;
-		gbc_rdbtnDown.insets = new Insets(0, 0, 5, 0);
-		gbc_rdbtnDown.gridx = 3;
-		gbc_rdbtnDown.gridy = 2;
-		add(mFloorButtonDown, gbc_rdbtnDown);
-		
+
+		mFloorUp = new JLabel("");
+		mFloorUp.setIcon(new ImageIcon(FloorPanel.class
+				.getResource("/img/colorArrowUp_off_small.png")));
+		GridBagConstraints gbc_mFloorUp = new GridBagConstraints();
+		gbc_mFloorUp.insets = new Insets(0, 0, 5, 0);
+		gbc_mFloorUp.gridx = 3;
+		gbc_mFloorUp.gridy = 1;
+		add(mFloorUp, gbc_mFloorUp);
+
+		mFloorDown = new JLabel("");
+		mFloorDown.setIcon(new ImageIcon(FloorPanel.class
+				.getResource("/img/colorArrowDown_off_small.png")));
+		GridBagConstraints gbc_mFloorDown = new GridBagConstraints();
+		gbc_mFloorDown.gridx = 3;
+		gbc_mFloorDown.gridy = 2;
+		add(mFloorDown, gbc_mFloorDown);
+
+		SetFloorButton(FLOOR_BUTTON_DOWN, false);
+		SetFloorButton(FLOOR_BUTTON_UP, false);
 		SetElevatorStatus(mElevatorStatus);
 		SetMoveStatus(mMoveStatus);
 	}
