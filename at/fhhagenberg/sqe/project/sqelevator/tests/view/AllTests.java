@@ -1,8 +1,15 @@
 package at.fhhagenberg.sqe.project.sqelevator.tests.view;
 
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
+@RunWith(Suite.class)
+@SuiteClasses({ 
+	ElevatorStatusTest.class, 
+	MoveStatusTest.class
+})
+
+public class AllTests {
+}
