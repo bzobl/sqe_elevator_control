@@ -14,7 +14,7 @@ import org.junit.Test;
 import abbot.finder.matchers.ClassMatcher;
 import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
 
-public class MoveStatusTest extends ComponentTestFixture
+public class FloorPanelMoveStatusTest extends ComponentTestFixture
 {
 	private final String FILENAME_MOVE_STATUS_UP = "upArrow_small.png";
 	private final String FILENAME_MOVE_STATUS_DOWN = "downArrow_small.png";
@@ -26,10 +26,8 @@ public class MoveStatusTest extends ComponentTestFixture
 	@Before
 	public void setUp() throws Exception 
 	{
-		JFrame frame = new JFrame();
 		mFloorPanel = new FloorPanel(1);
-		frame.add((JPanel)mFloorPanel);
-		frame.setVisible(true);
+		showFrame(mFloorPanel);
 
 		mUpDownImage = (JLabel) getFinder().find(new ClassMatcher(JLabel.class)
 		{

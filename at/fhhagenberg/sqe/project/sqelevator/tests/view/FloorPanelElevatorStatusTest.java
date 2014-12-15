@@ -14,7 +14,7 @@ import org.junit.Test;
 import abbot.finder.matchers.ClassMatcher;
 import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
 
-public class ElevatorStatusTest extends ComponentTestFixture
+public class FloorPanelElevatorStatusTest extends ComponentTestFixture
 {
 	private final String FILENAME_ELEVATOR_OPENED = "ellevator_door_opened_small.png";
 	private final String FILENAME_ELEVATOR_OPENING = "ellevator_door_opening_small.png";
@@ -27,10 +27,8 @@ public class ElevatorStatusTest extends ComponentTestFixture
 	@Before
 	public void setUp() throws Exception 
 	{
-		JFrame frame = new JFrame();
 		mFloorPanel = new FloorPanel(1);
-		frame.add((JPanel)mFloorPanel);
-		frame.setVisible(true);
+		showFrame(mFloorPanel);
 
 		mElevatorImage = (JLabel) getFinder().find(new ClassMatcher(JLabel.class)
 		{

@@ -363,6 +363,7 @@ public class FloorPanel extends JPanel implements IFloorView
 		mFloorUp = new JLabel("");
 		mFloorUp.setIcon(new ImageIcon(FloorPanel.class
 				.getResource("/img/colorArrowUp_off_small.png")));
+		mFloorUp.setName("floorUpImage");
 		GridBagConstraints gbc_mFloorUp = new GridBagConstraints();
 		gbc_mFloorUp.insets = new Insets(0, 0, 5, 0);
 		gbc_mFloorUp.gridx = 3;
@@ -372,6 +373,7 @@ public class FloorPanel extends JPanel implements IFloorView
 		mFloorDown = new JLabel("");
 		mFloorDown.setIcon(new ImageIcon(FloorPanel.class
 				.getResource("/img/colorArrowDown_off_small.png")));
+		mFloorDown.setName("floorDownImage");
 		GridBagConstraints gbc_mFloorDown = new GridBagConstraints();
 		gbc_mFloorDown.gridx = 3;
 		gbc_mFloorDown.gridy = 2;
