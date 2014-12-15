@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Observable;
+import java.util.Observer;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 
@@ -19,7 +20,8 @@ public class ElevatorSystem extends Observable {
 	
 	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
 
-	private static final int SYSTEM_PROPERTY_CHANGED = -1;
+	public static final int SYSTEM_PROPERTY_CHANGED = -1;
+	public static final int ELEVATOR_PROPERTY_CHANGED = -2;
 
 	private final int NUM_ELEVATORS;
 	private final int NUM_FLOORS;
@@ -31,8 +33,6 @@ public class ElevatorSystem extends Observable {
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
 
-	private boolean mChanged;
-	
 	public ElevatorSystem(IElevator connection, PollingTask p_task) throws java.rmi.RemoteException, MalformedURLException, NotBoundException {
         ElevatorConnection = connection;
 
@@ -46,7 +46,7 @@ public class ElevatorSystem extends Observable {
 		
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
 			int capacity = ElevatorConnection.getElevatorCapacity(i);
-			Elevators[i] = new Elevator(capacity, NUM_FLOORS);
+			Elevators[i] = new Elevator(i, capacity, NUM_FLOORS);
 		}
 
 		for (int i = 0; i < NUM_FLOORS; i++) {
@@ -56,6 +56,23 @@ public class ElevatorSystem extends Observable {
 
 		p_task.setElevatorSystem(this);
 		p_task.startPolling(ElevatorConnection.getClockTick());
+	}
+	
+	@Override
+	public void addObserver(Observer o) {
+		super.addObserver(o);
+		for (int e = 0; e < NUM_ELEVATORS; e++) {
+			Elevators[e].addObserver(o);
+		}
+	}
+	
+	public void pollingComplete() {
+		// will only be triggered if this object was changed
+        notifyObservers(new Integer(SYSTEM_PROPERTY_CHANGED));
+		
+		for (int e = 0; e < NUM_ELEVATORS; e++) {
+			Elevators[e].notifyObservers(new Integer(ELEVATOR_PROPERTY_CHANGED));
+		}
 	}
 	
 	public int getFloorHeight() {
@@ -68,6 +85,16 @@ public class ElevatorSystem extends Observable {
 
 	public int getNumElevators() {
 		return NUM_ELEVATORS;
+	}
+
+	/**
+	 * @param num Number of the elevator to get
+	 * @return Elevator with number num
+	 * @throws ElevatorException 
+	 */
+	public Elevator getElevator(int num) throws ElevatorException {
+		checkElevator(num);
+		return Elevators[num];
 	}
 
 	private void checkElevator(int elevator) throws ElevatorException {
@@ -174,7 +201,7 @@ public class ElevatorSystem extends Observable {
 	protected void setUpButton(int floor, boolean pressed) {
 		assert(floor < mUpButtons.length);
 		if (mUpButtons[floor] != pressed) {
-			mChanged = true;
+			setChanged();
 			mUpButtons[floor] = pressed;
 		}
 	}
@@ -182,23 +209,8 @@ public class ElevatorSystem extends Observable {
 	protected void setDownButton(int floor, boolean pressed) {
 		assert(floor < mDownButtons.length);
 		if (mDownButtons[floor] != pressed) {
-			mChanged = true;
+			setChanged();
 			mDownButtons[floor] = pressed;
 		}
-	}
-	
-	public void pollingComplete() {
-		if (mChanged) {
-			hasChanged();
-			notifyObservers(new Integer(SYSTEM_PROPERTY_CHANGED));
-		}
-		
-		for (int e = 0; e < NUM_ELEVATORS; e++) {
-			if (Elevators[e].hasChanged()) {
-				hasChanged();
-				notifyObservers(new Integer(e));
-			}
-		}
-		
 	}
 }

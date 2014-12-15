@@ -6,11 +6,14 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.model;
 
+import java.util.Observable;
+
 /** Elevator
  * 
  */
-public class Elevator {
-	private final int CAPACITY;
+public class Elevator extends Observable {
+	public final int CAPACITY;
+	public final int NUM;
 	
 	protected int mTargetFloor;
 	protected int mDirection;
@@ -22,21 +25,13 @@ public class Elevator {
 	protected int mSpeed;
 	protected int mWeight;
 	protected boolean mServicesFloors[];
-
-	private boolean mChanged;
 	
-	public Elevator(int capacity, int floors) {
+	public Elevator(int num, int capacity, int floors) {
+		NUM = num;
 		CAPACITY = capacity;
-		
+
 		mButtonStatus = new boolean[floors];
 		mServicesFloors = new boolean[floors];
-	}
-
-	/**
-	 * @return the CAPACITY
-	 */
-	public int getCapacity() {
-		return CAPACITY;
 	}
 
 	/**
@@ -108,24 +103,13 @@ public class Elevator {
 	public boolean getServicesFloors(int floor) {
 		return mServicesFloors[floor];
 	}
-	
-	/**
-	 * Checks whether any properties have changed and resets the change
-	 * indicator
-	 * @return boolean whether or not properties have changed
-	 */
-	protected boolean hasChanged() {
-		boolean changed = mChanged;
-		mChanged = false;
-		return changed;
-	}
 
 	/**
 	 * @param targetFloor the mTargetFloor to set
 	 */
 	protected void setTargetFloor(int targetFloor) {
 		if (targetFloor != mTargetFloor) {
-			mChanged = true;
+			setChanged();
 			mTargetFloor = targetFloor;
 		}
 	}
@@ -135,7 +119,7 @@ public class Elevator {
 	 */
 	protected void setDirection(int direction) {
 		if (mDirection != direction) {
-			mChanged = true;
+			setChanged();
 			mDirection = direction;
 		}
 	}
@@ -145,7 +129,7 @@ public class Elevator {
 	 */
 	protected void setAcceleration(int acceleration) {
 		if (mAcceleration != acceleration) {
-			mChanged = true;
+			setChanged();
 			mAcceleration = acceleration;
 		}
 	}
@@ -156,7 +140,7 @@ public class Elevator {
 	protected void setButtonStatus(int floor, boolean buttonStatus) {
 		assert(floor < mButtonStatus.length);
 		if (mButtonStatus[floor] != buttonStatus) {
-			mChanged = true;
+			setChanged();
 			mButtonStatus[floor] = buttonStatus;
 		}
 	}
@@ -166,7 +150,7 @@ public class Elevator {
 	 */
 	protected void setDoorstatus(int doorstatus) {
 		if (mDoorstatus != doorstatus) {
-			mChanged = true;
+			setChanged();
 			mDoorstatus = doorstatus;
 		}
 	}
@@ -176,7 +160,7 @@ public class Elevator {
 	 */
 	protected void setFloor(int floor) {
 		if (mFloor != floor) {
-			mChanged = true;
+			setChanged();
 			mFloor = floor;
 		}
 	}
@@ -186,7 +170,7 @@ public class Elevator {
 	 */
 	protected void setPosition(int position) {
 		if (mPosition != position) {
-			mChanged = true;
+			setChanged();
 			mPosition = position;
 		}
 	}
@@ -196,7 +180,7 @@ public class Elevator {
 	 */
 	protected void setSpeed(int speed) {
 		if (mSpeed != speed) {
-			mChanged = true;
+			setChanged();
 			mSpeed = speed;
 		}
 	}
@@ -206,7 +190,7 @@ public class Elevator {
 	 */
 	protected void setWeight(int weight) {
 		if (mWeight != weight) {
-			mChanged = true;
+			setChanged();
 			mWeight = weight;
 		}
 	}
@@ -217,7 +201,7 @@ public class Elevator {
 	protected void setServicesFloors(int floor, boolean servicesFloors) {
 		assert(floor < mServicesFloors.length);
 		if (mServicesFloors[floor] != servicesFloors) {
-			mChanged = true;
+			setChanged();
 			mServicesFloors[floor] = servicesFloors;
 		}
 	}

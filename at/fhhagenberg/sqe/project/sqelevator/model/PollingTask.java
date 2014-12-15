@@ -14,7 +14,7 @@ import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 
 import com.sun.istack.internal.logging.Logger;
 
-class PollingTask extends TimerTask {
+public class PollingTask extends TimerTask {
 	
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
@@ -51,14 +51,14 @@ class PollingTask extends TimerTask {
 				mElevators.setDownButton(floor, conn.getFloorButtonDown(floor));
 			}
 	
-			for (int num = 0; num < mElevators.getNumFloors(); num++) {
+			for (int num = 0; num < mElevators.getNumElevators(); num++) {
 				Elevator elevator = mElevators.Elevators[num];
 				elevator.setDirection(conn.getCommittedDirection(num));
 				elevator.setAcceleration(conn.getElevatorAccel(num));
 				elevator.setDoorstatus(conn.getElevatorDoorStatus(num));
 				elevator.setFloor(conn.getElevatorFloor(num));
 				elevator.setPosition(conn.getElevatorPosition(num));
-				elevator.setSpeed(conn.getElevatorAccel(num));
+				elevator.setSpeed(conn.getElevatorSpeed(num));
 				elevator.setWeight(conn.getElevatorWeight(num));
 				elevator.setTargetFloor(conn.getTarget(num));
 
