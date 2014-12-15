@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,18 +21,30 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	 */
 	private static final long serialVersionUID = -5003028963381832505L;
 
-	private JPanel mElevatorPane;
+	/**
+	 * panel which contains all floors
+	 */
+	private JPanel mFloorsPane;
 
 	/**
 	 * number of floors
 	 */
 	private final int NUMBER_OF_FLOORS;
-	private JTextField textPosition;
-	private JTextField textDirection;
-	private JTextField textPayload;
-	private JTextField textSpeed;
-	private JTextField textAcceleration;
+	
+	/**
+	 * text fields from front end
+	 */
+	private JTextField mTextPosition;
+	private JTextField mTextDirection;
+	private JTextField mTextPayload;
+	private JTextField mTextSpeed;
+	private JTextField mTextAcceleration;
 
+	/**
+	 * mode button for auto/manual mode
+	 */
+	private JToggleButton mModeButton;
+	
 	/**
 	 * add floor to the panel
 	 * 
@@ -45,14 +58,14 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc.gridx = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridy = (NUMBER_OF_FLOORS - num) * 2 - 1;
-		mElevatorPane.add(floor, gbc);
+		mFloorsPane.add(floor, gbc);
 
 		// add separator only between two floors
 		if (num < (NUMBER_OF_FLOORS - 1))
 		{
 			gbc.gridy = (NUMBER_OF_FLOORS - num) * 2 - 2;
 			gbc.insets = new Insets(5, 0, 5, 0);
-			mElevatorPane.add(new JSeparator(JSeparator.HORIZONTAL), gbc);
+			mFloorsPane.add(new JSeparator(JSeparator.HORIZONTAL), gbc);
 		}
 	}
 
@@ -91,15 +104,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_lblPosition.gridy = 2;
 		add(lblPosition, gbc_lblPosition);
 
-		textPosition = new JTextField();
-		textPosition.setName("textPosition");
+		mTextPosition = new JTextField();
+		mTextPosition.setName("textPosition");
 		GridBagConstraints gbc_textPosition = new GridBagConstraints();
 		gbc_textPosition.insets = new Insets(0, 0, 5, 5);
 		gbc_textPosition.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textPosition.gridx = 1;
 		gbc_textPosition.gridy = 2;
-		add(textPosition, gbc_textPosition);
-		textPosition.setColumns(10);
+		add(mTextPosition, gbc_textPosition);
+		mTextPosition.setColumns(10);
 
 		JLabel lblSpeed = new JLabel("Speed:");
 		GridBagConstraints gbc_lblSpeed = new GridBagConstraints();
@@ -109,15 +122,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_lblSpeed.gridy = 2;
 		add(lblSpeed, gbc_lblSpeed);
 
-		textSpeed = new JTextField();
-		textSpeed.setName("textSpeed");
+		mTextSpeed = new JTextField();
+		mTextSpeed.setName("textSpeed");
 		GridBagConstraints gbc_textSpeed = new GridBagConstraints();
 		gbc_textSpeed.insets = new Insets(0, 0, 5, 0);
 		gbc_textSpeed.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textSpeed.gridx = 3;
 		gbc_textSpeed.gridy = 2;
-		add(textSpeed, gbc_textSpeed);
-		textSpeed.setColumns(10);
+		add(mTextSpeed, gbc_textSpeed);
+		mTextSpeed.setColumns(10);
 
 		JLabel lblDirection = new JLabel("Direction:");
 		GridBagConstraints gbc_lblDirection = new GridBagConstraints();
@@ -127,15 +140,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_lblDirection.gridy = 3;
 		add(lblDirection, gbc_lblDirection);
 
-		textDirection = new JTextField();
-		textDirection.setName("textDirection");
+		mTextDirection = new JTextField();
+		mTextDirection.setName("textDirection");
 		GridBagConstraints gbc_textDirection = new GridBagConstraints();
 		gbc_textDirection.insets = new Insets(0, 0, 5, 5);
 		gbc_textDirection.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textDirection.gridx = 1;
 		gbc_textDirection.gridy = 3;
-		add(textDirection, gbc_textDirection);
-		textDirection.setColumns(10);
+		add(mTextDirection, gbc_textDirection);
+		mTextDirection.setColumns(10);
 
 		JLabel lblAcceleration = new JLabel("Acc.:");
 		GridBagConstraints gbc_lblAcceleration = new GridBagConstraints();
@@ -145,15 +158,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_lblAcceleration.gridy = 3;
 		add(lblAcceleration, gbc_lblAcceleration);
 
-		textAcceleration = new JTextField();
-		textAcceleration.setName("textAcceleration");
+		mTextAcceleration = new JTextField();
+		mTextAcceleration.setName("textAcceleration");
 		GridBagConstraints gbc_textAcceleration = new GridBagConstraints();
 		gbc_textAcceleration.insets = new Insets(0, 0, 5, 0);
 		gbc_textAcceleration.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textAcceleration.gridx = 3;
 		gbc_textAcceleration.gridy = 3;
-		add(textAcceleration, gbc_textAcceleration);
-		textAcceleration.setColumns(10);
+		add(mTextAcceleration, gbc_textAcceleration);
+		mTextAcceleration.setColumns(10);
 
 		JLabel lblPayload = new JLabel("Payload:");
 		GridBagConstraints gbc_lblPayload = new GridBagConstraints();
@@ -163,15 +176,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_lblPayload.gridy = 4;
 		add(lblPayload, gbc_lblPayload);
 
-		textPayload = new JTextField();
-		textPayload.setName("textPayload");
+		mTextPayload = new JTextField();
+		mTextPayload.setName("textPayload");
 		GridBagConstraints gbc_textPayload = new GridBagConstraints();
 		gbc_textPayload.insets = new Insets(0, 0, 0, 5);
 		gbc_textPayload.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textPayload.gridx = 1;
 		gbc_textPayload.gridy = 4;
-		add(textPayload, gbc_textPayload);
-		textPayload.setColumns(10);
+		add(mTextPayload, gbc_textPayload);
+		mTextPayload.setColumns(10);
 
 		JScrollPane scrollPane = new JScrollPane();
 
@@ -179,9 +192,9 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		scrollPane
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		mElevatorPane = new JPanel();
-		mElevatorPane.setLayout(new GridBagLayout());
-		scrollPane.setViewportView(mElevatorPane);
+		mFloorsPane = new JPanel();
+		mFloorsPane.setLayout(new GridBagLayout());
+		scrollPane.setViewportView(mFloorsPane);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(0, 0, 5, 0);
@@ -189,18 +202,19 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.NORTH;
 		gbc.fill = GridBagConstraints.BOTH;
+		gbc.ipady = 5;
 		gbc.gridwidth = 4;
 
 		add(scrollPane, gbc);
 
-		JToggleButton tglbtnAutoMode = new JToggleButton("Auto Mode");
+		mModeButton = new JToggleButton("Auto Mode");
 		GridBagConstraints gbc_tglbtnAutoMode = new GridBagConstraints();
 		gbc_tglbtnAutoMode.gridwidth = 2;
-		gbc_tglbtnAutoMode.insets = new Insets(0, 0, 0, 5);
+		gbc_tglbtnAutoMode.insets = new Insets(0, 0, 0, 0);
 		gbc_tglbtnAutoMode.fill = GridBagConstraints.HORIZONTAL;
 		gbc_tglbtnAutoMode.gridx = 2;
 		gbc_tglbtnAutoMode.gridy = 4;
-		add(tglbtnAutoMode, gbc_tglbtnAutoMode);
+		add(mModeButton, gbc_tglbtnAutoMode);
 
 		// create floors
 		for (int i = 0; i < NUMBER_OF_FLOORS; i++)
@@ -212,7 +226,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	@Override
 	public IFloorView getFloorView(int num)
 	{
-		for (Component c : mElevatorPane.getComponents())
+		for (Component c : mFloorsPane.getComponents())
 		{
 			if (c instanceof IFloorView)
 			{
@@ -228,13 +242,13 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	@Override
 	public void setPosition(int position)
 	{
-		textPosition.setText(String.valueOf(position));
+		mTextPosition.setText(String.valueOf(position));
 	}
 
 	@Override
 	public void setAcceleration(int acc)
 	{
-		textAcceleration.setText(String.valueOf(acc));
+		mTextAcceleration.setText(String.valueOf(acc));
 	}
 
 	@Override
@@ -243,20 +257,20 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		switch (dir)
 		{
 			case DIRECTION_DOWN:
-				textDirection.setText("down");
+				mTextDirection.setText("down");
 				break;
 
 			case DIRECTION_UP:
-				textDirection.setText("up");
+				mTextDirection.setText("up");
 				break;
 
 			case DIRECTION_NONE:
-				textDirection.setText("none");
+				mTextDirection.setText("none");
 				break;
 
 			default:
 				assert false : "unexpected direction";
-				textDirection.setText("");
+				mTextDirection.setText("");
 				break;
 		}
 	}
@@ -264,12 +278,24 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	@Override
 	public void setPayload(int payload)
 	{
-		textPayload.setText(String.valueOf(payload));
+		mTextPayload.setText(String.valueOf(payload));
 	}
 
 	@Override
 	public void setSpeed(int speed)
 	{
-		textSpeed.setText(String.valueOf(speed));
+		mTextSpeed.setText(String.valueOf(speed));
+	}
+
+	@Override
+	public void AddModeButtonListener(ActionListener l)
+	{
+		mModeButton.addActionListener(l);
+	}
+
+	@Override
+	public void RemoveModeButtonListener(ActionListener l)
+	{
+		mModeButton.removeActionListener(l);
 	}
 }

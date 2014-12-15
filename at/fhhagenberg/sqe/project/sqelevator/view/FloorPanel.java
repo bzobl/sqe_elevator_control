@@ -81,31 +81,19 @@ public class FloorPanel extends JPanel implements IFloorView
 	 */
 	private final int FLOOR_NUMBER;
 
-	/**
-	 * floor number of current floor
-	 */
+	@Override
 	public int GetFloorNumber()
 	{
 		return FLOOR_NUMBER;
 	}
 
-	/**
-	 * enables or disables call button.
-	 * 
-	 * @param on
-	 *            enable if true, disable if false
-	 */
+	@Override
 	public void EnableCallButton(boolean on)
 	{
 		mCallButton.setEnabled(on);
 	}
 
-	/**
-	 * set status for elevator icon. see ELEVATOR_STATUS_xxx for valid states.
-	 * 
-	 * @param elevatorStatus
-	 *            status to set.
-	 */
+	@Override
 	public void SetElevatorStatus(int elevatorStatus)
 	{
 		mElevatorStatus = elevatorStatus;
@@ -148,22 +136,13 @@ public class FloorPanel extends JPanel implements IFloorView
 		}
 	}
 
-	/**
-	 * get current elevator icon status.
-	 * 
-	 * @return any of ELEVATOR_STATUS_xxx
-	 */
+	@Override
 	public int GetElevatorStatus()
 	{
 		return mElevatorStatus;
 	}
 
-	/**
-	 * set move status for elevator. See MOVE_STATUS_xxx for valid states.
-	 * 
-	 * @param moveStatus
-	 *            state to set.
-	 */
+	@Override
 	public void SetMoveStatus(int moveStatus)
 	{
 		mMoveStatus = moveStatus;
@@ -201,33 +180,19 @@ public class FloorPanel extends JPanel implements IFloorView
 		}
 	}
 
-	/**
-	 * Get current move status.
-	 * 
-	 * @return any of MOVE_STATUS_xxx
-	 */
+	@Override
 	public int GetMoveStatus()
 	{
 		return mMoveStatus;
 	}
 
-	/**
-	 * add action listener for call button.
-	 * 
-	 * @param l
-	 *            action listener
-	 */
+	@Override
 	public void AddCallButtonListener(ActionListener l)
 	{
 		mCallButton.addActionListener(l);
 	}
 
-	/**
-	 * remove action listener from call button
-	 * 
-	 * @param l
-	 *            action listener
-	 */
+	@Override
 	public void RemoveCallButtonListener(ActionListener l)
 	{
 		mCallButton.removeActionListener(l);
@@ -238,14 +203,7 @@ public class FloorPanel extends JPanel implements IFloorView
 	 */
 	private boolean mFloorButtonStates[] = new boolean[2];
 
-	/**
-	 * set status of floor buttons.
-	 * 
-	 * @param btn
-	 *            any of FLOOR_BUTTON_xxx
-	 * @param status
-	 *            true to set active, else false.
-	 */
+	@Override
 	public void SetFloorButton(int btn, boolean status)
 	{
 		if (btn == FLOOR_BUTTON_DOWN)
@@ -282,13 +240,7 @@ public class FloorPanel extends JPanel implements IFloorView
 		}
 	}
 
-	/**
-	 * get current status of a floor button.
-	 * 
-	 * @param btn
-	 *            any of FLOOR_BUTTON_xxx
-	 * @return true, if active, else false
-	 */
+	@Override
 	public boolean GetFloorButton(int btn)
 	{
 		if (btn == FLOOR_BUTTON_DOWN)
