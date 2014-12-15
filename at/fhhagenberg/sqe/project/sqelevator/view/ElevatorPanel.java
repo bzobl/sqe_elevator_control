@@ -164,6 +164,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		add(lblPayload, gbc_lblPayload);
 
 		textPayload = new JTextField();
+		textPayload.setName("textPayload");
 		GridBagConstraints gbc_textPayload = new GridBagConstraints();
 		gbc_textPayload.insets = new Insets(0, 0, 0, 5);
 		gbc_textPayload.fill = GridBagConstraints.HORIZONTAL;
