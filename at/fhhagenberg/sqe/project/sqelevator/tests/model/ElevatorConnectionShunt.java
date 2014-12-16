@@ -4,8 +4,10 @@ package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 import java.rmi.RemoteException;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
-public final class ElevatorConnectionShunt implements IElevator {
+//TODO make package local as soon as shunt is not used in bootstrapper anymore
+public final class ElevatorConnectionShunt implements IElevatorConnection {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
@@ -52,107 +54,102 @@ public final class ElevatorConnectionShunt implements IElevator {
 	}
 	
 	@Override
-	public int getCommittedDirection(int elevatorNumber) throws RemoteException {
+	public int getCommittedDirection(int elevatorNumber) {
 		return CommitedDirection;
 	}
 
 	@Override
-	public int getElevatorAccel(int elevatorNumber) throws RemoteException {
+	public int getElevatorAccel(int elevatorNumber) {
 		return ElevatorAccel;
 	}
 
 	@Override
-	public boolean getElevatorButton(int elevatorNumber, int floor)
-			throws RemoteException {
+	public boolean getElevatorButton(int elevatorNumber, int floor) {
 		return ElevatorButton[floor];
 	}
 
 	@Override
-	public int getElevatorDoorStatus(int elevatorNumber) throws RemoteException {
+	public int getElevatorDoorStatus(int elevatorNumber) {
 		return Doorstatus;
 	}
 
 	@Override
-	public int getElevatorFloor(int elevatorNumber) throws RemoteException {
+	public int getElevatorFloor(int elevatorNumber) {
 		return Floor;
 	}
 
 	@Override
-	public int getElevatorNum() throws RemoteException {
+	public int getElevatorNum() {
 		return NUM_ELEVATORS;
 	}
 
 	@Override
-	public int getElevatorPosition(int elevatorNumber) throws RemoteException {
+	public int getElevatorPosition(int elevatorNumber) {
 		return Position;
 	}
 
 	@Override
-	public int getElevatorSpeed(int elevatorNumber) throws RemoteException {
+	public int getElevatorSpeed(int elevatorNumber) {
 		return Speed;
 	}
 
 	@Override
-	public int getElevatorWeight(int elevatorNumber) throws RemoteException {
+	public int getElevatorWeight(int elevatorNumber) {
 		return Weight;
 	}
 
 	@Override
-	public int getElevatorCapacity(int elevatorNumber) throws RemoteException {
+	public int getElevatorCapacity(int elevatorNumber) {
 		return CAPACITY;
 	}
 
 	@Override
-	public boolean getFloorButtonDown(int floor) throws RemoteException {
+	public boolean getFloorButtonDown(int floor) {
 		return FloorButtonDown[floor];
 	}
 
 	@Override
-	public boolean getFloorButtonUp(int floor) throws RemoteException {
+	public boolean getFloorButtonUp(int floor) {
 		return FloorButtonUp[floor];
 	}
 
 	@Override
-	public int getFloorHeight() throws RemoteException {
+	public int getFloorHeight() {
 		return FLOOR_HEIGHT;
 	}
 
 	@Override
-	public int getFloorNum() throws RemoteException {
+	public int getFloorNum() {
 		return FLOOR_NUM;
 	}
 
 	@Override
-	public boolean getServicesFloors(int elevatorNumber, int floor)
-			throws RemoteException {
+	public boolean getServicesFloors(int elevatorNumber, int floor) {
 		return ServicesFloors[floor];
 	}
 
 	@Override
-	public int getTarget(int elevatorNumber) throws RemoteException {
+	public int getTarget(int elevatorNumber) {
 		return Target;
 	}
 
 	@Override
-	public void setCommittedDirection(int elevatorNumber, int direction)
-			throws RemoteException {
+	public void setCommittedDirection(int elevatorNumber, int direction) {
 		SetCommitedDirection = direction;
 	}
 
 	@Override
-	public void setServicesFloors(int elevatorNumber, int floor, boolean service)
-			throws RemoteException {
+	public void setServicesFloors(int elevatorNumber, int floor, boolean service) {
 		SetServicesFloor[floor] = service;
 	}
 
 	@Override
-	public void setTarget(int elevatorNumber, int target)
-			throws RemoteException {
+	public void setTarget(int elevatorNumber, int target) {
 		SetTarget = target;
 	}
 
 	@Override
-	public long getClockTick() throws RemoteException {
+	public long getClockTick() {
 		return CLOCK_TICK;
 	}
 }

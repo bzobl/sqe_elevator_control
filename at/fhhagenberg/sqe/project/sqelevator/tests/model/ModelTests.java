@@ -14,7 +14,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({ ElevatorSystemTest.class, ElevatorTest.class })
+@SuiteClasses({ ElevatorTest.class,
+				ElevatorSystemTest.class,
+				ElevatorExceptionTest.class })
 public class ModelTests {
 
 }

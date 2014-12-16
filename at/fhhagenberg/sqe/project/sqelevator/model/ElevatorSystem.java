@@ -6,16 +6,16 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.model;
 
-import java.rmi.RemoteException;
 import java.util.Observable;
 import java.util.Observer;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
 
 public class ElevatorSystem extends Observable {
 	
+	@SuppressWarnings("unused")
 	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
 
 	public static final int SYSTEM_PROPERTY_CHANGED = -1;
@@ -25,13 +25,14 @@ public class ElevatorSystem extends Observable {
 	public final int NUM_FLOORS;
 	public final int FLOOR_HEIGHT;
 
-	protected IElevator ElevatorConnection;
+	//TODO not necessary to hold this object?
+	protected IElevatorConnection ElevatorConnection;
 	protected Elevator Elevators[];
 
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
 
-	public ElevatorSystem(IElevator connection, PollingTask p_task) throws RemoteException {
+	public ElevatorSystem(IElevatorConnection connection) {
         ElevatorConnection = connection;
 
 		NUM_FLOORS = ElevatorConnection.getFloorNum();
@@ -51,9 +52,6 @@ public class ElevatorSystem extends Observable {
 			mUpButtons[i] = false;
 			mDownButtons[i] = false;
 		}
-
-		p_task.setElevatorSystem(this);
-		p_task.startPolling(ElevatorConnection.getClockTick());
 	}
 	
 	@Override
@@ -106,11 +104,8 @@ public class ElevatorSystem extends Observable {
 	}
 
 	public void setCommitedDirection(int elevator, int direction) {
-		try {
-			ElevatorConnection.setCommittedDirection(elevator, direction);
-		} catch (RemoteException e) {
-			LOG.warning("RMI interface not connected");
-		}
+		//TODO remove from here
+		ElevatorConnection.setCommittedDirection(elevator, direction);
 	}
 
 	protected void setDownButton(int floor, boolean pressed) {
@@ -122,19 +117,13 @@ public class ElevatorSystem extends Observable {
 	}
 
 	public void setServicesFloors(int elevator, int floor, boolean enable) {
-		try {
-			ElevatorConnection.setServicesFloors(elevator, floor, enable);
-		} catch (RemoteException e) {
-			LOG.warning("RMI interface not connected");
-		}
+		//TODO remove from here
+		ElevatorConnection.setServicesFloors(elevator, floor, enable);
 	}
 	
 	public void setTarget(int elevator, int target) {
-		try {
-			ElevatorConnection.setTarget(elevator, target);
-		} catch (RemoteException e) {
-			LOG.warning("RMI interface not connected");
-		}
+		//TODO remove from here
+		ElevatorConnection.setTarget(elevator, target);
 	}
 
 	protected void setUpButton(int floor, boolean pressed) {

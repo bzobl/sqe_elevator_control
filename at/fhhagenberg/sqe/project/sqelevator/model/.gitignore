@@ -3,3 +3,4 @@
 /FloorException.class
 /ElevatorException.class
 /PollingTask.class
+/IElevatorConnection.class
