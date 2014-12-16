@@ -6,12 +6,12 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JButton;
 import javax.swing.JToggleButton;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
@@ -94,17 +94,7 @@ public class ElevatorControl implements Observer {
 	 * @param btn
 	 */
 	public void modeButtonClicked(int elevator, JToggleButton btn) {
-		if (btn.isSelected()) {
-			btn.setBackground(Color.green);
-		} else {
-			btn.setBackground(Color.red);
-		}
-		LOG.info("Mode of Elevator " + elevator + " changed to " + btn.isSelected());
-		
-		IElevatorView eleView = mView.getElevatorView(elevator);
-		if (eleView != null) {
-			eleView.getFloorView(0).setElevatorStatus(IFloorView.ELEVATOR_STATUS_OPENED);;
-		}
+		LOG.info("Mode button of Elevator " + elevator + " clicked");
 	}
 
 	/**
@@ -112,13 +102,8 @@ public class ElevatorControl implements Observer {
 	 * @param floor
 	 * @param btn
 	 */
-	public void callButtonClicked(int elevator, int floor, JToggleButton btn) {
-		if (btn.isSelected()) {
-			btn.setBackground(Color.green);
-		} else {
-			btn.setBackground(Color.red);
-		}
-		LOG.info("Call Button of Elevator " + elevator + ", Floor " + floor + " changed to " + btn.isSelected());
+	public void callButtonClicked(int elevator, int floor, JButton btn) {
+		LOG.info("Call Button of Elevator " + elevator + ", Floor " + floor + " clicked");
 		
 		IElevatorView eleView = mView.getElevatorView(elevator);
 		if (eleView != null) {
@@ -138,12 +123,7 @@ public class ElevatorControl implements Observer {
 	 * @param btn
 	 */
 	public void serviceButtonClicked(int elevator, int floor, JToggleButton btn) {
-		if (btn.isSelected()) {
-			btn.setBackground(Color.green);
-		} else {
-			btn.setBackground(Color.red);
-		}
-		LOG.info("Service Button of Elevator " + elevator + ", Floor " + floor + " changed to " + btn.isSelected());
+		LOG.info("Service Button of Elevator " + elevator + ", Floor " + floor + " clicked");
 	}
 
 	@Override
