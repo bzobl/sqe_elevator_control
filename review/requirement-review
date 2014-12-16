@@ -1,0 +1,26 @@
+
+Anforderungen:
+= Grafische Darstellung
+ - Liftposition
+ = Fahrtrichtung des Lifts
+  - steht, auf, ab
+ - Gewicht der Last 
+ - Geschwindigkeit
+ = Tuerstatus
+  - offen
+  - wird geoeffnet
+  - geschlossen
+  - wird geschlossen
+ - Zielstockwerke
+ = Call-Tasten im Stockwerk
+  - 'up' und 'down'
+ = Out-Of-Service Anzeige
+
+= Steuereingabe:
+ - Modusauswahl: Auto, Manuel
+ = Handbetrieb: 
+  - Call-Taste
+ - modusunabhaenginge Out-Of-Order Taste
+
+nicht implementierte Anforderungen:
+ - Anzeige der Tasten im Lift

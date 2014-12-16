@@ -1,0 +1,10 @@
+Verbesserung:
+ = Interface fuer MainView einfuegen
+
+ = Adapter fuer das Interface zur Hardware
+   Uebertragungsspezifische Fehler 'umwandeln' und weitergeben
+   'Connection lost', ...
+
+ = Interface fuer den Liftalgo
+  - Automatic Algo Klasse
+  - Manual Algo Klasse
