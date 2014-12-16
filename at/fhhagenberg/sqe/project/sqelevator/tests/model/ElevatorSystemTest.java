@@ -4,7 +4,6 @@ package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.net.MalformedURLException;
@@ -25,6 +24,7 @@ import at.fhhagenberg.sqe.project.sqelevator.model.PollingTask;
 
 public class ElevatorSystemTest extends PollingTask
 								implements Observer {
+
 	private final int FLOOR_HEIGHT = 6;
 	private final int FLOOR_NUM = 3;
 	private final long CLOCK_TICK = 1000;
@@ -43,6 +43,7 @@ public class ElevatorSystemTest extends PollingTask
 
 		mSystem = new ElevatorSystem(mShunt);
 		setElevatorSystem(mSystem);
+		this.mConnection = mShunt;
 		mSystem.addObserver(this);
 		poll();
 	}
@@ -292,42 +293,6 @@ public class ElevatorSystemTest extends PollingTask
 		mShunt.Target = 0;
 		poll();
 		checkElevator(0, false);
-	}
-	
-	@Test
-	public void testSetTarget() {
-		mSystem.setTarget(0, 1);
-		assertEquals(1, mShunt.SetTarget);
-
-		mSystem.setTarget(0, 2);
-		assertEquals(2, mShunt.SetTarget);
-
-		mSystem.setTarget(0, 0);
-		assertEquals(0, mShunt.SetTarget);
-	}
-	
-	@Test
-	public void testSetServicesFloor() {
-		mSystem.setServicesFloors(0, 1, false);
-		assertFalse(mShunt.SetServicesFloor[1]);
-
-		mSystem.setServicesFloors(0, 1, true);
-		assertTrue(mShunt.SetServicesFloor[1]);
-
-		mSystem.setServicesFloors(0, 2, true);
-		assertTrue(mShunt.SetServicesFloor[2]);
-	}
-	
-	@Test
-	public void testSetCommitedDirection() {
-		mSystem.setCommitedDirection(0, IElevator.ELEVATOR_DIRECTION_UP);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
-
-		mSystem.setCommitedDirection(0, IElevator.ELEVATOR_DIRECTION_DOWN);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);
-
-		mSystem.setCommitedDirection(0, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mShunt.SetCommitedDirection);
 	}
 	
 	@Test

@@ -25,26 +25,22 @@ public class ElevatorSystem extends Observable {
 	public final int NUM_FLOORS;
 	public final int FLOOR_HEIGHT;
 
-	//TODO not necessary to hold this object?
-	protected IElevatorConnection ElevatorConnection;
 	protected Elevator Elevators[];
 
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
 
-	public ElevatorSystem(IElevatorConnection connection) {
-        ElevatorConnection = connection;
-
-		NUM_FLOORS = ElevatorConnection.getFloorNum();
-		FLOOR_HEIGHT = ElevatorConnection.getFloorHeight();
-		NUM_ELEVATORS = ElevatorConnection.getElevatorNum();
+	public ElevatorSystem(IElevatorConnection conn) {
+		NUM_ELEVATORS = conn.getElevatorNum();
+		NUM_FLOORS = conn.getFloorNum();
+		FLOOR_HEIGHT = conn.getFloorHeight();
 
 		Elevators = new Elevator[NUM_ELEVATORS];
 		mUpButtons = new boolean[NUM_FLOORS];
 		mDownButtons = new boolean[NUM_FLOORS];
 		
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
-			int capacity = ElevatorConnection.getElevatorCapacity(i);
+			int capacity = conn.getElevatorCapacity(i);
 			Elevators[i] = new Elevator(i, capacity, NUM_FLOORS);
 		}
 
@@ -103,27 +99,12 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 
-	public void setCommitedDirection(int elevator, int direction) {
-		//TODO remove from here
-		ElevatorConnection.setCommittedDirection(elevator, direction);
-	}
-
 	protected void setDownButton(int floor, boolean pressed) {
 		assert(floor < mDownButtons.length);
 		if (mDownButtons[floor] != pressed) {
 			setChanged();
 			mDownButtons[floor] = pressed;
 		}
-	}
-
-	public void setServicesFloors(int elevator, int floor, boolean enable) {
-		//TODO remove from here
-		ElevatorConnection.setServicesFloors(elevator, floor, enable);
-	}
-	
-	public void setTarget(int elevator, int target) {
-		//TODO remove from here
-		ElevatorConnection.setTarget(elevator, target);
 	}
 
 	protected void setUpButton(int floor, boolean pressed) {

@@ -6,8 +6,6 @@
 
 package at.fhhagenberg.sqe.project.sqelevator;
 
-import java.rmi.RemoteException;
-
 import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.tests.model.ElevatorConnectionShunt;
 

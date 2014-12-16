@@ -17,8 +17,16 @@ public class PollingTask extends TimerTask {
 	
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
+	protected IElevatorConnection mConnection;
 	private ElevatorSystem mElevators;
 	private Timer mTimer = new Timer();
+	
+	protected PollingTask() {
+	}
+
+	public PollingTask(IElevatorConnection connection) {
+		mConnection = connection;
+	}
 	
 	@Override
 	public void run() {
@@ -28,27 +36,32 @@ public class PollingTask extends TimerTask {
 			return;
 		}
 
-		IElevatorConnection conn = mElevators.ElevatorConnection;
+		if (mConnection == null) {
+			stopPolling();
+			LOG.warning("No connection set: stopping to poll");
+			return;
+		}
+
 		try {
 			for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
-				mElevators.setUpButton(floor, conn.getFloorButtonUp(floor));
-				mElevators.setDownButton(floor, conn.getFloorButtonDown(floor));
+				mElevators.setUpButton(floor, mConnection.getFloorButtonUp(floor));
+				mElevators.setDownButton(floor, mConnection.getFloorButtonDown(floor));
 			}
 	
 			for (int num = 0; num < mElevators.NUM_ELEVATORS; num++) {
 				Elevator elevator = mElevators.Elevators[num];
-				elevator.setDirection(conn.getCommittedDirection(num));
-				elevator.setAcceleration(conn.getElevatorAccel(num));
-				elevator.setDoorstatus(conn.getElevatorDoorStatus(num));
-				elevator.setFloor(conn.getElevatorFloor(num));
-				elevator.setPosition(conn.getElevatorPosition(num));
-				elevator.setSpeed(conn.getElevatorSpeed(num));
-				elevator.setWeight(conn.getElevatorWeight(num));
-				elevator.setTargetFloor(conn.getTarget(num));
+				elevator.setDirection(mConnection.getCommittedDirection(num));
+				elevator.setAcceleration(mConnection.getElevatorAccel(num));
+				elevator.setDoorstatus(mConnection.getElevatorDoorStatus(num));
+				elevator.setFloor(mConnection.getElevatorFloor(num));
+				elevator.setPosition(mConnection.getElevatorPosition(num));
+				elevator.setSpeed(mConnection.getElevatorSpeed(num));
+				elevator.setWeight(mConnection.getElevatorWeight(num));
+				elevator.setTargetFloor(mConnection.getTarget(num));
 
 				for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
-					elevator.setButtonStatus(floor, conn.getElevatorButton(num, floor));
-                    elevator.setServicesFloors(floor, conn.getServicesFloors(num, floor));
+					elevator.setButtonStatus(floor, mConnection.getElevatorButton(num, floor));
+                    elevator.setServicesFloors(floor, mConnection.getServicesFloors(num, floor));
 				}
 			}
 		} catch (FloorException e) {

@@ -51,18 +51,22 @@ public class ElevatorControl implements Observer {
 	MainView mView;
 	
 	public ElevatorControl(IElevatorConnection connection) {
-		LOG.info("creating ElevatorConnectionShunt");
 		mConnection = connection;
-		LOG.info("initializing PollingTask");
-        mPollTask = new PollingTask();
 
-		LOG.info("initializing ElevatorControl with Connection Shunt");
         mModel = new ElevatorSystem(mConnection);
-		mPollTask.setElevatorSystem(mModel);
         mModel.addObserver(this);
+
+        mPollTask = new PollingTask(mConnection);
+		mPollTask.setElevatorSystem(mModel);
         
         mView = new MainView();
+		initializeView();
         
+        LOG.info("Elevator control successfully initialized, starting to poll");
+		mPollTask.startPolling(mConnection.getClockTick());
+	}
+
+	private void initializeView() {
         for (int e = 0; e < mModel.NUM_ELEVATORS; e++) {
         	IElevatorView eleView = mView.addNewElevator(mModel.NUM_FLOORS);
         	ElevatorButtonListener mbl = new ElevatorButtonListener(ListenerType.MODE_BUTTON_LISTENER, this, e, -1);
@@ -79,10 +83,6 @@ public class ElevatorControl implements Observer {
         		floorView.addServiceButtonListener(sbl);
         	}
         }
-        
-        LOG.info("Elevator control successfully initialized");
-		mPollTask.startPolling(mConnection.getClockTick());
-
 	}
 
 	public void showGui() {
