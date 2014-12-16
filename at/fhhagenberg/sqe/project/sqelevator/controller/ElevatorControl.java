@@ -192,7 +192,13 @@ public class ElevatorControl implements Observer {
 			int moveStatus = IFloorView.MOVE_STATUS_AWAY;
 			int elevatorStatus = IFloorView.ELEVATOR_STATUS_AWAY;
 			
-			
+			if (elev.getFloor() == i) {
+				elevatorStatus = DOORSTATUS_LUT.get(elev.getDoorstatus());
+				moveStatus = DIRECTION_LUT.get(elev.getDirection());
+			} else if ((elev.getTargetFloor() == i)) {
+				elevatorStatus = IFloorView.ELEVATOR_STATUS_TARGET;
+			}
+
 			try {
 				if (!elev.getServicesFloors(i)) {
 					elevatorStatus = IFloorView.ELEVATOR_STATUS_OUT_OF_ORDER;
@@ -202,13 +208,6 @@ public class ElevatorControl implements Observer {
 				}
 			} catch (FloorException e) {
 				LOG.severe(e.getMessage());
-			}
-			
-			if (elev.getFloor() == i) {
-				elevatorStatus = DOORSTATUS_LUT.get(elev.getDoorstatus());
-				moveStatus = DIRECTION_LUT.get(elev.getDirection());
-			} else if ((elev.getTargetFloor() == i)) {
-				elevatorStatus = IFloorView.ELEVATOR_STATUS_TARGET;
 			}
 
 			floorView.setMoveStatus(moveStatus);

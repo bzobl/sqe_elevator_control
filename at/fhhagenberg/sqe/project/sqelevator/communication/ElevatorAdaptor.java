@@ -6,10 +6,14 @@ import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 public class ElevatorAdaptor implements IElevatorConnection {
 
 	private static final int FLOOR_HEIGHT = 6;
-	public static final long CLOCK_TICK = 500;
+	public static final long CLOCK_TICK = 300;
 	private static final int DEFAULT_CAPACITY = 1000;
 	
-	public static final int MOVE_DELAY_CLOCK_TICKS = 3;
+	public static final int DELAY_CLOSING = 1;
+	public static final int DELAY_CLOSED = 2;
+	public static final int DELAY_MOVE = 3;
+	public static final int DELAY_OPENING = 5;
+	public static final int DELAY_DONE = 6;
 
 	private final int NUM_ELEVATORS;
 	private final int NUM_FLOORS;
@@ -53,10 +57,10 @@ public class ElevatorAdaptor implements IElevatorConnection {
 
         for (int e = 0; e < NUM_ELEVATORS; e++) {
         	CAPACITY[e] = DEFAULT_CAPACITY;
-        	delayTicks[e] = 0;
+        	delayTicks[e] = -1;
 
         	CommitedDirection[e] = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
-        	Doorstatus[e] = IElevator.ELEVATOR_DOORS_CLOSED;
+        	Doorstatus[e] = IElevator.ELEVATOR_DOORS_OPEN;
         	ElevatorAccel[e] = 0;
         	Floor[e] = 0;
         	Speed[e] = 0;
@@ -78,14 +82,25 @@ public class ElevatorAdaptor implements IElevatorConnection {
 		return Floor[e] * FLOOR_HEIGHT;
 	}
 	
-	private void updateFloor(int elevatorNumber) {
-		if ((  ((CommitedDirection[elevatorNumber] == IElevator.ELEVATOR_DIRECTION_DOWN) && (Floor[elevatorNumber] > Target[elevatorNumber]))
-		    || ((CommitedDirection[elevatorNumber] == IElevator.ELEVATOR_DIRECTION_UP)   && (Floor[elevatorNumber] < Target[elevatorNumber]))
-		    || (Floor[elevatorNumber] == Target[elevatorNumber]))
-		   && (ServicesFloors[elevatorNumber][Target[elevatorNumber]])){
-			Floor[elevatorNumber] = Target[elevatorNumber];
-			CommitedDirection[elevatorNumber] = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+	private void move(int elevatorNumber) {
+		if (delayTicks[elevatorNumber] < 0) return;
+		
+		if (delayTicks[elevatorNumber] >= DELAY_DONE) {
 			Doorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_OPEN;
+			CommitedDirection[elevatorNumber] = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+			delayTicks[elevatorNumber] = -1;
+			return;
+		}
+		
+		delayTicks[elevatorNumber]++;
+
+		if (delayTicks[elevatorNumber] == DELAY_MOVE) {
+			if ((  ((CommitedDirection[elevatorNumber] == IElevator.ELEVATOR_DIRECTION_DOWN) && (Floor[elevatorNumber] > Target[elevatorNumber]))
+			    || ((CommitedDirection[elevatorNumber] == IElevator.ELEVATOR_DIRECTION_UP)   && (Floor[elevatorNumber] < Target[elevatorNumber]))
+			    || (Floor[elevatorNumber] == Target[elevatorNumber]))
+			   && (ServicesFloors[elevatorNumber][Target[elevatorNumber]])){
+				Floor[elevatorNumber] = Target[elevatorNumber];
+			}
 		}
 	}
 
@@ -106,16 +121,19 @@ public class ElevatorAdaptor implements IElevatorConnection {
 
 	@Override
 	public int getElevatorDoorStatus(int elevatorNumber) {
+		if (delayTicks[elevatorNumber] == DELAY_CLOSING) {
+			Doorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_CLOSING;
+		} else if (delayTicks[elevatorNumber] == DELAY_CLOSED) {
+			Doorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_CLOSED;
+		} else if (delayTicks[elevatorNumber] == DELAY_OPENING) {
+			Doorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_OPENING;
+		}
 		return Doorstatus[elevatorNumber];
 	}
 
 	@Override
 	public int getElevatorFloor(int elevatorNumber) {
-		delayTicks[elevatorNumber]++;
-		if (delayTicks[elevatorNumber] >= MOVE_DELAY_CLOCK_TICKS) {
-			updateFloor(elevatorNumber);
-			delayTicks[elevatorNumber] = 0;
-		}
+		move(elevatorNumber);
 		return Floor[elevatorNumber];
 	}
 
@@ -176,8 +194,8 @@ public class ElevatorAdaptor implements IElevatorConnection {
 
 	@Override
 	public void setCommittedDirection(int elevatorNumber, int direction) {
+		delayTicks[elevatorNumber] = 0;
 		CommitedDirection[elevatorNumber] = direction;
-		Doorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_CLOSED;
 	}
 
 	@Override
