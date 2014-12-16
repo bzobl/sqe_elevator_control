@@ -37,17 +37,17 @@ public class ElevatorButtonListener implements ActionListener {
 		
 		switch (mType) {
 		case MODE_BUTTON_LISTENER:
-			assert !(e.getSource() instanceof JToggleButton) : "unexpected button type";
+			assert (e.getSource() instanceof JToggleButton) : "unexpected button type";
 			mControl.modeButtonClicked(mElevatorNum, (JToggleButton) e.getSource());
 			break;
 
 		case CALL_BUTTON_LISTENER:
-			assert !(e.getSource() instanceof JButton) : "unexpected button type";
+			assert (e.getSource() instanceof JButton) : "unexpected button type";
 			mControl.callButtonClicked(mElevatorNum, mFloorNum, (JButton) e.getSource());
 			break;
 			
 		case SERVICE_BUTTON_LISTENER:
-			assert !(e.getSource() instanceof JToggleButton) : "unexpected button type";
+			assert (e.getSource() instanceof JToggleButton) : "unexpected button type";
 			mControl.serviceButtonClicked(mElevatorNum, mFloorNum, (JToggleButton) e.getSource());
 			break;
 

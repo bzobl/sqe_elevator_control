@@ -50,6 +50,8 @@ public class ElevatorControl implements Observer {
 	ElevatorSystem mModel;
 	MainView mView;
 	
+	boolean[] mAuto;
+	
 	public ElevatorControl(IElevatorConnection connection) {
 		mConnection = connection;
 
@@ -61,6 +63,8 @@ public class ElevatorControl implements Observer {
         
         mView = new MainView();
 		initializeView();
+		
+		mAuto = new boolean[mModel.NUM_ELEVATORS];
         
         LOG.info("Elevator control successfully initialized, starting to poll");
 		mPollTask.startPolling(mConnection.getClockTick());
@@ -81,6 +85,7 @@ public class ElevatorControl implements Observer {
         		
         		floorView.addCallButtonListener(cbl);
         		floorView.addServiceButtonListener(sbl);
+        		floorView.enableCallButton(true);
         	}
         }
 	}
@@ -95,6 +100,14 @@ public class ElevatorControl implements Observer {
 	 */
 	public void modeButtonClicked(int elevator, JToggleButton btn) {
 		LOG.info("Mode button of Elevator " + elevator + " clicked");
+		IElevatorView eleView = mView.getElevatorView(elevator);
+		
+		mAuto[elevator] = btn.isSelected();
+		
+		for (int i = 0; i < mModel.NUM_FLOORS; i++) {
+			IFloorView floorView = eleView.getFloorView(i); 
+			floorView.enableCallButton(!mAuto[elevator]);
+		}
 	}
 
 	/**
@@ -104,6 +117,7 @@ public class ElevatorControl implements Observer {
 	 */
 	public void callButtonClicked(int elevator, int floor, JButton btn) {
 		LOG.info("Call Button of Elevator " + elevator + ", Floor " + floor + " clicked");
+		assert(mAuto[elevator] == false) : "Call Button cannot be pressed when in auto mode";
 		
 		IElevatorView eleView = mView.getElevatorView(elevator);
 		if (eleView != null) {
