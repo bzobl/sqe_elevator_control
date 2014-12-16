@@ -25,6 +25,12 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	private static final long serialVersionUID = -5003028963381832505L;
 
 	/**
+	 * path to the button icons
+	 */
+	private final String SRC_BUTTON_PRESSED = "/img/buttonPressed_small.png";
+	private final String SRC_BUTTON_RELEASED = "/img/buttonReleased_small.png";
+	
+	/**
 	 * panel which contains all floors
 	 */
 	private JPanel mFloorsPane;
@@ -59,6 +65,23 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	private JSeparator separator_1;
 	
 	/**
+	 * set icon for elevator floor buttons
+	 * @param l	label with the icon 
+	 * @param on	status pressed/released
+	 */
+	private void setElevatorButtonIcon(JLabel l, boolean on)
+	{
+		if (on)
+		{
+			l.setIcon(new ImageIcon(ElevatorPanel.class.getResource(SRC_BUTTON_PRESSED)));
+		}
+		else
+		{
+			l.setIcon(new ImageIcon(ElevatorPanel.class.getResource(SRC_BUTTON_RELEASED)));
+		}
+	}
+	
+	/**
 	 * add floor to the panel
 	 * 
 	 * @param num
@@ -87,7 +110,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		d.height += 10;
 		label.setPreferredSize(d);
 		label.setMinimumSize(d);
-		label.setIcon(new ImageIcon(ElevatorPanel.class.getResource("/img/colorArrowUp_small.png")));
+		setElevatorButtonIcon(label, false);
 		mElevatorButtonPanel.add(label);
 	}
 
@@ -308,5 +331,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	public void removeModeButtonListener(ActionListener l)
 	{
 		mModeButton.removeActionListener(l);
+	}
+
+	@Override
+	public void setElevatorButton(int floorNum, boolean on)
+	{
+		if ((floorNum >= 0) && (floorNum < mElevatorButtonPanel.getComponentCount()))
+		{
+			JLabel l = (JLabel)mElevatorButtonPanel.getComponent(floorNum);
+			setElevatorButtonIcon(l, on);
+		}
 	}
 }

@@ -30,6 +30,9 @@ public class TestGui extends JFrame
 					for (int i = 0; i < 3; i++) {
 						frame.addNewElevator(15);
 					}
+					
+					frame.getElevatorView(1).setElevatorButton(1, true);
+					
 					frame.setVisible(true);					
 				}
 				catch (Exception e)

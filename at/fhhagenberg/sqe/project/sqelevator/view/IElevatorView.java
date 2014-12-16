@@ -63,4 +63,11 @@ public interface IElevatorView
 	 * @return number
 	 */
 	public int getElevatorNumber();
+	
+	/**
+	 * set status of elevator buttons (floor numbers)
+	 * @param floorNum	which button (floor)
+	 * @param on	status (true = pressed, false = released)
+	 */
+	public void setElevatorButton(int floorNum, boolean on);
 }
