@@ -3,7 +3,6 @@ package at.fhhagenberg.sqe.project.sqelevator.tests.view;
 import java.awt.Component;
 
 import javax.swing.JLabel;
-import javax.swing.JToggleButton;
 
 import junit.extensions.abbot.ComponentTestFixture;
 
@@ -14,7 +13,7 @@ import abbot.finder.matchers.ClassMatcher;
 import at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPanel;
 import at.fhhagenberg.sqe.project.sqelevator.view.IElevatorView;
 
-public class ElevatorPaneElevatorButtonTest extends ComponentTestFixture
+public class ElevatorPaneElevatorButtonTest extends ComponentTestFixture 
 {
 	private final String FILENAME_BUTTON_PRESSED = "buttonPressed_small.png";
 	private final String FILENAME_BUTTON_RELEASED = "buttonReleased_small.png";
