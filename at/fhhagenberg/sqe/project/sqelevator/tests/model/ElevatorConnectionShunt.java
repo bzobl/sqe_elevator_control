@@ -1,8 +1,6 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 
-import java.rmi.RemoteException;
-
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 

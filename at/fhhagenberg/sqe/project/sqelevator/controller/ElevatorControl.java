@@ -18,6 +18,7 @@ import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorButtonListener.ListenerType;
 import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.PollingTask;
@@ -50,7 +51,7 @@ public class ElevatorControl implements Observer {
 	ElevatorSystem mModel;
 	MainView mView;
 	
-	boolean[] mAuto;
+	boolean mAuto[];
 	
 	public ElevatorControl(IElevatorConnection connection) {
 		mConnection = connection;
@@ -87,7 +88,15 @@ public class ElevatorControl implements Observer {
         		floorView.addServiceButtonListener(sbl);
         		floorView.enableCallButton(true);
         	}
+        	
+        	try {
+				updateElevator(mModel.getElevator(e));
+			} catch (ElevatorException ex) {
+				LOG.severe(ex.getMessage());
+			}
         }
+        
+        updateElevatorSystem(mModel);
 	}
 
 	public void showGui() {
@@ -117,17 +126,25 @@ public class ElevatorControl implements Observer {
 	 */
 	public void callButtonClicked(int elevator, int floor, JButton btn) {
 		LOG.info("Call Button of Elevator " + elevator + ", Floor " + floor + " clicked");
+
 		assert(mAuto[elevator] == false) : "Call Button cannot be pressed when in auto mode";
-		
-		IElevatorView eleView = mView.getElevatorView(elevator);
-		if (eleView != null) {
-			for (int i = 0; i < mModel.NUM_FLOORS; i++) {
-				int status = IFloorView.ELEVATOR_STATUS_OPENED;
-				if (i != floor) {
-					status = IFloorView.ELEVATOR_STATUS_AWAY;
-				}
-				eleView.getFloorView(i).setElevatorStatus(status);
+		assert((floor < mModel.NUM_FLOORS) && (floor >= 0)) : "floor number is invalid";
+
+		mConnection.setTarget(elevator, floor);
+
+		int curFloor;
+		try {
+			curFloor = mModel.getElevator(elevator).getFloor();
+			if (curFloor < floor) {
+				mConnection.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);
+			} else if (curFloor > floor) {
+				mConnection.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_DOWN);
+			} else {
+				mConnection.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
 			}
+		} catch (ElevatorException e) {
+			LOG.severe(e.getMessage());
+			return;
 		}
 	}
 
@@ -138,6 +155,7 @@ public class ElevatorControl implements Observer {
 	 */
 	public void serviceButtonClicked(int elevator, int floor, JToggleButton btn) {
 		LOG.info("Service Button of Elevator " + elevator + ", Floor " + floor + " clicked");
+		mConnection.setServicesFloors(elevator, floor, btn.isSelected());
 	}
 
 	@Override
@@ -148,7 +166,6 @@ public class ElevatorControl implements Observer {
 		} else if (arg.equals(ElevatorSystem.ELEVATOR_PROPERTY_CHANGED)) {
 			LOG.info("Got Elevator update");
 			updateElevator((Elevator)o);
-			
 		} else {
 			LOG.warning("Unexpected class notified ElevatorControl: " + o.getClass().getCanonicalName());
 		}
@@ -175,10 +192,6 @@ public class ElevatorControl implements Observer {
 			int moveStatus = IFloorView.MOVE_STATUS_AWAY;
 			int elevatorStatus = IFloorView.ELEVATOR_STATUS_AWAY;
 			
-			if (elev.getFloor() == i) {
-				elevatorStatus = DOORSTATUS_LUT.get(elev.getDoorstatus());
-				moveStatus = DIRECTION_LUT.get(elev.getDirection());
-			}
 			
 			try {
 				if (!elev.getServicesFloors(i)) {
@@ -191,7 +204,10 @@ public class ElevatorControl implements Observer {
 				LOG.severe(e.getMessage());
 			}
 			
-			if (elev.getTargetFloor() == i) {
+			if (elev.getFloor() == i) {
+				elevatorStatus = DOORSTATUS_LUT.get(elev.getDoorstatus());
+				moveStatus = DIRECTION_LUT.get(elev.getDirection());
+			} else if ((elev.getTargetFloor() == i)) {
 				elevatorStatus = IFloorView.ELEVATOR_STATUS_TARGET;
 			}
 
@@ -216,5 +232,4 @@ public class ElevatorControl implements Observer {
 			}
 		}
 	}
-
 }

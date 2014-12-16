@@ -24,8 +24,7 @@ public class ElevatorButtonListener implements ActionListener {
 	private int mElevatorNum;
 	private int mFloorNum;
 	
-	public ElevatorButtonListener(ListenerType t, ElevatorControl c,
-							  int e, int f) {
+	public ElevatorButtonListener(ListenerType t, ElevatorControl c, int e, int f) {
 		mType = t;
 		mControl = c;
 		mElevatorNum = e;

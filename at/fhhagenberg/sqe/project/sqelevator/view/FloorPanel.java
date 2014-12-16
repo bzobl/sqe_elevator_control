@@ -173,8 +173,6 @@ public class FloorPanel extends JPanel implements IFloorView
 	{
 		mMoveStatus = moveStatus;
 
-		System.out.println(mMovingImage.getIcon().toString());
-
 		switch (moveStatus)
 		{
 			case MOVE_STATUS_UP:
