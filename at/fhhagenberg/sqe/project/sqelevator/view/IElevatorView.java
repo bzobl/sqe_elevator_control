@@ -55,18 +55,27 @@ public interface IElevatorView
 	 * @param speed
 	 */
 	public void setSpeed(int speed);
-	
+
 	/**
 	 * add a action listener to the mode button
-	 * @param l	action listener
+	 * 
+	 * @param l
+	 *            action listener
 	 */
 	public void addModeButtonListener(ActionListener l);
-	
+
 	/**
 	 * remove a action listener from the mode button
-	 * @param l action listener
+	 * 
+	 * @param l
+	 *            action listener
 	 */
 	public void removeModeButtonListener(ActionListener l);
 
-	int getElevatorNumber();
+	/**
+	 * get elevator number of this elevator
+	 * 
+	 * @return number
+	 */
+	public int getElevatorNumber();
 }
