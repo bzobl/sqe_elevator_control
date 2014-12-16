@@ -5,16 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
 import junit.extensions.abbot.ComponentTestFixture;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import sun.applet.Main;
 import abbot.finder.matchers.ClassMatcher;
 import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
 

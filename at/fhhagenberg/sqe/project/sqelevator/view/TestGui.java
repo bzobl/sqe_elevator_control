@@ -10,6 +10,9 @@ import javax.swing.border.EmptyBorder;
 public class TestGui extends JFrame
 {
 
+	private static final long serialVersionUID = 1L;
+
+	
 	private JPanel contentPane;
 
 	/**
@@ -23,14 +26,11 @@ public class TestGui extends JFrame
 			{
 				try
 				{
-					MainView frame = new MainView();
+					final MainView frame = new MainView();
 					for (int i = 0; i < 3; i++) {
-						frame.addNewElevator(5);
+						frame.addNewElevator(15);
 					}
-					frame.setVisible(true);
-					
-					//TestGui frame = new TestGui();
-					//frame.setVisible(true);
+					frame.setVisible(true);					
 				}
 				catch (Exception e)
 				{

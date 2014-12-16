@@ -2,14 +2,11 @@ package at.fhhagenberg.sqe.project.sqelevator.tests.view;
 
 import java.awt.Component;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 import junit.extensions.abbot.ComponentTestFixture;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 

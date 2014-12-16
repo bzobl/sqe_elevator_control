@@ -7,11 +7,10 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-import javax.swing.JCheckBox;
-import javax.swing.JButton;
 
 public class FloorPanel extends JPanel implements IFloorView
 {
@@ -90,6 +89,11 @@ public class FloorPanel extends JPanel implements IFloorView
 	 */
 	private int mMoveStatus = MOVE_STATUS_AWAY;
 
+	/**
+	 * width of a single floor panel
+	 */
+	public final static int FLOOR_PANEL_WIDTH = 240;
+	
 	/**
 	 * floor number as shown in label
 	 */
@@ -292,7 +296,7 @@ public class FloorPanel extends JPanel implements IFloorView
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0 };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0 };
 		setLayout(gridBagLayout);
-
+		
 		JLabel lblFloorNumber = new JLabel(String.valueOf(floorNumber));
 		lblFloorNumber.setFont(new Font("Dialog", Font.BOLD, 24));
 		GridBagConstraints gbc_lblFloorNumber = new GridBagConstraints();

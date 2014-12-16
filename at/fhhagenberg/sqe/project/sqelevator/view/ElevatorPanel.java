@@ -1,11 +1,14 @@
 package at.fhhagenberg.sqe.project.sqelevator.view;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,6 +40,11 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	private int NUMBER_ELEVATOR;
 	
 	/**
+	 * panel for elevator buttons
+	 */
+	private JPanel mElevatorButtonPanel;
+	
+	/**
 	 * text fields from front end
 	 */
 	private JTextField mTextPosition;
@@ -48,6 +56,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	 * mode button for auto/manual mode
 	 */
 	private JToggleButton mModeButton;
+	private JSeparator separator_1;
 	
 	/**
 	 * add floor to the panel
@@ -55,7 +64,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	 * @param num
 	 *            floor number
 	 */
-	private void addFloor(int num)
+	private void addFloor(Integer num)
 	{
 		FloorPanel floor = new FloorPanel(num);
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -71,6 +80,15 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 			gbc.insets = new Insets(5, 0, 5, 0);
 			mFloorsPane.add(new JSeparator(JSeparator.HORIZONTAL), gbc);
 		}
+		
+		JLabel label = new JLabel(num.toString());
+		Dimension d = label.getPreferredSize();
+		d.width = 40;
+		d.height += 10;
+		label.setPreferredSize(d);
+		label.setMinimumSize(d);
+		label.setIcon(new ImageIcon(ElevatorPanel.class.getResource("/img/colorArrowUp_small.png")));
+		mElevatorButtonPanel.add(label);
 	}
 
 	/**
@@ -83,13 +101,13 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	{
 		NUMBER_ELEVATOR = num;
 		NUMBER_OF_FLOORS = floors;
-
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 80, 60, 70, 60, 0 };
-		gridBagLayout.rowHeights = new int[] { 20, 5, 25, 25, 25, 0 };
+		gridBagLayout.rowHeights = new int[] { 20, 5, 0, 5, 25, 25, 25, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0,
 				Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0,
+		gridBagLayout.rowWeights = new double[] { 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 
@@ -97,17 +115,41 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		GridBagConstraints gbc_separator = new GridBagConstraints();
 		gbc_separator.fill = GridBagConstraints.HORIZONTAL;
 		gbc_separator.gridwidth = 4;
-		gbc_separator.insets = new Insets(0, 0, 5, 0);
+		gbc_separator.insets = new Insets(5, 5, 5, 5);
 		gbc_separator.gridx = 0;
 		gbc_separator.gridy = 1;
 		add(separator, gbc_separator);
+		
+		mElevatorButtonPanel = new JPanel();
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.anchor = GridBagConstraints.SOUTH;
+		gbc_panel.gridwidth = 4;
+		gbc_panel.insets = new Insets(0, 5, 0, 5);
+		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 2;
+		add(mElevatorButtonPanel, gbc_panel);
 
+		final int MaxCols = 6;
+		GridLayout gl = new GridLayout(num / MaxCols, MaxCols);
+		
+		mElevatorButtonPanel.setLayout(gl);
+		
+		separator_1 = new JSeparator();
+		GridBagConstraints gbc_separator_1 = new GridBagConstraints();
+		gbc_separator_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_separator_1.gridwidth = 4;
+		gbc_separator_1.insets = new Insets(5, 5, 5, 5);
+		gbc_separator_1.gridx = 0;
+		gbc_separator_1.gridy = 3;
+		add(separator_1, gbc_separator_1);
+		
 		JLabel lblPosition = new JLabel("Position:");
 		GridBagConstraints gbc_lblPosition = new GridBagConstraints();
 		gbc_lblPosition.anchor = GridBagConstraints.EAST;
-		gbc_lblPosition.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPosition.insets = new Insets(0, 5, 5, 5);
 		gbc_lblPosition.gridx = 0;
-		gbc_lblPosition.gridy = 2;
+		gbc_lblPosition.gridy = 4;
 		add(lblPosition, gbc_lblPosition);
 
 		mTextPosition = new JTextField();
@@ -116,7 +158,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_textPosition.insets = new Insets(0, 0, 5, 5);
 		gbc_textPosition.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textPosition.gridx = 1;
-		gbc_textPosition.gridy = 2;
+		gbc_textPosition.gridy = 4;
 		add(mTextPosition, gbc_textPosition);
 		mTextPosition.setColumns(10);
 
@@ -125,52 +167,52 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_lblSpeed.anchor = GridBagConstraints.EAST;
 		gbc_lblSpeed.insets = new Insets(0, 0, 5, 5);
 		gbc_lblSpeed.gridx = 2;
-		gbc_lblSpeed.gridy = 2;
+		gbc_lblSpeed.gridy = 4;
 		add(lblSpeed, gbc_lblSpeed);
 
 		mTextSpeed = new JTextField();
 		mTextSpeed.setName("textSpeed");
 		GridBagConstraints gbc_textSpeed = new GridBagConstraints();
-		gbc_textSpeed.insets = new Insets(0, 0, 5, 0);
+		gbc_textSpeed.insets = new Insets(0, 0, 5, 5);
 		gbc_textSpeed.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textSpeed.gridx = 3;
-		gbc_textSpeed.gridy = 2;
+		gbc_textSpeed.gridy = 4;
 		add(mTextSpeed, gbc_textSpeed);
 		mTextSpeed.setColumns(10);
 		
-				JLabel lblPayload = new JLabel("Payload:");
-				GridBagConstraints gbc_lblPayload = new GridBagConstraints();
-				gbc_lblPayload.anchor = GridBagConstraints.EAST;
-				gbc_lblPayload.insets = new Insets(0, 0, 5, 5);
-				gbc_lblPayload.gridx = 0;
-				gbc_lblPayload.gridy = 3;
-				add(lblPayload, gbc_lblPayload);
-		
-				mTextPayload = new JTextField();
-				mTextPayload.setName("textPayload");
-				GridBagConstraints gbc_textPayload = new GridBagConstraints();
-				gbc_textPayload.insets = new Insets(0, 0, 5, 5);
-				gbc_textPayload.fill = GridBagConstraints.HORIZONTAL;
-				gbc_textPayload.gridx = 1;
-				gbc_textPayload.gridy = 3;
-				add(mTextPayload, gbc_textPayload);
-				mTextPayload.setColumns(10);
+		JLabel lblPayload = new JLabel("Payload:");
+		GridBagConstraints gbc_lblPayload = new GridBagConstraints();
+		gbc_lblPayload.anchor = GridBagConstraints.EAST;
+		gbc_lblPayload.insets = new Insets(0, 5, 5, 5);
+		gbc_lblPayload.gridx = 0;
+		gbc_lblPayload.gridy = 5;
+		add(lblPayload, gbc_lblPayload);
+
+		mTextPayload = new JTextField();
+		mTextPayload.setName("textPayload");
+		GridBagConstraints gbc_textPayload = new GridBagConstraints();
+		gbc_textPayload.insets = new Insets(0, 0, 5, 5);
+		gbc_textPayload.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textPayload.gridx = 1;
+		gbc_textPayload.gridy = 5;
+		add(mTextPayload, gbc_textPayload);
+		mTextPayload.setColumns(10);
 
 		JLabel lblAcceleration = new JLabel("Acc.:");
 		GridBagConstraints gbc_lblAcceleration = new GridBagConstraints();
 		gbc_lblAcceleration.anchor = GridBagConstraints.EAST;
 		gbc_lblAcceleration.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAcceleration.gridx = 2;
-		gbc_lblAcceleration.gridy = 3;
+		gbc_lblAcceleration.gridy = 5;
 		add(lblAcceleration, gbc_lblAcceleration);
 
 		mTextAcceleration = new JTextField();
 		mTextAcceleration.setName("textAcceleration");
 		GridBagConstraints gbc_textAcceleration = new GridBagConstraints();
-		gbc_textAcceleration.insets = new Insets(0, 0, 5, 0);
+		gbc_textAcceleration.insets = new Insets(0, 0, 5, 5);
 		gbc_textAcceleration.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textAcceleration.gridx = 3;
-		gbc_textAcceleration.gridy = 3;
+		gbc_textAcceleration.gridy = 5;
 		add(mTextAcceleration, gbc_textAcceleration);
 		mTextAcceleration.setColumns(10);
 
@@ -185,7 +227,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		scrollPane.setViewportView(mFloorsPane);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(0, 0, 5, 0);
+		gbc.insets = new Insets(0, 5, 0, 5);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -197,10 +239,10 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		mModeButton = new JToggleButton("Auto Mode");
 		GridBagConstraints gbc_tglbtnAutoMode = new GridBagConstraints();
 		gbc_tglbtnAutoMode.gridwidth = 4;
-		gbc_tglbtnAutoMode.insets = new Insets(0, 0, 0, 0);
+		gbc_tglbtnAutoMode.insets = new Insets(5, 5, 5, 5);
 		gbc_tglbtnAutoMode.fill = GridBagConstraints.HORIZONTAL;
 		gbc_tglbtnAutoMode.gridx = 0;
-		gbc_tglbtnAutoMode.gridy = 4;
+		gbc_tglbtnAutoMode.gridy = 6;
 		add(mModeButton, gbc_tglbtnAutoMode);
 
 		// create floors

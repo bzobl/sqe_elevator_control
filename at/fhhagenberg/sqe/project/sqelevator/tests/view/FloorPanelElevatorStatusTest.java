@@ -2,9 +2,7 @@ package at.fhhagenberg.sqe.project.sqelevator.tests.view;
 
 import java.awt.Component;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import junit.extensions.abbot.ComponentTestFixture;
 
