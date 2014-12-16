@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -19,12 +20,8 @@ import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
 
 public class FloorPanelCallButton extends ComponentTestFixture
 {
-	private final String FILENAME_MOVE_STATUS_UP = "upArrow_small.png";
-	private final String FILENAME_MOVE_STATUS_DOWN = "downArrow_small.png";
-	private final String FILENAME_MOVE_STATUS_STANDING = "standing_small.png";
-	
 	private FloorPanel mFloorPanel;
-	private JToggleButton mCallButton;
+	private JButton mCallButton;
 	private int mActionCounter = 0;
 
 	@Before
@@ -33,12 +30,12 @@ public class FloorPanelCallButton extends ComponentTestFixture
 		mFloorPanel = new FloorPanel(1);
 		showFrame(mFloorPanel);
 
-		mCallButton = (JToggleButton) getFinder().find(new ClassMatcher(JToggleButton.class)
+		mCallButton = (JButton) getFinder().find(new ClassMatcher(JButton.class)
 		{
 			public boolean matches(Component c)
 			{
-				return super.matches(c) && (((JToggleButton) c).getText() != null) 
-										&& ((JToggleButton) c).getText().equals("Call");
+				return super.matches(c) && (((JButton) c).getText() != null) 
+										&& ((JButton) c).getText().equals("Call");
 			}
 		});
 	}
@@ -59,10 +56,9 @@ public class FloorPanelCallButton extends ComponentTestFixture
 		assertEquals(0,  mActionCounter);
         mCallButton.doClick();
 		assertEquals(1, mActionCounter);
-		assertTrue(mCallButton.isSelected());
+
         mCallButton.doClick();
 		assertEquals(2, mActionCounter);
-		assertFalse(mCallButton.isSelected());
 	}
 	
 	@Test
@@ -81,12 +77,10 @@ public class FloorPanelCallButton extends ComponentTestFixture
 		assertEquals(0,  mActionCounter);
         mCallButton.doClick();
 		assertEquals(1, mActionCounter);
-		assertTrue(mCallButton.isSelected());
 		
 		mFloorPanel.removeCallButtonListener(l);
 		
         mCallButton.doClick();
 		assertEquals(1, mActionCounter);
-		assertFalse(mCallButton.isSelected());
 	}
 }

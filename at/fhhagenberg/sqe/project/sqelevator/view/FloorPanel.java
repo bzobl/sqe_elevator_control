@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JCheckBox;
+import javax.swing.JButton;
 
 public class FloorPanel extends JPanel implements IFloorView
 {
@@ -45,11 +46,6 @@ public class FloorPanel extends JPanel implements IFloorView
 	private final String SRC_FLOOR_BTN_DOWN_ON = "/img/colorArrowDown_small.png";
 
 	/**
-	 * call toggle button
-	 */
-	private JToggleButton mCallButton;
-
-	/**
 	 * check box serviced
 	 */
 	private JCheckBox chckbxServiced;
@@ -74,6 +70,16 @@ public class FloorPanel extends JPanel implements IFloorView
 	 */
 	private JLabel mFloorDown;
 
+	/**
+	 * current status of floor buttons
+	 */
+	private boolean mFloorButtonStates[] = new boolean[2];
+	
+	/**
+	 * call button
+	 */
+	private JButton mCallButton;
+	
 	/**
 	 * current elevator status. see ELEVATOR_STATUS_xxx for valid states.
 	 */
@@ -218,11 +224,6 @@ public class FloorPanel extends JPanel implements IFloorView
 		mCallButton.removeActionListener(l);
 	}
 
-	/**
-	 * current status of floor buttons
-	 */
-	private boolean mFloorButtonStates[] = new boolean[2];
-
 	@Override
 	public void setFloorButton(int btn, boolean status)
 	{
@@ -325,13 +326,13 @@ public class FloorPanel extends JPanel implements IFloorView
 		gbc_lblUpDownImage.gridx = 2;
 		gbc_lblUpDownImage.gridy = 0;
 		add(mMovingImage, gbc_lblUpDownImage);
-
-		mCallButton = new JToggleButton("Call");
-		GridBagConstraints gbc_tglbtnCall = new GridBagConstraints();
-		gbc_tglbtnCall.insets = new Insets(0, 0, 5, 0);
-		gbc_tglbtnCall.gridx = 3;
-		gbc_tglbtnCall.gridy = 0;
-		add(mCallButton, gbc_tglbtnCall);
+		
+		mCallButton = new JButton("Call");
+		GridBagConstraints gbc_mCallButton = new GridBagConstraints();
+		gbc_mCallButton.insets = new Insets(0, 0, 5, 0);
+		gbc_mCallButton.gridx = 3;
+		gbc_mCallButton.gridy = 0;
+		add(mCallButton, gbc_mCallButton);
 
 		mFloorUp = new JLabel("");
 		mFloorUp.setIcon(new ImageIcon(FloorPanel.class
