@@ -5,21 +5,6 @@ import java.awt.event.ActionListener;
 public interface IElevatorView
 {
 	/**
-	 * valid directions for setDirection()
-	 */
-	public final static int DIRECTION_UP = 0;
-	public final static int DIRECTION_DOWN = 1;
-	public final static int DIRECTION_NONE = 2;
-
-	/**
-	 * set direction of elevator.
-	 * 
-	 * @param dir
-	 *            any of DIRECTION_xxx
-	 */
-	public void setDirection(int dir);
-
-	/**
 	 * get floor view of a given floor number.
 	 * 
 	 * @param num

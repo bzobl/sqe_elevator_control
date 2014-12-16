@@ -25,7 +25,6 @@ public class ElevatorPaneTest extends ComponentTestFixture
 	private JTextField mTextAcceleration;
 	private JTextField mTextSpeed;
 	private JTextField mTextPosition;
-	private JTextField mTextDirection;
 	private JTextField mTextPayload;
 	
 	private IElevatorView mElevatorView;
@@ -46,18 +45,6 @@ public class ElevatorPaneTest extends ComponentTestFixture
 						return super.matches(c)
 								&& ((JToggleButton) c).getText().equals(
 										"Auto Mode");
-					}
-				});
-	
-		mTextDirection = (JTextField) getFinder().find(
-				new ClassMatcher(JTextField.class)
-				{
-					public boolean matches(Component c)
-					{
-						return super.matches(c)
-								&& (((JTextField) c).getName() != null)
-								&& ((JTextField) c).getName().equals(
-										"textDirection");
 					}
 				});
 		
@@ -148,20 +135,6 @@ public class ElevatorPaneTest extends ComponentTestFixture
 		assertEquals("1", mTextPosition.getText());
 		mElevatorView.setPosition(-1);
 		assertEquals("-1", mTextPosition.getText());
-	}
-	
-	@Test
-	public void testDirection()
-	{
-		assertEquals("", mTextDirection.getText());
-		mElevatorView.setDirection(IElevatorView.DIRECTION_DOWN);
-		assertEquals("down", mTextDirection.getText());
-		mElevatorView.setDirection(IElevatorView.DIRECTION_UP);
-		assertEquals("up", mTextDirection.getText());
-		mElevatorView.setDirection(IElevatorView.DIRECTION_NONE);
-		assertEquals("none", mTextDirection.getText());
-		mElevatorView.setDirection(-1);
-		assertEquals("", mTextDirection.getText());
 	}
 
 	@Test

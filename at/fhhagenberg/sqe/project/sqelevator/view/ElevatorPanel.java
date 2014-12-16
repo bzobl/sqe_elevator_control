@@ -40,7 +40,6 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	 * text fields from front end
 	 */
 	private JTextField mTextPosition;
-	private JTextField mTextDirection;
 	private JTextField mTextPayload;
 	private JTextField mTextSpeed;
 	private JTextField mTextAcceleration;
@@ -138,24 +137,24 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_textSpeed.gridy = 2;
 		add(mTextSpeed, gbc_textSpeed);
 		mTextSpeed.setColumns(10);
-
-		JLabel lblDirection = new JLabel("Direction:");
-		GridBagConstraints gbc_lblDirection = new GridBagConstraints();
-		gbc_lblDirection.anchor = GridBagConstraints.EAST;
-		gbc_lblDirection.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDirection.gridx = 0;
-		gbc_lblDirection.gridy = 3;
-		add(lblDirection, gbc_lblDirection);
-
-		mTextDirection = new JTextField();
-		mTextDirection.setName("textDirection");
-		GridBagConstraints gbc_textDirection = new GridBagConstraints();
-		gbc_textDirection.insets = new Insets(0, 0, 5, 5);
-		gbc_textDirection.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textDirection.gridx = 1;
-		gbc_textDirection.gridy = 3;
-		add(mTextDirection, gbc_textDirection);
-		mTextDirection.setColumns(10);
+		
+				JLabel lblPayload = new JLabel("Payload:");
+				GridBagConstraints gbc_lblPayload = new GridBagConstraints();
+				gbc_lblPayload.anchor = GridBagConstraints.EAST;
+				gbc_lblPayload.insets = new Insets(0, 0, 5, 5);
+				gbc_lblPayload.gridx = 0;
+				gbc_lblPayload.gridy = 3;
+				add(lblPayload, gbc_lblPayload);
+		
+				mTextPayload = new JTextField();
+				mTextPayload.setName("textPayload");
+				GridBagConstraints gbc_textPayload = new GridBagConstraints();
+				gbc_textPayload.insets = new Insets(0, 0, 5, 5);
+				gbc_textPayload.fill = GridBagConstraints.HORIZONTAL;
+				gbc_textPayload.gridx = 1;
+				gbc_textPayload.gridy = 3;
+				add(mTextPayload, gbc_textPayload);
+				mTextPayload.setColumns(10);
 
 		JLabel lblAcceleration = new JLabel("Acc.:");
 		GridBagConstraints gbc_lblAcceleration = new GridBagConstraints();
@@ -174,24 +173,6 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		gbc_textAcceleration.gridy = 3;
 		add(mTextAcceleration, gbc_textAcceleration);
 		mTextAcceleration.setColumns(10);
-
-		JLabel lblPayload = new JLabel("Payload:");
-		GridBagConstraints gbc_lblPayload = new GridBagConstraints();
-		gbc_lblPayload.anchor = GridBagConstraints.EAST;
-		gbc_lblPayload.insets = new Insets(0, 0, 0, 5);
-		gbc_lblPayload.gridx = 0;
-		gbc_lblPayload.gridy = 4;
-		add(lblPayload, gbc_lblPayload);
-
-		mTextPayload = new JTextField();
-		mTextPayload.setName("textPayload");
-		GridBagConstraints gbc_textPayload = new GridBagConstraints();
-		gbc_textPayload.insets = new Insets(0, 0, 0, 5);
-		gbc_textPayload.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textPayload.gridx = 1;
-		gbc_textPayload.gridy = 4;
-		add(mTextPayload, gbc_textPayload);
-		mTextPayload.setColumns(10);
 
 		JScrollPane scrollPane = new JScrollPane();
 
@@ -215,10 +196,10 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 
 		mModeButton = new JToggleButton("Auto Mode");
 		GridBagConstraints gbc_tglbtnAutoMode = new GridBagConstraints();
-		gbc_tglbtnAutoMode.gridwidth = 2;
+		gbc_tglbtnAutoMode.gridwidth = 4;
 		gbc_tglbtnAutoMode.insets = new Insets(0, 0, 0, 0);
 		gbc_tglbtnAutoMode.fill = GridBagConstraints.HORIZONTAL;
-		gbc_tglbtnAutoMode.gridx = 2;
+		gbc_tglbtnAutoMode.gridx = 0;
 		gbc_tglbtnAutoMode.gridy = 4;
 		add(mModeButton, gbc_tglbtnAutoMode);
 
@@ -261,30 +242,6 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 	public void setAcceleration(int acc)
 	{
 		mTextAcceleration.setText(String.valueOf(acc));
-	}
-
-	@Override
-	public void setDirection(int dir)
-	{
-		switch (dir)
-		{
-			case DIRECTION_DOWN:
-				mTextDirection.setText("down");
-				break;
-
-			case DIRECTION_UP:
-				mTextDirection.setText("up");
-				break;
-
-			case DIRECTION_NONE:
-				mTextDirection.setText("none");
-				break;
-
-			default:
-				assert false : "unexpected direction";
-				mTextDirection.setText("");
-				break;
-		}
 	}
 
 	@Override
