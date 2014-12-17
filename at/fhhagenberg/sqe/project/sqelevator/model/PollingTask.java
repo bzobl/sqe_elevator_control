@@ -9,7 +9,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -17,14 +17,14 @@ public class PollingTask extends TimerTask {
 	
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
-	protected IElevatorConnection mConnection;
+	protected IElevatorStatus mConnection;
 	private ElevatorSystem mElevators;
 	private Timer mTimer = new Timer();
 	
 	protected PollingTask() {
 	}
 
-	public PollingTask(IElevatorConnection connection) {
+	public PollingTask(IElevatorStatus connection) {
 		mConnection = connection;
 	}
 	

@@ -9,7 +9,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Observable;
 import java.util.Observer;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -30,17 +30,17 @@ public class ElevatorSystem extends Observable {
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
 
-	public ElevatorSystem(IElevatorConnection conn) {
-		NUM_ELEVATORS = conn.getElevatorNum();
-		NUM_FLOORS = conn.getFloorNum();
-		FLOOR_HEIGHT = conn.getFloorHeight();
+	public ElevatorSystem(IElevatorStatus status) {
+		NUM_ELEVATORS = status.getElevatorNum();
+		NUM_FLOORS = status.getFloorNum();
+		FLOOR_HEIGHT = status.getFloorHeight();
 
 		Elevators = new Elevator[NUM_ELEVATORS];
 		mUpButtons = new boolean[NUM_FLOORS];
 		mDownButtons = new boolean[NUM_FLOORS];
 		
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
-			int capacity = conn.getElevatorCapacity(i);
+			int capacity = status.getElevatorCapacity(i);
 			Elevators[i] = new Elevator(i, capacity, NUM_FLOORS);
 		}
 

@@ -1,3 +1,5 @@
 /IElevatorConnection.class
 /ElevatorAdaptor.class
 /SimpleElevatorSimulator.class
+/IElevatorStatus.class
+/IElevatorControl.class

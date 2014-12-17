@@ -2,10 +2,10 @@
 package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
-//TODO make package local as soon as shunt is not used in bootstrapper anymore
-public final class ElevatorConnectionShunt implements IElevatorConnection {
+final class ElevatorConnectionShunt implements IElevatorStatus, IElevatorControl {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
@@ -13,7 +13,7 @@ public final class ElevatorConnectionShunt implements IElevatorConnection {
 	
 	public int NUM_ELEVATORS = 1;
 	
-	// Self shunt variables
+	// Shunt variables
 	public int CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 	public int Doorstatus = IElevator.ELEVATOR_DOORS_OPEN;
 	public int ElevatorAccel = 0;

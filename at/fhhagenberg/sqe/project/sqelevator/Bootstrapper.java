@@ -6,9 +6,8 @@
 
 package at.fhhagenberg.sqe.project.sqelevator;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
-import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControlCenter;
 import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
 
 import com.sun.istack.internal.logging.Logger;
@@ -25,11 +24,10 @@ public class Bootstrapper {
 		final int num_elevators = 3;
 		final int num_floors = 5;
 		
-		SimpleElevatorSimulator adbt = new SimpleElevatorSimulator(num_elevators, num_floors);
+		SimpleElevatorSimulator sim = new SimpleElevatorSimulator(num_elevators, num_floors);
 		
-		IElevatorConnection conn = adbt;
-		LOG.info("using " + conn.getClass().getCanonicalName() + " as connection interface");
-		ElevatorControl ctrl = new ElevatorControl(conn);
+		LOG.info("using " + sim.getClass().getCanonicalName() + " as connection interface");
+		ElevatorControlCenter ctrl = new ElevatorControlCenter(sim, sim);
 		
 		MainView view = new MainView(ctrl, num_elevators, num_floors, APPLICATION_NAME);
 		ctrl.setView(view);

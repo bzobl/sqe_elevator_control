@@ -12,7 +12,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
@@ -24,9 +25,9 @@ import at.fhhagenberg.sqe.project.sqelevator.view.IMainView;
 
 import com.sun.istack.internal.logging.Logger;
 
-public class ElevatorControl implements IControl, Observer {
+public class ElevatorControlCenter implements IControl, Observer {
 	
-	private static Logger LOG = Logger.getLogger(ElevatorControl.class);
+	private static Logger LOG = Logger.getLogger(ElevatorControlCenter.class);
 	
 	private static final Map<Integer, Integer> DIRECTION_LUT = new HashMap<>();
 	private static final Map<Integer, Integer> DOORSTATUS_LUT = new HashMap<>();
@@ -43,25 +44,25 @@ public class ElevatorControl implements IControl, Observer {
 	}
 	
 	PollingTask mPollTask;
-	IElevatorConnection mConnection;
+	IElevatorControl mControl;
 	ElevatorSystem mModel;
 	IMainView mView;
 	
 	boolean mAuto[];
 	
-	public ElevatorControl(IElevatorConnection connection) {
-		mConnection = connection;
+	public ElevatorControlCenter(IElevatorControl control, IElevatorStatus status) {
+		mControl = control;
 
-        mModel = new ElevatorSystem(mConnection);
+        mModel = new ElevatorSystem(status);
         mModel.addObserver(this);
 
-        mPollTask = new PollingTask(mConnection);
+        mPollTask = new PollingTask(status);
 		mPollTask.setElevatorSystem(mModel);
 		
 		mAuto = new boolean[mModel.NUM_ELEVATORS];
         
         LOG.info("Elevator control successfully initialized, starting to poll");
-		mPollTask.startPolling(mConnection.getClockTick());
+		mPollTask.startPolling(status.getClockTick());
 	}
 
 	/**
@@ -93,17 +94,17 @@ public class ElevatorControl implements IControl, Observer {
 		assert(mAuto[elevator] == false) : "Call Button cannot be pressed when in auto mode";
 		assert((floor < mModel.NUM_FLOORS) && (floor >= 0)) : "floor number is invalid";
 
-		mConnection.setTarget(elevator, floor);
+		mControl.setTarget(elevator, floor);
 
 		int curFloor;
 		try {
 			curFloor = mModel.getElevator(elevator).getFloor();
 			if (curFloor < floor) {
-				mConnection.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);
+				mControl.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);
 			} else if (curFloor > floor) {
-				mConnection.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_DOWN);
+				mControl.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_DOWN);
 			} else {
-				mConnection.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+				mControl.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
 			}
 		} catch (ElevatorException e) {
 			LOG.severe(e.getMessage());
@@ -119,7 +120,7 @@ public class ElevatorControl implements IControl, Observer {
 	@Override
 	public void setServicedFloor(int elevator, int floor, boolean isServiced) {
 		LOG.info("Service Button of Elevator " + elevator + ", Floor " + floor + " clicked");
-		mConnection.setServicesFloors(elevator, floor, isServiced);
+		mControl.setServicesFloors(elevator, floor, isServiced);
 	}
 	
 	@Override
