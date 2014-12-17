@@ -1,16 +1,22 @@
 package at.fhhagenberg.sqe.project.sqelevator.view;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import at.fhhagenberg.sqe.project.sqelevator.controller.IControl;
 import at.fhhagenberg.sqe.project.sqelevator.view.ElevatorButtonListener.ListenerType;
 
 import com.sun.istack.internal.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class MainView extends JFrame implements IMainView
 {
@@ -22,6 +28,8 @@ public class MainView extends JFrame implements IMainView
 	private final int NUM_FLOORS;
 
 	private JPanel mElevatorPane;
+	private JPanel mMainPanel;
+	private JLabel mLblStatus;
 	
 	public MainView(IControl control, int numElevators, int numFloors, String title)
 	{
@@ -35,13 +43,42 @@ public class MainView extends JFrame implements IMainView
 
 		mElevatorPane = new JPanel();
 		mElevatorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(mElevatorPane);
 		
 		// set more space between elevator panels
 		GridLayout gl = new GridLayout(1, 0, 0, 0);
 		gl.setHgap(20);
-		
 		mElevatorPane.setLayout(gl);
+		
+		GridBagLayout glb = new GridBagLayout();
+		glb.rowWeights = new double[]{1.0, 0.0};
+		glb.columnWeights = new double[]{1.0};
+		glb.columnWidths = new int[]{0};
+		
+		glb.rowHeights = new int[]{0, 22};
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.fill = GridBagConstraints.BOTH;
+		
+		GridBagConstraints gbcStatusBar = new GridBagConstraints();
+		gbcStatusBar.fill = GridBagConstraints.BOTH;
+		gbcStatusBar.gridx = 0;
+		gbcStatusBar.gridy = 1;
+		JPanel mStatusPanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) mStatusPanel.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		mStatusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));		
+		
+		mMainPanel = new JPanel(glb);
+		mMainPanel.setBorder(new EmptyBorder(5,5,5,5));
+		mMainPanel.add(mElevatorPane, gbc);
+		mMainPanel.add(mStatusPanel, gbcStatusBar);
+		
+		mLblStatus = new JLabel("");
+		mLblStatus.setHorizontalAlignment(SwingConstants.RIGHT);
+		mStatusPanel.add(mLblStatus);
+		
+		setContentPane(mMainPanel);
 		
 		initializeAllViews(control);
 	}
@@ -72,9 +109,6 @@ public class MainView extends JFrame implements IMainView
 		return pane;
 	}
 
-	/* (non-Javadoc)
-	 * @see at.fhhagenberg.sqe.project.sqelevator.view.IMainView#getElevatorView(int)
-	 */
 	@Override
 	public IElevatorView getElevatorView(int num)
 	{
@@ -89,5 +123,11 @@ public class MainView extends JFrame implements IMainView
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void setStatusText(String statusText)
+	{
+		mLblStatus.setText(statusText);	
 	}
 }

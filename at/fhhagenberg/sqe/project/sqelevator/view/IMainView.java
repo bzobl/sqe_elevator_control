@@ -12,4 +12,5 @@ package at.fhhagenberg.sqe.project.sqelevator.view;
 public interface IMainView {
 	public IElevatorView getElevatorView(int num);
 	public void setVisible(boolean visible);
+	public void setStatusText(String statusText);
 }
