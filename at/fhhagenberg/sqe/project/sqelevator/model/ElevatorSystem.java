@@ -100,7 +100,7 @@ public class ElevatorSystem extends Observable {
 	}
 
 	protected void setDownButton(int floor, boolean pressed) {
-		assert(floor < mDownButtons.length);
+		assert ((floor >= 0) && (floor < mDownButtons.length));
 		if (mDownButtons[floor] != pressed) {
 			setChanged();
 			mDownButtons[floor] = pressed;
@@ -108,7 +108,7 @@ public class ElevatorSystem extends Observable {
 	}
 
 	protected void setUpButton(int floor, boolean pressed) {
-		assert(floor < mUpButtons.length);
+		assert ((floor >= 0) && floor < mUpButtons.length);
 		if (mUpButtons[floor] != pressed) {
 			setChanged();
 			mUpButtons[floor] = pressed;

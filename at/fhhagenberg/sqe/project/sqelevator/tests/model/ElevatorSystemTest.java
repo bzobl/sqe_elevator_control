@@ -1,11 +1,10 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -84,7 +83,7 @@ public class ElevatorSystemTest extends PollingTask
 		return elev;
 	}
 	
-	private void checkElevatorProperties(Elevator elev) {
+	private void checkElevatorProperties(Elevator elev) throws FloorException {
 		assertEquals(mShunt.Target, elev.getTargetFloor());
 		assertEquals(mShunt.CommitedDirection, elev.getDirection());
 		assertEquals(mShunt.ElevatorAccel, elev.getAcceleration());
@@ -94,27 +93,36 @@ public class ElevatorSystemTest extends PollingTask
 		assertEquals(mShunt.Speed, elev.getSpeed());
 		assertEquals(mShunt.Weight, elev.getWeight());
 
-		try {
-			for (int floor = 0; floor < FLOOR_NUM; floor++) {
-				assertEquals(mShunt.ElevatorButton[floor], elev.getButtonStatus(floor));
-				assertEquals(mShunt.ServicesFloors[floor], elev.getServicesFloors(floor));
-			}
-		} catch (FloorException e) {
-			fail("caught Floor Exception: " + e.getMessage());
+		for (int floor = 0; floor < FLOOR_NUM; floor++) {
+			assertEquals(mShunt.ElevatorButton[floor], elev.getButtonStatus(floor));
+			assertEquals(mShunt.ServicesFloors[floor], elev.getServicesFloors(floor));
 		}
 	}
 	
-	private void checkElevator(int num, boolean observer_expected) {
+	private void checkElevator(int num, boolean observer_expected) throws ElevatorException, FloorException {
 		Elevator elev = checkObserverUpdate(num, observer_expected);
 		if (elev != null) {
 			checkElevatorProperties(elev);
 		}
 
-		try {
-			elev = mSystem.getElevator(num);
-			checkElevatorProperties(elev);
-		} catch (ElevatorException e) {
-			fail("caught Elevator Exception: " + e.getMessage());
+		elev = mSystem.getElevator(num);
+		checkElevatorProperties(elev);
+	}
+
+	private void checkSystem (boolean observer_expected) throws FloorException {
+		if (!observer_expected) {
+			assertNull(mLastObservable);
+			assertNull(mObserverArgument);
+		} else {
+			assertEquals(new Integer(ElevatorSystem.SYSTEM_PROPERTY_CHANGED), mObserverArgument);
+			assertTrue(mLastObservable instanceof ElevatorSystem);
+			mLastObservable = null;
+			mObserverArgument = null;
+		}
+		
+		for (int f = 0; f < mSystem.NUM_FLOORS; f++) {
+			assertEquals(mShunt.FloorButtonUp[f], mSystem.getFloorButton(f, true));
+			assertEquals(mShunt.FloorButtonDown[f], mSystem.getFloorButton(f, false));
 		}
 	}
 
@@ -132,7 +140,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testElevatorDirection() {
+	public void testElevatorDirection() throws ElevatorException, FloorException {
 		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_DOWN;
 		poll();
 		checkElevator(0,true);
@@ -151,7 +159,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 
 	@Test
-	public void testElevatorAcceleration() {
+	public void testElevatorAcceleration() throws ElevatorException, FloorException {
 		mShunt.ElevatorAccel = 100;
 		poll();
 		checkElevator(0, true);
@@ -170,7 +178,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testElevatorButton() {
+	public void testElevatorButton() throws ElevatorException, FloorException {
 		mShunt.ElevatorButton[0] = true;
 		poll();
 		checkElevator(0, true);
@@ -193,7 +201,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testDoorStatus() {
+	public void testDoorStatus() throws ElevatorException, FloorException {
 		mShunt.Doorstatus = IElevator.ELEVATOR_DOORS_OPENING;
 		poll();
 		checkElevator(0, true);
@@ -207,7 +215,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testFloor() {
+	public void testFloor() throws ElevatorException, FloorException {
 		mShunt.Floor = 1;
 		poll();
 		checkElevator(0, true);
@@ -226,7 +234,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testPosition() {
+	public void testPosition() throws ElevatorException, FloorException {
 		mShunt.Position = 54;
 		poll();
 		checkElevator(0, true);
@@ -241,7 +249,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testSpeed() {
+	public void testSpeed() throws ElevatorException, FloorException {
 		mShunt.Speed = 99;
 		poll();
 		checkElevator(0, true);
@@ -256,7 +264,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testWeight() {
+	public void testWeight() throws ElevatorException, FloorException {
 		mShunt.Weight = 412;
 		poll();
 		checkElevator(0, true);
@@ -266,7 +274,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testServicesFloors() {
+	public void testServicesFloors() throws ElevatorException, FloorException {
 		mShunt.ServicesFloors[0] = false;
 		poll();
 		checkElevator(0, true);
@@ -277,7 +285,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	@Test
-	public void testTarget() {
+	public void testTarget() throws ElevatorException, FloorException {
 		mShunt.Target = 2;
 		poll();
 		checkElevator(0, true);
@@ -303,6 +311,13 @@ public class ElevatorSystemTest extends PollingTask
 		} catch (FloorException e) {
 			assertEquals("Floor 4 is invalid", e.getMessage());
 		}
+
+		try {
+			mSystem.getFloorButton(-1, true);
+			fail("No floor exception thrown");
+		} catch (FloorException e) {
+			assertEquals("Floor -1 is invalid", e.getMessage());
+		}
 	}
 	
 	@Test
@@ -313,5 +328,57 @@ public class ElevatorSystemTest extends PollingTask
 		} catch (ElevatorException e) {
 			assertEquals("Elevator 2 is invalid", e.getMessage());
 		}
+
+		try {
+			mSystem.getElevator(-1);
+			fail("No elevator exception thrown");
+		} catch (ElevatorException e) {
+			assertEquals("Elevator -1 is invalid", e.getMessage());
+		}
 	}
+	
+	@Test
+	public void testGetFloorButton() throws FloorException {
+		
+		mShunt.FloorButtonDown[1] = true;
+		poll();
+		checkSystem(true);
+
+		mShunt.FloorButtonDown[1] = false;
+		poll();
+		checkSystem(true);
+
+		mShunt.FloorButtonUp[1] = false;
+		poll();
+		checkSystem(false);
+
+		mShunt.FloorButtonUp[0] = true;
+		poll();
+		checkSystem(true);
+	}
+
+	private Method getProtectedMethod(Class<?> clazz, String name, Class<?>...classes) throws NoSuchMethodException, SecurityException {
+		Method f = clazz.getDeclaredMethod(name, classes);
+		f.setAccessible(true);
+		return f;
+	}
+	
+	@Test
+	public void testSetDownButton() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, FloorException {
+		getProtectedMethod(mSystem.getClass(), "setDownButton", int.class, boolean.class).invoke(mSystem, 0, true);
+		assertTrue(mSystem.getFloorButton(0, false));
+
+		getProtectedMethod(mSystem.getClass(), "setDownButton", int.class, boolean.class).invoke(mSystem, 1, false);
+		assertFalse(mSystem.getFloorButton(1, false));
+	}
+
+	@Test
+	public void testSetUpButton() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, FloorException {
+		getProtectedMethod(mSystem.getClass(), "setUpButton", int.class, boolean.class).invoke(mSystem, 0, true);
+		assertTrue(mSystem.getFloorButton(0, true));
+
+		getProtectedMethod(mSystem.getClass(), "setUpButton", int.class, boolean.class).invoke(mSystem, 1, false);
+		assertFalse(mSystem.getFloorButton(1, true));
+	}
+
 }

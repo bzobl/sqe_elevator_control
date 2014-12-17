@@ -6,13 +6,17 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.tests.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
@@ -25,6 +29,11 @@ public class ElevatorTest implements Observer {
 
 	// Class under test
 	private Elevator mElev = new Elevator(0, CAPACITY, FLOOR_NUM);
+	
+	@Before
+	public void setUp() {
+		mElev.addObserver(this);
+	}
 
 	private Method getProtectedMethod(String name, Class<?>...classes) throws NoSuchMethodException, SecurityException {
 		Method f = mElev.getClass().getDeclaredMethod(name, classes);
