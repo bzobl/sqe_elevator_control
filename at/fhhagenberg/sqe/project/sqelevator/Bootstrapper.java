@@ -16,6 +16,8 @@ import com.sun.istack.internal.logging.Logger;
 public class Bootstrapper {
 	private static Logger LOG = Logger.getLogger(Bootstrapper.class); 
 
+	private static final String APPLICATION_NAME = "EEC - Elevator Control Center";
+	
 	public static void main(String[] args) {
 		
 		LOG.info("starting up");
@@ -29,7 +31,7 @@ public class Bootstrapper {
 		LOG.info("using " + conn.getClass().getCanonicalName() + " as connection interface");
 		ElevatorControl ctrl = new ElevatorControl(conn);
 		
-		MainView view = new MainView(ctrl, num_elevators, num_floors);
+		MainView view = new MainView(ctrl, num_elevators, num_floors, APPLICATION_NAME);
 		ctrl.setView(view);
 		ctrl.updateAll();
 

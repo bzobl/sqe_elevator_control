@@ -23,18 +23,25 @@ public class MainView extends JFrame implements IMainView
 
 	private JPanel mElevatorPane;
 	
-	public MainView(IControl control, int numElevators, int numFloors)
+	public MainView(IControl control, int numElevators, int numFloors, String title)
 	{
 		NUM_ELEVATORS = numElevators;
 		NUM_FLOORS = numFloors;
 
+		setTitle(title);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
 		mElevatorPane = new JPanel();
 		mElevatorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(mElevatorPane);
-		mElevatorPane.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		// set more space between elevator panels
+		GridLayout gl = new GridLayout(1, 0, 0, 0);
+		gl.setHgap(20);
+		
+		mElevatorPane.setLayout(gl);
 		
 		initializeAllViews(control);
 	}
