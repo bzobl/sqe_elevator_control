@@ -176,6 +176,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		add(lblPosition, gbc_lblPosition);
 
 		mTextPosition = new JTextField();
+		mTextPosition.setEditable(false);
 		mTextPosition.setName("textPosition");
 		GridBagConstraints gbc_textPosition = new GridBagConstraints();
 		gbc_textPosition.insets = new Insets(0, 0, 5, 5);
@@ -194,6 +195,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		add(lblSpeed, gbc_lblSpeed);
 
 		mTextSpeed = new JTextField();
+		mTextSpeed.setEditable(false);
 		mTextSpeed.setName("textSpeed");
 		GridBagConstraints gbc_textSpeed = new GridBagConstraints();
 		gbc_textSpeed.insets = new Insets(0, 0, 5, 5);
@@ -212,6 +214,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		add(lblPayload, gbc_lblPayload);
 
 		mTextPayload = new JTextField();
+		mTextPayload.setEditable(false);
 		mTextPayload.setName("textPayload");
 		GridBagConstraints gbc_textPayload = new GridBagConstraints();
 		gbc_textPayload.insets = new Insets(0, 0, 5, 5);
@@ -230,6 +233,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		add(lblAcceleration, gbc_lblAcceleration);
 
 		mTextAcceleration = new JTextField();
+		mTextAcceleration.setEditable(false);
 		mTextAcceleration.setName("textAcceleration");
 		GridBagConstraints gbc_textAcceleration = new GridBagConstraints();
 		gbc_textAcceleration.insets = new Insets(0, 0, 5, 5);
