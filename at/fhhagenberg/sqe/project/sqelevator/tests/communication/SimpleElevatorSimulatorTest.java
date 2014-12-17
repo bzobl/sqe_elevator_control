@@ -6,7 +6,7 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.tests.communication;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -39,35 +39,75 @@ public class SimpleElevatorSimulatorTest {
 		assertEquals(5, SimpleElevatorSimulator.DELAY_DONE);
 	}
 	
-	@Test
-	public void testMovement() {
-		assertEquals(0, mSim.getElevatorFloor(0));
-		assertEquals(0, mSim.getTarget(0));
-		assertEquals(IElevator.ELEVATOR_DOORS_OPEN, mSim.getElevatorDoorStatus(0));
-		
-		mSim.setTarget(0, 3);
-		mSim.setCommittedDirection(0, IElevator.ELEVATOR_DIRECTION_UP);
-		
-		assertEquals(3, mSim.getTarget(0));
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mSim.getCommittedDirection(0));
+	private void moveElevatorToFloor(int elevator, int start, int floor) {
+		assertEquals(start, mSim.getElevatorFloor(elevator));
+		assertEquals(start, mSim.getTarget(elevator));
+		assertEquals(IElevator.ELEVATOR_DOORS_OPEN, mSim.getElevatorDoorStatus(elevator));
+
+		mSim.setTarget(elevator, floor);
+		mSim.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);
+
+		assertEquals(floor, mSim.getTarget(elevator));
 		
 		//every call of getElevatorFloor() triggers the move action to increase the delay
-		assertEquals(0, mSim.getElevatorFloor(0));
-		assertEquals(IElevator.ELEVATOR_DOORS_CLOSING, mSim.getElevatorDoorStatus(0));
+		assertEquals(start, mSim.getElevatorFloor(elevator));
+		assertEquals(IElevator.ELEVATOR_DOORS_CLOSING, mSim.getElevatorDoorStatus(elevator));
 
-		assertEquals(0, mSim.getElevatorFloor(0));
-		assertEquals(IElevator.ELEVATOR_DOORS_CLOSED, mSim.getElevatorDoorStatus(0));
+		assertEquals(start, mSim.getElevatorFloor(elevator));
+		assertEquals(IElevator.ELEVATOR_DOORS_CLOSED, mSim.getElevatorDoorStatus(elevator));
 
-		assertEquals(3, mSim.getElevatorFloor(0));
-		assertEquals(IElevator.ELEVATOR_DOORS_CLOSED, mSim.getElevatorDoorStatus(0));
+		assertEquals(floor, mSim.getElevatorFloor(elevator));
+		assertEquals(IElevator.ELEVATOR_DOORS_CLOSED, mSim.getElevatorDoorStatus(elevator));
 		
-		assertEquals(3, mSim.getElevatorFloor(0));
-		assertEquals(IElevator.ELEVATOR_DOORS_OPENING, mSim.getElevatorDoorStatus(0));
+		assertEquals(floor, mSim.getElevatorFloor(elevator));
+		assertEquals(IElevator.ELEVATOR_DOORS_OPENING, mSim.getElevatorDoorStatus(elevator));
 
-		assertEquals(3, mSim.getElevatorFloor(0));
-		assertEquals(IElevator.ELEVATOR_DOORS_OPEN, mSim.getElevatorDoorStatus(0));
+		assertEquals(floor, mSim.getElevatorFloor(elevator));
+		assertEquals(IElevator.ELEVATOR_DOORS_OPEN, mSim.getElevatorDoorStatus(elevator));
 
-		mSim.setCommittedDirection(0, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mSim.getCommittedDirection(elevator));
+	}
+	
+	@Test
+	public void testMovement() {
+		moveElevatorToFloor(0, 0, 3);
+	}
+	
+	@Test
+	public void testTargetOnSameFloor() {
+		moveElevatorToFloor(1, 0, 0);
+	}
+	
+	@Test
+	public void testWrongCommitedDirectionUp() {
+		moveElevatorToFloor(0, 0, 2);
+		
+		mSim.setTarget(0, 3);
+		mSim.setCommittedDirection(0, IElevator.ELEVATOR_DIRECTION_DOWN);
+
+		assertEquals(2, mSim.getElevatorFloor(0));
+		assertEquals(2, mSim.getElevatorFloor(0));
+		assertEquals(2, mSim.getElevatorFloor(0));
+		assertEquals(2, mSim.getElevatorFloor(0));
+		assertEquals(2, mSim.getElevatorFloor(0));
+
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mSim.getCommittedDirection(0));
+	}
+	
+	@Test
+	public void testWrongCommitedDirectionDown() {
+		moveElevatorToFloor(2, 0, 2);
+		
+		mSim.setTarget(2, 1);
+		mSim.setCommittedDirection(2, IElevator.ELEVATOR_DIRECTION_UP);
+
+		assertEquals(2, mSim.getElevatorFloor(2));
+		assertEquals(2, mSim.getElevatorFloor(2));
+		assertEquals(2, mSim.getElevatorFloor(2));
+		assertEquals(2, mSim.getElevatorFloor(2));
+		assertEquals(2, mSim.getElevatorFloor(2));
+
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mSim.getCommittedDirection(2));
 	}
 	
 	@Test
@@ -89,5 +129,71 @@ public class SimpleElevatorSimulatorTest {
 		
 		assertEquals(18, mSim.getElevatorPosition(2));
 	}
+	
+	@Test
+	public void testAcceleration() {
+		assertEquals(0, mSim.getElevatorAccel(0));
+	}
+	
+	@Test
+	public void testElevatorButton() {
+		assertFalse(mSim.getElevatorButton(0, 1));
+		assertFalse(mSim.getElevatorButton(0, 2));
+		assertFalse(mSim.getElevatorButton(0, 4));
+		assertFalse(mSim.getElevatorButton(1, 0));
+	}
+	
+	@Test
+	public void testSpeed() {
+		assertEquals(0, mSim.getElevatorSpeed(0));
+	}
 
+	@Test
+	public void testWeight() {
+		assertEquals(0, mSim.getElevatorWeight(0));
+	}
+
+	@Test
+	public void testCapacity() {
+		assertEquals(1000, mSim.getElevatorCapacity(0));
+	}
+
+	@Test
+	public void testButtonDown() {
+		assertFalse(mSim.getFloorButtonDown(0));
+		assertFalse(mSim.getFloorButtonDown(1));
+		assertFalse(mSim.getFloorButtonDown(2));
+		assertFalse(mSim.getFloorButtonDown(3));
+		assertFalse(mSim.getFloorButtonDown(4));
+	}
+
+	@Test
+	public void testButtonUp() {
+		assertFalse(mSim.getFloorButtonUp(0));
+		assertFalse(mSim.getFloorButtonUp(1));
+		assertFalse(mSim.getFloorButtonUp(2));
+		assertFalse(mSim.getFloorButtonUp(3));
+		assertFalse(mSim.getFloorButtonUp(4));
+	}
+	
+	@Test
+	public void testSetServicesFloors() {
+		assertTrue(mSim.getServicesFloors(0, 1));
+		mSim.setServicesFloors(0, 1, false);
+		assertFalse(mSim.getServicesFloors(0, 1));
+	}
+
+	@Test
+	public void testServicesFloors() {
+		assertTrue(mSim.getServicesFloors(0, 0));
+		assertTrue(mSim.getServicesFloors(1, 1));
+		assertTrue(mSim.getServicesFloors(2, 2));
+		assertTrue(mSim.getServicesFloors(0, 3));
+		assertTrue(mSim.getServicesFloors(1, 4));
+	}
+	
+	@Test
+	public void testClockTick() {
+		assertEquals(SimpleElevatorSimulator.CLOCK_TICK, mSim.getClockTick());
+	}
 }
