@@ -6,7 +6,7 @@
 
 package at.fhhagenberg.sqe.project.sqelevator;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.ElevatorAdaptor;
+import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.tests.model.ElevatorConnectionShunt;
@@ -34,7 +34,7 @@ public class Bootstrapper {
         elevcon.FloorButtonUp[3] = true;
         elevcon.FloorButtonDown[1] = true;
 		
-		ElevatorAdaptor adbt = new ElevatorAdaptor(num_elevators, num_floors);
+		SimpleElevatorSimulator adbt = new SimpleElevatorSimulator(num_elevators, num_floors);
 		
 		IElevatorConnection conn = adbt;
 		LOG.info("using " + conn.getClass().getCanonicalName() + " as connection interface");

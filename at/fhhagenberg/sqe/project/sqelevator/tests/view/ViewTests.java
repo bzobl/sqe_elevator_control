@@ -16,5 +16,5 @@ import org.junit.runners.Suite.SuiteClasses;
 	ElevatorPaneElevatorButtonTest.class
 })
 
-public class AllTests {
+public class ViewTests {
 }
