@@ -134,7 +134,7 @@ m2=*</panel_attributes>
       <x>1617</x>
       <y>525</y>
       <w>231</w>
-      <h>119</h>
+      <h>154</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
 IElevatorAlgorithm
@@ -142,7 +142,8 @@ IElevatorAlgorithm
 - mModel : ElevatorSystemModel
 - mControl : IElevatorControl
 --
-+ ProcessInputs()
++ setElevatorRequest(int elevator, int floor)
++ setFloorRequest(int floor, boolean up)
 
 + setModel(ElevatorSystemModel model)
 + setControl(IElevatorControl control)</panel_attributes>
@@ -869,7 +870,7 @@ IMainView
 + setCallRequest(int elevator, int floor)
 + setServicedFloor(int elevator, int floor, boolean isServiced)
 
-+ updateAll()
++ updateView()
 + setView(IMainView view)</panel_attributes>
     <additional_attributes/>
   </element>

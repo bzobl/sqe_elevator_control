@@ -9,6 +9,6 @@ public interface IControl {
 	public void setCallRequest(int elevator, int floor);
 	public void setServicedFloor(int elevator, int floor, boolean isServiced);
 	
-	public void updateAll();
+	public void updateView();
 	public void setView(IMainView view);
 }

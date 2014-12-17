@@ -31,7 +31,7 @@ public class Bootstrapper {
 		
 		MainView view = new MainView(ctrl, num_elevators, num_floors, APPLICATION_NAME);
 		ctrl.setView(view);
-		ctrl.updateAll();
+		ctrl.updateView();
 
 		view.setVisible(true);
 		

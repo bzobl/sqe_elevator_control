@@ -5,3 +5,5 @@
 /ElevatorButtonListener.class
 /IControl.class
 /ElevatorControlCenter.class
+/IElevatorAlgorithm.class
+/ManualElevatorAlgorithm.class
