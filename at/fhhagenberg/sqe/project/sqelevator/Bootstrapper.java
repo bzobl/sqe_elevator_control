@@ -6,10 +6,10 @@
 
 package at.fhhagenberg.sqe.project.sqelevator;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
+import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControl;
-import at.fhhagenberg.sqe.project.sqelevator.tests.model.ElevatorConnectionShunt;
+import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -22,25 +22,18 @@ public class Bootstrapper {
 
 		final int num_elevators = 3;
 		final int num_floors = 5;
-		final int floor_height = 6;
-		final int period = 1000;
-		final int capacity = 100;
-
-		ElevatorConnectionShunt elevcon = new ElevatorConnectionShunt(num_floors, floor_height, period, capacity);
-		elevcon.NUM_ELEVATORS = num_elevators;
-        elevcon.ElevatorAccel = 1;
-        elevcon.Floor = 2;
-        elevcon.ServicesFloors[1] = false;
-        elevcon.FloorButtonUp[3] = true;
-        elevcon.FloorButtonDown[1] = true;
 		
 		SimpleElevatorSimulator adbt = new SimpleElevatorSimulator(num_elevators, num_floors);
 		
 		IElevatorConnection conn = adbt;
 		LOG.info("using " + conn.getClass().getCanonicalName() + " as connection interface");
 		ElevatorControl ctrl = new ElevatorControl(conn);
+		
+		MainView view = new MainView(ctrl, num_elevators, num_floors);
+		ctrl.setView(view);
+		ctrl.updateAll();
 
-		ctrl.showGui();
+		view.setVisible(true);
 		
 	}
 }

@@ -11,12 +11,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
-
 import at.fhhagenberg.sqe.project.sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
-import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorButtonListener.ListenerType;
 import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
@@ -24,11 +20,11 @@ import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.PollingTask;
 import at.fhhagenberg.sqe.project.sqelevator.view.IElevatorView;
 import at.fhhagenberg.sqe.project.sqelevator.view.IFloorView;
-import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
+import at.fhhagenberg.sqe.project.sqelevator.view.IMainView;
 
 import com.sun.istack.internal.logging.Logger;
 
-public class ElevatorControl implements Observer {
+public class ElevatorControl implements IControl, Observer {
 	
 	private static Logger LOG = Logger.getLogger(ElevatorControl.class);
 	
@@ -49,7 +45,7 @@ public class ElevatorControl implements Observer {
 	PollingTask mPollTask;
 	IElevatorConnection mConnection;
 	ElevatorSystem mModel;
-	MainView mView;
+	IMainView mView;
 	
 	boolean mAuto[];
 	
@@ -61,9 +57,6 @@ public class ElevatorControl implements Observer {
 
         mPollTask = new PollingTask(mConnection);
 		mPollTask.setElevatorSystem(mModel);
-        
-        mView = new MainView();
-		initializeView();
 		
 		mAuto = new boolean[mModel.NUM_ELEVATORS];
         
@@ -71,47 +64,16 @@ public class ElevatorControl implements Observer {
 		mPollTask.startPolling(mConnection.getClockTick());
 	}
 
-	private void initializeView() {
-        for (int e = 0; e < mModel.NUM_ELEVATORS; e++) {
-        	IElevatorView eleView = mView.addNewElevator(mModel.NUM_FLOORS);
-        	ElevatorButtonListener mbl = new ElevatorButtonListener(ListenerType.MODE_BUTTON_LISTENER, this, e, -1);
-        	eleView.addModeButtonListener(mbl);
-        	LOG.info("initialization of IElevatorView " + e + " almost done");
-        	
-        	for (int f = 0; f < mModel.NUM_FLOORS; f++) {
-        		IFloorView floorView = eleView.getFloorView(f);
-        		
-        		ElevatorButtonListener cbl = new ElevatorButtonListener(ListenerType.CALL_BUTTON_LISTENER, this, e, f);
-        		ElevatorButtonListener sbl = new ElevatorButtonListener(ListenerType.SERVICE_BUTTON_LISTENER, this, e, f);
-        		
-        		floorView.addCallButtonListener(cbl);
-        		floorView.addServiceButtonListener(sbl);
-        		floorView.enableCallButton(true);
-        	}
-        	
-        	try {
-				updateElevator(mModel.getElevator(e));
-			} catch (ElevatorException ex) {
-				LOG.severe(ex.getMessage());
-			}
-        }
-        
-        updateElevatorSystem(mModel);
-	}
-
-	public void showGui() {
-		mView.setVisible(true);
-	}
-
 	/**
 	 * @param elevator
 	 * @param btn
 	 */
-	public void modeButtonClicked(int elevator, JToggleButton btn) {
+	@Override
+	public void changeControlMode(int elevator, boolean autoMode) {
 		LOG.info("Mode button of Elevator " + elevator + " clicked");
 		IElevatorView eleView = mView.getElevatorView(elevator);
 		
-		mAuto[elevator] = btn.isSelected();
+		mAuto[elevator] = autoMode;
 		
 		for (int i = 0; i < mModel.NUM_FLOORS; i++) {
 			IFloorView floorView = eleView.getFloorView(i); 
@@ -124,7 +86,8 @@ public class ElevatorControl implements Observer {
 	 * @param floor
 	 * @param btn
 	 */
-	public void callButtonClicked(int elevator, int floor, JButton btn) {
+	@Override
+	public void setCallRequest(int elevator, int floor) {
 		LOG.info("Call Button of Elevator " + elevator + ", Floor " + floor + " clicked");
 
 		assert(mAuto[elevator] == false) : "Call Button cannot be pressed when in auto mode";
@@ -153,9 +116,28 @@ public class ElevatorControl implements Observer {
 	 * @param floor
 	 * @param btn
 	 */
-	public void serviceButtonClicked(int elevator, int floor, JToggleButton btn) {
+	@Override
+	public void setServicedFloor(int elevator, int floor, boolean isServiced) {
 		LOG.info("Service Button of Elevator " + elevator + ", Floor " + floor + " clicked");
-		mConnection.setServicesFloors(elevator, floor, btn.isSelected());
+		mConnection.setServicesFloors(elevator, floor, isServiced);
+	}
+	
+	@Override
+	public void updateAll() {
+        try {
+        	for (int i = 0; i < mModel.NUM_ELEVATORS; i++) {
+				updateElevator(mModel.getElevator(i));
+        	}
+        } catch (ElevatorException e) {
+        	LOG.severe(e.getMessage());
+		}
+		
+		updateElevatorSystem(mModel);
+	}
+	
+	@Override
+	public void setView(IMainView view) {
+		mView = view;
 	}
 
 	@Override
@@ -175,6 +157,12 @@ public class ElevatorControl implements Observer {
 	 * @param elev
 	 */
 	private void updateElevator(Elevator elev) {
+		if (mView == null) {
+			LOG.warning("update requested when no view is set");
+			return;
+		}
+
+		
 		IElevatorView eleView = mView.getElevatorView(elev.NUM);
 		if (eleView == null) {
 			LOG.severe("Could not find ElevatorView for elevator " + elev.NUM);
@@ -219,6 +207,11 @@ public class ElevatorControl implements Observer {
 	 * @param sys
 	 */
 	private void updateElevatorSystem(ElevatorSystem sys) {
+		if (mView == null) {
+			LOG.warning("update requested when no view is set");
+			return;
+		}
+
 		for (int e = 0; e < mModel.NUM_ELEVATORS; e++) {
 			for (int f = 0; f < mModel.NUM_ELEVATORS; f++) {
 				IFloorView floorView = mView.getElevatorView(e).getFloorView(f);

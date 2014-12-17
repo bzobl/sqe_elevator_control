@@ -1,11 +1,13 @@
 
-package at.fhhagenberg.sqe.project.sqelevator.controller;
+package at.fhhagenberg.sqe.project.sqelevator.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
+
+import at.fhhagenberg.sqe.project.sqelevator.controller.IControl;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -20,11 +22,11 @@ public class ElevatorButtonListener implements ActionListener {
 	}
 
 	private ListenerType mType;
-	private ElevatorControl mControl;
+	private IControl mControl;
 	private int mElevatorNum;
 	private int mFloorNum;
 	
-	public ElevatorButtonListener(ListenerType t, ElevatorControl c, int e, int f) {
+	public ElevatorButtonListener(ListenerType t, IControl c, int e, int f) {
 		mType = t;
 		mControl = c;
 		mElevatorNum = e;
@@ -37,17 +39,17 @@ public class ElevatorButtonListener implements ActionListener {
 		switch (mType) {
 		case MODE_BUTTON_LISTENER:
 			assert (e.getSource() instanceof JToggleButton) : "unexpected button type";
-			mControl.modeButtonClicked(mElevatorNum, (JToggleButton) e.getSource());
+			mControl.changeControlMode(mElevatorNum, ((JToggleButton) e.getSource()).isSelected());
 			break;
 
 		case CALL_BUTTON_LISTENER:
 			assert (e.getSource() instanceof JButton) : "unexpected button type";
-			mControl.callButtonClicked(mElevatorNum, mFloorNum, (JButton) e.getSource());
+			mControl.setCallRequest(mElevatorNum, mFloorNum);
 			break;
 			
 		case SERVICE_BUTTON_LISTENER:
 			assert (e.getSource() instanceof JToggleButton) : "unexpected button type";
-			mControl.serviceButtonClicked(mElevatorNum, mFloorNum, (JToggleButton) e.getSource());
+			mControl.setServicedFloor(mElevatorNum, mFloorNum, ((JToggleButton) e.getSource()).isSelected());
 			break;
 
 		default:
