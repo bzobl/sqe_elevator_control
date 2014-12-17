@@ -131,7 +131,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		NUMBER_OF_FLOORS = floors;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 85, 25, 35, 75, 25, 45, 0 };
+		gridBagLayout.columnWidths = new int[] { 85, 25, 25, 65, 25, 45, 0 };
 		gridBagLayout.rowHeights = new int[] { 20, 5, 0, 5, 25, 25, 25, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
 				Double.MIN_VALUE };
@@ -277,7 +277,7 @@ public class ElevatorPanel extends JPanel implements IElevatorView
 		scrollPane.setViewportView(mFloorsPane);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.SOUTH;
 		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
