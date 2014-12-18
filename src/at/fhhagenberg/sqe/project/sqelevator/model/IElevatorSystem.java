@@ -10,14 +10,20 @@ import java.util.Observer;
 
 public interface IElevatorSystem {
 
-	public abstract void addObserver(Observer o);
+	public static final int SYSTEM_PROPERTY_CHANGED = -1;
+	public static final int ELEVATOR_PROPERTY_CHANGED = -2;
+
+	public void addObserver(Observer o);
+
+	public int getNumberOfElevators();
+	public int getNumberOfFloors();
 
 	/**
 	 * @param num Number of the elevator to get
 	 * @return Elevator with number num
 	 * @throws ElevatorException 
 	 */
-	public IElevator getElevator(int num) throws ElevatorException;
+	public IElevatorModel getElevator(int num) throws ElevatorException;
 
 	public boolean getFloorButton(int floor, boolean up) throws FloorException;
 

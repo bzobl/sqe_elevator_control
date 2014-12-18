@@ -18,9 +18,6 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	@SuppressWarnings("unused")
 	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
 
-	public static final int SYSTEM_PROPERTY_CHANGED = -1;
-	public static final int ELEVATOR_PROPERTY_CHANGED = -2;
-
 	public final int NUM_ELEVATORS;
 	public final int NUM_FLOORS;
 	public final int FLOOR_HEIGHT;
@@ -48,6 +45,10 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 			mUpButtons[i] = false;
 			mDownButtons[i] = false;
 		}
+
+        PollingTask pTask = new PollingTask(status);
+		pTask.setElevatorSystem(this);
+		pTask.startPolling(status.getClockTick());
 	}
 	
 	/* (non-Javadoc)
@@ -59,6 +60,16 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 		for (int e = 0; e < NUM_ELEVATORS; e++) {
 			Elevators[e].addObserver(o);
 		}
+	}
+
+	@Override
+	public int getNumberOfElevators() {
+		return NUM_ELEVATORS;
+	}
+	
+	@Override
+	public int getNumberOfFloors() {
+		return NUM_FLOORS;
 	}
 	
 	private void checkElevator(int elevator) throws ElevatorException {
@@ -77,7 +88,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	 * @see at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem#getElevator(int)
 	 */
 	@Override
-	public Elevator getElevator(int num) throws ElevatorException {
+	public IElevatorModel getElevator(int num) throws ElevatorException {
 		checkElevator(num);
 		return Elevators[num];
 	}

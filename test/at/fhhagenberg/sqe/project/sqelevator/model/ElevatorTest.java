@@ -19,7 +19,7 @@ import java.util.Observer;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
 

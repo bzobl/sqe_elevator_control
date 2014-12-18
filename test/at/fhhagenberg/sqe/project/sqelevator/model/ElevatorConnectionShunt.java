@@ -1,7 +1,7 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.model;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 

@@ -1,7 +1,7 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.communication;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 
 public class SimpleElevatorSimulator implements IElevatorStatus, IElevatorControl {
 

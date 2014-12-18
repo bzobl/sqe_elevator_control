@@ -13,7 +13,7 @@ import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
 import com.sun.istack.internal.logging.Logger;
 
-public class PollingTask extends TimerTask {
+class PollingTask extends TimerTask {
 	
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	

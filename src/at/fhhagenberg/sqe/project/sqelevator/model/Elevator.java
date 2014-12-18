@@ -8,7 +8,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 
 import java.util.Observable;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 
 /** Elevator
  *  This class is a readonly-model of the current properties of an elevator.
@@ -19,9 +19,9 @@ import at.fhhagenberg.sqe.project.sqelevator.IElevator;
  *  it to.
  * 
  */
-public class Elevator extends Observable implements at.fhhagenberg.sqe.project.sqelevator.model.IElevator {
-	public final int NUM;
-	public final int CAPACITY;
+class Elevator extends Observable implements IElevatorModel {
+	private final int NUM;
+	private final int CAPACITY;
 	
 	private int mAcceleration = 0;
 	private int mDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
@@ -51,6 +51,16 @@ public class Elevator extends Observable implements at.fhhagenberg.sqe.project.s
 		if (floor >= mServicesFloors.length) {
 			throw new FloorException(floor);
 		}
+	}
+	
+	@Override
+	public int getElevatorNumber() {
+		return NUM;
+	}	
+	
+	@Override
+	public int getCapacity() {
+		return CAPACITY;
 	}
 
 	@Override

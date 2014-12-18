@@ -3,6 +3,8 @@ package at.fhhagenberg.sqe.project.sqelevator;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
+import sqelevator.IElevator;
+
 
 public class ElevatorExample {
 
@@ -15,7 +17,10 @@ public class ElevatorExample {
 	public static void main(String[] args) {
 
 		try {
-			IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
+			IElevator controller = (IElevator) Naming.lookup("rmi://10.29.17.240/ElevatorSim");
+			//IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
+			
+			System.out.println("he did have done the lookup do");
 			ElevatorExample client = new ElevatorExample(controller);
 
 			client.displayElevatorSettings();

@@ -1,22 +1,22 @@
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
-import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
 
 abstract public class ElevatorAlgorithm implements IElevatorAlgorithm {
 	
-	protected ElevatorSystem mModel;
+	protected IElevatorSystem mModel;
 	protected IElevatorControl mControl;
 	protected boolean mEnabledElevators[];
 
-	public ElevatorAlgorithm(ElevatorSystem sys, IElevatorControl ctrl) {
+	public ElevatorAlgorithm(IElevatorSystem sys, IElevatorControl ctrl) {
 		mModel = sys;
 		mControl = ctrl;
-		mEnabledElevators = new boolean[mModel.NUM_ELEVATORS];
+		mEnabledElevators = new boolean[mModel.getNumberOfElevators()];
 	}
 
 	@Override
-	public void setModel(ElevatorSystem model) {
+	public void setModel(IElevatorSystem model) {
 		mModel = model;
 	}
 

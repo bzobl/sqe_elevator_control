@@ -1,30 +1,19 @@
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
-import java.util.ArrayList;
-
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
-import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
-import at.fhhagenberg.sqe.project.sqelevator.model.PollingTask;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
 
 import com.sun.istack.internal.logging.Logger;
 
 public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 
-	private static Logger LOG = Logger.getLogger(PollingTask.class); 
+	private static Logger LOG = Logger.getLogger(AutoElevatorAlgorithm.class); 
 
-	private ArrayList<ArrayList<Integer> > mTargets;
-	
-	public AutoElevatorAlgorithm(ElevatorSystem sys, IElevatorControl ctrl) {
+	public AutoElevatorAlgorithm(IElevatorSystem sys, IElevatorControl ctrl) {
 		super(sys, ctrl);
-		mTargets = new ArrayList<>();
-		for (int i = 0; i < mModel.NUM_ELEVATORS; ++i) {
-			if (((ElevatorControlCenter)mControl).mAuto[i] == true) {
-				mTargets.add(new ArrayList<Integer>());
-			} 
-		}
 	}
 
 	@Override
@@ -38,8 +27,8 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		}
 		assert (curFloor != floor);
 		
-		int nextFloor = 0, diff = mModel.NUM_FLOORS+1;
-		for (int i = 0; i < mModel.NUM_FLOORS; ++i) {
+		int nextFloor = 0, diff = mModel.getNumberOfElevators()+1;
+		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
 			try {
 				if (mModel.getElevator(elevator).getButtonStatus(i) && mModel.getElevator(elevator).getServicesFloors(curFloor)) {
 					if (diff > Math.abs(floor-i)) {
@@ -56,7 +45,7 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 			}
 		}
 		
-		if (diff < mModel.NUM_FLOORS+1) {
+		if (diff < mModel.getNumberOfElevators()+1) {
 			mControl.setTarget(elevator, nextFloor);
 			mControl.setCommittedDirection(elevator, getDirection(floor, nextFloor));
 		}
@@ -79,7 +68,7 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 	@Override
 	public void setFloorRequest(int floor, boolean up) {
 		// check if there is already a elevator in this floor
-		for (int i = 0; i < mModel.NUM_ELEVATORS; ++i) {
+		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
 			try {																// check if
 				if (((ElevatorControlCenter)mControl).mAuto[i] == true 			// elevator is in automatic mode
 						&& mModel.getElevator(i).getServicesFloors(floor) 		// floor is serviced
@@ -98,7 +87,7 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		}
 		
 		// check if there is an elevator without a job
-		for (int i = 0; i < mModel.NUM_ELEVATORS; ++i) {
+		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
 			try {																// check if
 				if (((ElevatorControlCenter)mControl).mAuto[i] == true 			// elevator is in automatic mode
 						&& mModel.getElevator(i).getServicesFloors(floor) 		// floor is serviced
@@ -118,7 +107,7 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		}
 		
 		// check if an elevator can pick up passengers
-		for (int i = 0; i < mModel.NUM_ELEVATORS; ++i) {
+		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
 			try {																// check if
 				if (((ElevatorControlCenter)mControl).mAuto[i] == true 			// elevator is in automatic mode
 						&& mModel.getElevator(i).getServicesFloors(floor) 		// floor is serviced

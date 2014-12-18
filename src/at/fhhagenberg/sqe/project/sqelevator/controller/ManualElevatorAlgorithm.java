@@ -6,10 +6,10 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
-import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -19,13 +19,13 @@ import com.sun.istack.internal.logging.Logger;
 public class ManualElevatorAlgorithm extends ElevatorAlgorithm {
 	private static Logger LOG = Logger.getLogger(ManualElevatorAlgorithm.class);
 	
-	public ManualElevatorAlgorithm(ElevatorSystem sys, IElevatorControl ctrl) {
+	public ManualElevatorAlgorithm(IElevatorSystem sys, IElevatorControl ctrl) {
 		super(sys, ctrl);
 	}
 
 	@Override
 	public void setElevatorRequest(int elevator, int floor) {
-		assert((floor < mModel.NUM_FLOORS) && (floor >= 0)) : "floor number is invalid";
+		assert((floor < mModel.getNumberOfElevators()) && (floor >= 0)) : "floor number is invalid";
 
 		mControl.setTarget(elevator, floor);
 

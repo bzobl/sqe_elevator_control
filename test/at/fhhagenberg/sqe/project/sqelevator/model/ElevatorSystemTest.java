@@ -14,7 +14,7 @@ import java.util.Observer;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhhagenberg.sqe.project.sqelevator.model.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel;
 import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
@@ -64,7 +64,7 @@ public class ElevatorSystemTest extends PollingTask
 		run();
 	}
 
-	private IElevator checkObserverUpdate(int num, boolean changed)
+	private IElevatorModel checkObserverUpdate(int num, boolean changed)
 	{
 		if (!changed) {
 			assertNull(mLastObservable);
@@ -75,7 +75,7 @@ public class ElevatorSystemTest extends PollingTask
 		assertTrue(mLastObservable instanceof Elevator);
 
 		Elevator elev = (Elevator) mLastObservable;
-		assertEquals(num, elev.NUM);
+		assertEquals(num, elev.getElevatorNumber());
 		
 		mLastObservable = null;
 		mObserverArgument = null;
@@ -83,7 +83,7 @@ public class ElevatorSystemTest extends PollingTask
 		return elev;
 	}
 	
-	private void checkElevatorProperties(IElevator elev) throws FloorException {
+	private void checkElevatorProperties(IElevatorModel elev) throws FloorException {
 		assertEquals(mShunt.Target, elev.getTargetFloor());
 		assertEquals(mShunt.CommitedDirection, elev.getDirection());
 		assertEquals(mShunt.ElevatorAccel, elev.getAcceleration());
@@ -100,7 +100,7 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	private void checkElevator(int num, boolean observer_expected) throws ElevatorException, FloorException {
-		IElevator elev = checkObserverUpdate(num, observer_expected);
+		IElevatorModel elev = checkObserverUpdate(num, observer_expected);
 		if (elev != null) {
 			checkElevatorProperties(elev);
 		}
@@ -132,24 +132,25 @@ public class ElevatorSystemTest extends PollingTask
 		assertEquals(1, mSystem.NUM_ELEVATORS);
 		assertEquals(FLOOR_NUM, mSystem.NUM_FLOORS);
 		assertEquals(FLOOR_HEIGHT, mSystem.FLOOR_HEIGHT);
-        assertEquals(CAPACITY, mSystem.getElevator(0).CAPACITY);
+        assertEquals(CAPACITY, mSystem.getElevator(0).getCapacity());
+        assertEquals(0, mSystem.getElevator(0).getElevatorNumber());
 	}
 	
 	@Test
 	public void testElevatorDirection() throws ElevatorException, FloorException {
-		mShunt.CommitedDirection = at.fhhagenberg.sqe.project.sqelevator.IElevator.ELEVATOR_DIRECTION_DOWN;
+		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_DOWN;
 		poll();
 		checkElevator(0,true);
 
-		mShunt.CommitedDirection = at.fhhagenberg.sqe.project.sqelevator.IElevator.ELEVATOR_DIRECTION_UP;
+		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_UP;
 		poll();
 		checkElevator(0, true);
 
-		mShunt.CommitedDirection = at.fhhagenberg.sqe.project.sqelevator.IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		poll();
 		checkElevator(0, true);
 
-		mShunt.CommitedDirection = at.fhhagenberg.sqe.project.sqelevator.IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		poll();
 		checkElevator(0, false);
 	}
@@ -198,11 +199,11 @@ public class ElevatorSystemTest extends PollingTask
 	
 	@Test
 	public void testDoorStatus() throws ElevatorException, FloorException {
-		mShunt.Doorstatus = at.fhhagenberg.sqe.project.sqelevator.IElevator.ELEVATOR_DOORS_OPENING;
+		mShunt.Doorstatus = sqelevator.IElevator.ELEVATOR_DOORS_OPENING;
 		poll();
 		checkElevator(0, true);
 
-		mShunt.Doorstatus = at.fhhagenberg.sqe.project.sqelevator.IElevator.ELEVATOR_DOORS_CLOSING;
+		mShunt.Doorstatus = sqelevator.IElevator.ELEVATOR_DOORS_CLOSING;
 		poll();
 		checkElevator(0, true);
 

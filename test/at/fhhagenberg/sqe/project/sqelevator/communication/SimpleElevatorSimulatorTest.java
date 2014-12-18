@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import at.fhhagenberg.sqe.project.sqelevator.IElevator;
+import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 
 /** SimpleElevatorSimulatorTest
