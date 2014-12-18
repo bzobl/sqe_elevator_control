@@ -13,7 +13,7 @@ import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
 import com.sun.istack.internal.logging.Logger;
 
-public class ElevatorSystem extends Observable {
+public class ElevatorSystem extends Observable implements IElevatorSystem {
 	
 	@SuppressWarnings("unused")
 	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
@@ -50,6 +50,9 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem#addObserver(java.util.Observer)
+	 */
 	@Override
 	public void addObserver(Observer o) {
 		super.addObserver(o);
@@ -70,16 +73,19 @@ public class ElevatorSystem extends Observable {
 		}
 	}
 
-	/**
-	 * @param num Number of the elevator to get
-	 * @return Elevator with number num
-	 * @throws ElevatorException 
+	/* (non-Javadoc)
+	 * @see at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem#getElevator(int)
 	 */
+	@Override
 	public Elevator getElevator(int num) throws ElevatorException {
 		checkElevator(num);
 		return Elevators[num];
 	}
 
+	/* (non-Javadoc)
+	 * @see at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem#getFloorButton(int, boolean)
+	 */
+	@Override
 	public boolean getFloorButton(int floor, boolean up) throws FloorException {
 		checkFloor(floor);
 

@@ -19,7 +19,7 @@ import at.fhhagenberg.sqe.project.sqelevator.IElevator;
  *  it to.
  * 
  */
-public class Elevator extends Observable {
+public class Elevator extends Observable implements at.fhhagenberg.sqe.project.sqelevator.model.IElevator {
 	public final int NUM;
 	public final int CAPACITY;
 	
@@ -53,44 +53,54 @@ public class Elevator extends Observable {
 		}
 	}
 
+	@Override
 	public int getAcceleration() {
 		return mAcceleration;
 	}
 
+	@Override
 	public boolean getButtonStatus(int floor) throws FloorException {
 		checkFloor(floor);
 		return mButtonStatus[floor];
 	}
 
+	@Override
 	public int getDirection() {
 		return mDirection;
 	}
 
+	@Override
 	public int getDoorstatus() {
 		return mDoorstatus;
 	}
 
+	@Override
 	public int getFloor() {
 		return mFloor;
 	}
 
+	@Override
 	public int getPosition() {
 		return mPosition;
 	}
 
+	@Override
 	public boolean getServicesFloors(int floor) throws FloorException {
 		checkFloor(floor);
 		return mServicesFloors[floor];
 	}
 
+	@Override
 	public int getSpeed() {
 		return mSpeed;
 	}
 
+	@Override
 	public int getTargetFloor() {
 		return mTargetFloor;
 	}
 
+	@Override
 	public int getWeight() {
 		return mWeight;
 	}

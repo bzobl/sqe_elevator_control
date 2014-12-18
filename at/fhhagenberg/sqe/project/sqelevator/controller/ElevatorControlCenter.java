@@ -18,6 +18,7 @@ import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
 import at.fhhagenberg.sqe.project.sqelevator.model.PollingTask;
 import at.fhhagenberg.sqe.project.sqelevator.view.IElevatorView;
 import at.fhhagenberg.sqe.project.sqelevator.view.IFloorView;
@@ -143,7 +144,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg.equals(ElevatorSystem.SYSTEM_PROPERTY_CHANGED)) {
-			ElevatorSystem sys = (ElevatorSystem) o;
+			IElevatorSystem sys = (IElevatorSystem) o;
 			if (mView != null) {
 				updateView(sys);
 			} else {
@@ -197,7 +198,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	/**
 	 * @param sys
 	 */
-	private void updateAlgorithm(ElevatorSystem sys) {
+	private void updateAlgorithm(IElevatorSystem sys) {
 		assert (mAutoAlgo != null) : "Auto algorithm not set";
 		assert (isAnyElevatorAuto()) : "all elevators are in manual mode";
 
@@ -260,7 +261,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	}
 
 		
-	private void updateView(ElevatorSystem sys) {
+	private void updateView(IElevatorSystem sys) {
 		assert (mView != null) : "update of view requested when no view was set";
 
 		for (int e = 0; e < mModel.NUM_ELEVATORS; e++) {

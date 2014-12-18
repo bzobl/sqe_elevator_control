@@ -4,3 +4,6 @@
 /ElevatorException.class
 /PollingTask.class
 /IElevatorConnection.class
+/IElevatorSystem.class
+/IElevator.class
+/IElevator1.class
