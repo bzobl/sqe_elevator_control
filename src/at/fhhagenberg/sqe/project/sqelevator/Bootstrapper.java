@@ -20,7 +20,6 @@ public class Bootstrapper {
 	public static void main(String[] args) {
 		
 		LOG.info("starting up");
-		System.out.println(" > " + System.getProperty("user.dir"));
 		
 		final int num_elevators = 3;
 		final int num_floors = 5;
