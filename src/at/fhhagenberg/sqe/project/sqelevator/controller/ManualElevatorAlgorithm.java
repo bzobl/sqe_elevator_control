@@ -25,7 +25,7 @@ public class ManualElevatorAlgorithm extends ElevatorAlgorithm {
 
 	@Override
 	public void setElevatorRequest(int elevator, int floor) {
-		assert((floor < mModel.getNumberOfElevators()) && (floor >= 0)) : "floor number is invalid";
+		assert((floor < mModel.getNumberOfFloors()) && (floor >= 0)) : "floor number is invalid";
 
 		mControl.setTarget(elevator, floor);
 
