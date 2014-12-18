@@ -75,6 +75,7 @@ public class MainView extends JFrame implements IMainView
 		mMainPanel.add(mStatusPanel, gbcStatusBar);
 		
 		mLblStatus = new JLabel("");
+		mLblStatus.setName("statusText");
 		mLblStatus.setHorizontalAlignment(SwingConstants.RIGHT);
 		mStatusPanel.add(mLblStatus);
 		
