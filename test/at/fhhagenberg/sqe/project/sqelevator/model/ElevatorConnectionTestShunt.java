@@ -5,7 +5,7 @@ import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
-final class ElevatorConnectionShunt implements IElevatorStatus, IElevatorControl {
+final class ElevatorConnectionTestShunt implements IElevatorStatus, IElevatorControl {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
@@ -31,7 +31,7 @@ final class ElevatorConnectionShunt implements IElevatorStatus, IElevatorControl
 	public boolean[] SetServicesFloor;
 	public int SetTarget;
 	
-	public ElevatorConnectionShunt(int floors, int height, long period, int capacity) {
+	public ElevatorConnectionTestShunt(int floors, int height, long period, int capacity) {
 		FLOOR_NUM = floors;
 		FLOOR_HEIGHT = height;
 		CLOCK_TICK = period;

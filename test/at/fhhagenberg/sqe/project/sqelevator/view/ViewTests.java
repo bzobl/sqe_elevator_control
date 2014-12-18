@@ -7,7 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	FloorPanelCallButton.class, 
+	FloorPanelCallButtonTest.class, 
 	FloorPanelElevatorStatusTest.class,
 	FloorPanelFloorButtonTest.class,
 	FloorPanelMoveStatusTest.class,

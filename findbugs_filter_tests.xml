@@ -10,4 +10,7 @@
       <Bug code="IJU" /> <!-- 'IJU' is the code for bugs related to JUnit test code -->
   </Not>
 </Match>
+<Match>
+  <Class name="sqelevator.ElevatorExample" />
+</Match>
 </FindBugsFilter>

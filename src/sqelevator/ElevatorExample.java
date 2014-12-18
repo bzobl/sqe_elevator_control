@@ -1,9 +1,7 @@
-package at.fhhagenberg.sqe.project.sqelevator;
+package sqelevator;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-
-import sqelevator.IElevator;
 
 
 public class ElevatorExample {

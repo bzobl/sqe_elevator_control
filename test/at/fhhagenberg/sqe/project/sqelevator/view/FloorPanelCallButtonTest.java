@@ -12,9 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import abbot.finder.matchers.ClassMatcher;
-import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
 
-public class FloorPanelCallButton extends ComponentTestFixture
+public class FloorPanelCallButtonTest extends ComponentTestFixture
 {
 	private FloorPanel mFloorPanel;
 	private JButton mCallButton;

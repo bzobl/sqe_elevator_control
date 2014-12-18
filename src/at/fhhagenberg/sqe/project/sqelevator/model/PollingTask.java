@@ -49,7 +49,7 @@ class PollingTask extends TimerTask {
 			}
 	
 			for (int num = 0; num < mElevators.NUM_ELEVATORS; num++) {
-				Elevator elevator = mElevators.Elevators[num];
+				Elevator elevator = mElevators.mElevators[num];
 				elevator.setDirection(mConnection.getCommittedDirection(num));
 				elevator.setAcceleration(mConnection.getElevatorAccel(num));
 				elevator.setDoorstatus(mConnection.getElevatorDoorStatus(num));

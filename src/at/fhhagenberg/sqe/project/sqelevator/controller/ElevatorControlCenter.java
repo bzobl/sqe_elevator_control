@@ -138,6 +138,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (arg.equals(IElevatorSystem.SYSTEM_PROPERTY_CHANGED)) {
+			assert (o instanceof IElevatorSystem);
 			IElevatorSystem sys = (IElevatorSystem) o;
 			if (mView != null) {
 				updateView(sys);
@@ -152,6 +153,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 				LOG.info("ElevatorSystem updated, but no auto algo is set");
 			}
 		} else if (arg.equals(IElevatorSystem.ELEVATOR_PROPERTY_CHANGED)) {
+			assert (o instanceof IElevatorModel);
 			IElevatorModel elev = (IElevatorModel) o;
 			if (mView != null) {
 				updateView(elev);

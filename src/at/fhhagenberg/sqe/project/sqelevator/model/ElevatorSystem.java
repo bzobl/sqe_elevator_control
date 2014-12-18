@@ -22,7 +22,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	public final int NUM_FLOORS;
 	public final int FLOOR_HEIGHT;
 
-	protected Elevator Elevators[];
+	protected Elevator mElevators[];
 
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
@@ -32,13 +32,13 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 		NUM_FLOORS = status.getFloorNum();
 		FLOOR_HEIGHT = status.getFloorHeight();
 
-		Elevators = new Elevator[NUM_ELEVATORS];
+		mElevators = new Elevator[NUM_ELEVATORS];
 		mUpButtons = new boolean[NUM_FLOORS];
 		mDownButtons = new boolean[NUM_FLOORS];
 		
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
 			int capacity = status.getElevatorCapacity(i);
-			Elevators[i] = new Elevator(i, capacity, NUM_FLOORS);
+			mElevators[i] = new Elevator(i, capacity, NUM_FLOORS);
 		}
 
 		for (int i = 0; i < NUM_FLOORS; i++) {
@@ -58,7 +58,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	public void addObserver(Observer o) {
 		super.addObserver(o);
 		for (int e = 0; e < NUM_ELEVATORS; e++) {
-			Elevators[e].addObserver(o);
+			mElevators[e].addObserver(o);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	@Override
 	public IElevatorModel getElevator(int num) throws ElevatorException {
 		checkElevator(num);
-		return Elevators[num];
+		return mElevators[num];
 	}
 
 	/* (non-Javadoc)
@@ -109,10 +109,10 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 
 	public void pollingComplete() {
 		// will only be triggered if this object was changed
-        notifyObservers(new Integer(SYSTEM_PROPERTY_CHANGED));
+        notifyObservers(SYSTEM_PROPERTY_CHANGED);
 		
 		for (int e = 0; e < NUM_ELEVATORS; e++) {
-			Elevators[e].notifyObservers(new Integer(ELEVATOR_PROPERTY_CHANGED));
+			mElevators[e].notifyObservers(ELEVATOR_PROPERTY_CHANGED);
 		}
 	}
 

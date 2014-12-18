@@ -69,11 +69,11 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 	public void setFloorRequest(int floor, boolean up) {
 		// check if there is already a elevator in this floor
 		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
-			try {																// check if
-				if (((ElevatorControlCenter)mControl).mAuto[i] == true 			// elevator is in automatic mode
-						&& mModel.getElevator(i).getServicesFloors(floor) 		// floor is serviced
-						&& ((mModel.getElevator(i).getFloor() == floor) 		// elevator is in this floor
-								|| (mModel.getElevator(i).getTargetFloor() == floor))) {	// elevator is moving to this floor
+			try {																	// check if
+				if (mEnabledElevators[i]		 									// elevator is in automatic mode
+					&& mModel.getElevator(i).getServicesFloors(floor) 				// floor is serviced
+					&& ((mModel.getElevator(i).getFloor() == floor) 				// elevator is in this floor
+						 || (mModel.getElevator(i).getTargetFloor() == floor))) {	// elevator is moving to this floor
 					// nothing to do
 					return;
 				}
@@ -88,10 +88,10 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		
 		// check if there is an elevator without a job
 		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
-			try {																// check if
-				if (((ElevatorControlCenter)mControl).mAuto[i] == true 			// elevator is in automatic mode
-						&& mModel.getElevator(i).getServicesFloors(floor) 		// floor is serviced
-						&& (mModel.getElevator(i).getDirection() == IElevator.ELEVATOR_DIRECTION_UNCOMMITTED)) { 		// elevator has no job
+			try {																								// check if
+				if (mEnabledElevators[i] 																		// elevator is in automatic mode
+					&& mModel.getElevator(i).getServicesFloors(floor)									 		// floor is serviced
+					&& (mModel.getElevator(i).getDirection() == IElevator.ELEVATOR_DIRECTION_UNCOMMITTED)) {	// elevator has no job
 					
 					mControl.setTarget(i, floor);
 					mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));
@@ -109,9 +109,9 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		// check if an elevator can pick up passengers
 		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
 			try {																// check if
-				if (((ElevatorControlCenter)mControl).mAuto[i] == true 			// elevator is in automatic mode
-						&& mModel.getElevator(i).getServicesFloors(floor) 		// floor is serviced
-						&& mModel.getElevator(i).getDirection() == (up ? IElevator.ELEVATOR_DIRECTION_UP : IElevator.ELEVATOR_DIRECTION_DOWN)) { 		// elevator drives in the same direction like requested
+				if (mEnabledElevators[i] 										// elevator is in automatic mode
+					&& mModel.getElevator(i).getServicesFloors(floor) 			// floor is serviced
+					&& mModel.getElevator(i).getDirection() == (up ? IElevator.ELEVATOR_DIRECTION_UP : IElevator.ELEVATOR_DIRECTION_DOWN)) { 		// elevator drives in the same direction as requested
 					
 					int curFloor = mModel.getElevator(i).getFloor();
 					
