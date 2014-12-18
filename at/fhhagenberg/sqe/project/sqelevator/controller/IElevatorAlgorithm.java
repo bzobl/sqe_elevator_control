@@ -7,6 +7,7 @@
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
 
 public interface IElevatorAlgorithm {
@@ -16,4 +17,6 @@ public interface IElevatorAlgorithm {
 	
 	public void setModel(ElevatorSystem model);
 	public void setControl(IElevatorControl control);
+	
+	public void enableElevator(int elevator, boolean enable);
 }

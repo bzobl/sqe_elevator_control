@@ -16,15 +16,11 @@ import com.sun.istack.internal.logging.Logger;
 /** ManualElevatorAlgorithm
  * 
  */
-public class ManualElevatorAlgorithm implements IElevatorAlgorithm {
+public class ManualElevatorAlgorithm extends ElevatorAlgorithm {
 	private static Logger LOG = Logger.getLogger(ManualElevatorAlgorithm.class);
 	
-	private ElevatorSystem mModel;
-	private IElevatorControl mControl;
-	
 	public ManualElevatorAlgorithm(ElevatorSystem sys, IElevatorControl ctrl) {
-		mModel = sys;
-		mControl = ctrl;
+		super(sys, ctrl);
 	}
 
 	@Override
@@ -51,17 +47,6 @@ public class ManualElevatorAlgorithm implements IElevatorAlgorithm {
 
 	@Override
 	public void setFloorRequest(int floor, boolean up) {
-		assert(false) : "Floor request cannot be called in automatic mode";
+		assert(false) : "Floor request cannot be called in manual mode";
 	}
-
-	@Override
-	public void setModel(ElevatorSystem model) {
-		mModel = model;
-	}
-
-	@Override
-	public void setControl(IElevatorControl control) {
-		mControl = control;
-	}
-
 }
