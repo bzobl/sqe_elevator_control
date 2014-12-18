@@ -7,7 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -15,8 +17,6 @@ import at.fhhagenberg.sqe.project.sqelevator.controller.IControl;
 import at.fhhagenberg.sqe.project.sqelevator.view.ElevatorButtonListener.ListenerType;
 
 import com.sun.istack.internal.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 public class MainView extends JFrame implements IMainView
 {

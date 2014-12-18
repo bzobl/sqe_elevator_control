@@ -6,6 +6,7 @@
 
 package at.fhhagenberg.sqe.project.sqelevator;
 
+import at.fhhagenberg.sqe.project.sqelevator.communication.ElevatorSimCommunication;
 import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControlCenter;
 import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
@@ -24,16 +25,26 @@ public class Bootstrapper {
 		final int num_elevators = 3;
 		final int num_floors = 5;
 		
-		SimpleElevatorSimulator sim = new SimpleElevatorSimulator(num_elevators, num_floors);
+		//SimpleElevatorSimulator sim = new SimpleElevatorSimulator(num_elevators, num_floors);
+		
+		ElevatorSimCommunication sim = new ElevatorSimCommunication();
+		
+		final String rmiName = "rmi://10.29.17.240/ElevatorSim";
+		
+		
+		
+		if (sim.connect(rmiName) == false)
+		{
+			//sim = new SimpleElevatorSimulator(4, 4);
+			LOG.info("simple simulator used");
+		}
 		
 		LOG.info("using " + sim.getClass().getCanonicalName() + " as connection interface");
 		ElevatorControlCenter ctrl = new ElevatorControlCenter(sim, sim);
-		
-		MainView view = new MainView(ctrl, num_elevators, num_floors, APPLICATION_NAME);
+		MainView view = new MainView(ctrl, sim.getElevatorNum(), sim.getFloorNum(), APPLICATION_NAME);
 		ctrl.setView(view);
 		ctrl.updateView();
 
 		view.setVisible(true);
-		
 	}
 }

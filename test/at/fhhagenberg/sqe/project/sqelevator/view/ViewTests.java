@@ -14,8 +14,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	ElevatorPaneTest.class,
 	FloorPanelServicedTest.class,
 	ElevatorPaneElevatorButtonTest.class,
+	ElevatorButtonListenerTest.class,
+	ElevatorPaneModeButtonListenerTest.class,
 	MainViewTest.class,
-	ElevatorButtonListenerTest.class
 })
 
 public class ViewTests {
