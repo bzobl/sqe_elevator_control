@@ -128,15 +128,11 @@ public class ElevatorSystemTest extends PollingTask
 
 
 	@Test
-	public void testConstants() {
+	public void testConstants() throws ElevatorException {
 		assertEquals(1, mSystem.NUM_ELEVATORS);
 		assertEquals(FLOOR_NUM, mSystem.NUM_FLOORS);
 		assertEquals(FLOOR_HEIGHT, mSystem.FLOOR_HEIGHT);
-		try {
-			assertEquals(CAPACITY, mSystem.getElevator(0).CAPACITY);
-		} catch (ElevatorException e) {
-			fail("Elevator Exception thrown: " + e);
-		}
+        assertEquals(CAPACITY, mSystem.getElevator(0).CAPACITY);
 	}
 	
 	@Test

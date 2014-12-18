@@ -15,7 +15,7 @@ import com.sun.istack.internal.logging.Logger;
 public class Bootstrapper {
 	private static Logger LOG = Logger.getLogger(Bootstrapper.class); 
 
-	private static final String APPLICATION_NAME = "EEC - Elevator Control Center";
+	private static final String APPLICATION_NAME = "E2C2 - Extended Elevator Control Center";
 	
 	public static void main(String[] args) {
 		
