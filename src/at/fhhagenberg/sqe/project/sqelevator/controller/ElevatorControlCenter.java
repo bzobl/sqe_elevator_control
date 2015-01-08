@@ -60,7 +60,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 
 		mAuto = new boolean[mModel.getNumberOfElevators()];
 		
-		mAutoAlgo = null;
+		mAutoAlgo = new AutoElevatorAlgorithm(mModel, mControl);
 		mManuAlgo = new ManualElevatorAlgorithm(mModel, mControl);
         
         LOG.info("Elevator control successfully initialized, starting to poll");
@@ -166,6 +166,11 @@ public class ElevatorControlCenter implements IControl, Observer {
 				} else {
 					LOG.info("Elevator updated, but no auto algo is set");
 				}
+			} else {
+				// check whether or not the elevator is in the target floor and clear direction accordingly
+				if (elev.getFloor() == elev.getTargetFloor()) {
+                    mManuAlgo.setElevatorRequest(elev.getElevatorNumber(), elev.getTargetFloor());
+				}
 			}
 		} else {
 			LOG.warning("Unexpected class notified ElevatorControl: " + o.getClass().getCanonicalName());
@@ -255,12 +260,11 @@ public class ElevatorControlCenter implements IControl, Observer {
 		}
 	}
 
-		
 	private void updateView(IElevatorSystem sys) {
 		assert (mView != null) : "update of view requested when no view was set";
 
 		for (int e = 0; e < mModel.getNumberOfElevators(); e++) {
-			for (int f = 0; f < mModel.getNumberOfElevators(); f++) {
+			for (int f = 0; f < mModel.getNumberOfFloors(); f++) {
 				IFloorView floorView = mView.getElevatorView(e).getFloorView(f);
 				try {
 					floorView.setFloorButton(IFloorView.FLOOR_BUTTON_UP, sys.getFloorButton(f, true));

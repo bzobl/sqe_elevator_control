@@ -26,15 +26,16 @@ public class Bootstrapper {
 		int numFloors = 5;
 	
 // 	Only for remote simulator
-//
-//		String rmiName = "rmi://10.29.17.240/ElevatorSim";
-//		ElevatorSimCommunication sim = new ElevatorSimCommunication();
-//		if (sim.connect(rmiName) == false)
-//		{
-//			LOG.info("simple simulator used");
-//		}		
+
+		String rmiName = "rmi://10.29.17.92/ElevatorSim";
+		//String rmiName = "rmi://localhost/ElevatorSim";
+		ElevatorSimCommunication sim = new ElevatorSimCommunication();
+		if (sim.connect(rmiName) == false)
+		{
+			LOG.info("simple simulator used");
+		}
 		
-		SimpleElevatorSimulator sim = new SimpleElevatorSimulator(numElevators, numFloors);
+//		SimpleElevatorSimulator sim = new SimpleElevatorSimulator(numElevators, numFloors);
 		
 		LOG.info("using " + sim.getClass().getCanonicalName() + " as connection interface");
 		ElevatorControlCenter ctrl = new ElevatorControlCenter(sim, sim);
