@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="3.0.0" sequence="1" timestamp="1418931074606" analysisTimestamp="1418931062688" release="">
+  <Project projectName="SQE-Project">
+    <Jar>/home/werner/Workspace/SQE/SQE-Project/bin</Jar>
+    <AuxClasspathEntry>/home/werner/Workspace/SQE/SQE-Project/bin</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/werner/Programs/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/werner/Programs/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/home/werner/Workspace/SQE/SQE-Project/abbot.jar</AuxClasspathEntry>
+    <AuxClasspathEntry>/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar</AuxClasspathEntry>
+    <SrcDir>/home/werner/Workspace/SQE/SQE-Project/src</SrcDir>
+    <SrcDir>/home/werner/Workspace/SQE/SQE-Project/test</SrcDir>
+    <Cloud id="edu.umd.cs.findbugs.cloud.doNothingCloud" online="false"></Cloud>
+  </Project>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Thu, 18 Dec 2014 20:27:10 +0100" total_classes="67" referenced_classes="454" total_bugs="0" total_size="2972" num_packages="6" java_version="1.7.0_65" vm_version="24.65-b04" cpu_seconds="49.01" clock_seconds="120.77" peak_mbytes="377.86" alloc_mbytes="455.00" gc_seconds="1.74">
+    <PackageStats package="at.fhhagenberg.sqe.project.sqelevator" total_bugs="0" total_types="2" total_size="24">
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.AllTests" sourceFile="AllTests.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.Bootstrapper" sourceFile="Bootstrapper.java" interface="false" size="21" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="at.fhhagenberg.sqe.project.sqelevator.communication" total_bugs="0" total_types="6" total_size="407">
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.communication.CommunicationTests" sourceFile="CommunicationTests.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.communication.ElevatorSimCommunication" sourceFile="ElevatorSimCommunication.java" interface="false" size="128" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl" sourceFile="IElevatorControl.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus" sourceFile="IElevatorStatus.java" interface="true" size="18" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator" sourceFile="SimpleElevatorSimulator.java" interface="false" size="128" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulatorTest" sourceFile="SimpleElevatorSimulatorTest.java" interface="false" size="126" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="at.fhhagenberg.sqe.project.sqelevator.controller" total_bugs="0" total_types="6" total_size="295">
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.controller.AutoElevatorAlgorithm" sourceFile="AutoElevatorAlgorithm.java" interface="false" size="81" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorAlgorithm" sourceFile="ElevatorAlgorithm.java" interface="false" size="23" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControlCenter" sourceFile="ElevatorControlCenter.java" interface="false" size="153" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.controller.IControl" sourceFile="IControl.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.controller.IElevatorAlgorithm" sourceFile="IElevatorAlgorithm.java" interface="true" size="6" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.controller.ManualElevatorAlgorithm" sourceFile="ManualElevatorAlgorithm.java" interface="false" size="26" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="at.fhhagenberg.sqe.project.sqelevator.model" total_bugs="0" total_types="12" total_size="801">
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.Elevator" sourceFile="Elevator.java" interface="false" size="115" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ElevatorConnectionTestShunt" sourceFile="ElevatorConnectionTestShunt.java" interface="false" size="90" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException" sourceFile="ElevatorException.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ElevatorExceptionTest" sourceFile="ElevatorExceptionTest.java" interface="false" size="59" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem" sourceFile="ElevatorSystem.java" interface="false" size="72" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystemTest" sourceFile="ElevatorSystemTest.java" interface="false" size="258" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ElevatorTest" sourceFile="ElevatorTest.java" interface="false" size="112" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.FloorException" sourceFile="FloorException.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel" sourceFile="IElevatorModel.java" interface="true" size="13" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem" sourceFile="IElevatorSystem.java" interface="true" size="8" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.ModelTests" sourceFile="ModelTests.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.model.PollingTask" sourceFile="PollingTask.java" interface="false" size="53" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="at.fhhagenberg.sqe.project.sqelevator.view" total_bugs="0" total_types="39" total_size="1352">
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorButtonListener" sourceFile="ElevatorButtonListener.java" interface="false" size="32" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorButtonListener$ListenerType" sourceFile="ElevatorButtonListener.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorButtonListenerTest" sourceFile="ElevatorButtonListenerTest.java" interface="false" size="75" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneElevatorButtonTest" sourceFile="ElevatorPaneElevatorButtonTest.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneElevatorButtonTest$1" sourceFile="ElevatorPaneElevatorButtonTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneElevatorButtonTest$2" sourceFile="ElevatorPaneElevatorButtonTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneModeButtonListenerTest" sourceFile="ElevatorPaneModeButtonListenerTest.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneModeButtonListenerTest$1" sourceFile="ElevatorPaneModeButtonListenerTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneModeButtonListenerTest$TestActionListener" sourceFile="ElevatorPaneModeButtonListenerTest.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneTest" sourceFile="ElevatorPaneTest.java" interface="false" size="73" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneTest$1" sourceFile="ElevatorPaneTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneTest$2" sourceFile="ElevatorPaneTest.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneTest$3" sourceFile="ElevatorPaneTest.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneTest$4" sourceFile="ElevatorPaneTest.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPaneTest$5" sourceFile="ElevatorPaneTest.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ElevatorPanel" sourceFile="ElevatorPanel.java" interface="false" size="246" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel" sourceFile="FloorPanel.java" interface="false" size="225" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelCallButtonTest" sourceFile="FloorPanelCallButtonTest.java" interface="false" size="33" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelCallButtonTest$1" sourceFile="FloorPanelCallButtonTest.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelCallButtonTest$2" sourceFile="FloorPanelCallButtonTest.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelCallButtonTest$3" sourceFile="FloorPanelCallButtonTest.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelElevatorStatusTest" sourceFile="FloorPanelElevatorStatusTest.java" interface="false" size="71" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelElevatorStatusTest$1" sourceFile="FloorPanelElevatorStatusTest.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelFloorButtonTest" sourceFile="FloorPanelFloorButtonTest.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelFloorButtonTest$1" sourceFile="FloorPanelFloorButtonTest.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelFloorButtonTest$2" sourceFile="FloorPanelFloorButtonTest.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelMoveStatusTest" sourceFile="FloorPanelMoveStatusTest.java" interface="false" size="47" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelMoveStatusTest$1" sourceFile="FloorPanelMoveStatusTest.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelServicedTest" sourceFile="FloorPanelServicedTest.java" interface="false" size="55" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelServicedTest$1" sourceFile="FloorPanelServicedTest.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelServicedTest$2" sourceFile="FloorPanelServicedTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.FloorPanelServicedTest$3" sourceFile="FloorPanelServicedTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.IElevatorView" sourceFile="IElevatorView.java" interface="true" size="10" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.IFloorView" sourceFile="IFloorView.java" interface="true" size="28" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.IMainView" sourceFile="IMainView.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.MainView" sourceFile="MainView.java" interface="false" size="78" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.MainViewTest" sourceFile="MainViewTest.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.MainViewTest$1" sourceFile="MainViewTest.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="at.fhhagenberg.sqe.project.sqelevator.view.ViewTests" sourceFile="ViewTests.java" interface="false" size="3" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="sqelevator" total_bugs="0" total_types="2" total_size="93">
+      <ClassStats class="sqelevator.ElevatorExample" sourceFile="ElevatorExample.java" interface="false" size="65" bugs="0"/>
+      <ClassStats class="sqelevator.IElevator" sourceFile="IElevator.java" interface="true" size="28" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="de.tobject.findbugs.builder.FindBugs2Eclipse" totalMilliseconds="1228" invocations="2" avgMicrosecondsPerInvocation="614463" maxMicrosecondsPerInvocation="793195" standardDeviationMircosecondsPerInvocation="178730"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="1086" invocations="1725" avgMicrosecondsPerInvocation="629" maxMicrosecondsPerInvocation="24340" standardDeviationMircosecondsPerInvocation="1579"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="1004" invocations="454" avgMicrosecondsPerInvocation="2213" maxMicrosecondsPerInvocation="49489" standardDeviationMircosecondsPerInvocation="5735"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="756" invocations="1144" avgMicrosecondsPerInvocation="661" maxMicrosecondsPerInvocation="78775" standardDeviationMircosecondsPerInvocation="2536"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="531" invocations="429" avgMicrosecondsPerInvocation="1238" maxMicrosecondsPerInvocation="191738" standardDeviationMircosecondsPerInvocation="9410"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="478" invocations="371" avgMicrosecondsPerInvocation="1288" maxMicrosecondsPerInvocation="190001" standardDeviationMircosecondsPerInvocation="9895"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="429" invocations="369" avgMicrosecondsPerInvocation="1164" maxMicrosecondsPerInvocation="146306" standardDeviationMircosecondsPerInvocation="7842"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="411" invocations="368" avgMicrosecondsPerInvocation="1117" maxMicrosecondsPerInvocation="106923" standardDeviationMircosecondsPerInvocation="5721"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="391" invocations="419" avgMicrosecondsPerInvocation="935" maxMicrosecondsPerInvocation="103315" standardDeviationMircosecondsPerInvocation="5202"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="284" invocations="454" avgMicrosecondsPerInvocation="625" maxMicrosecondsPerInvocation="36782" standardDeviationMircosecondsPerInvocation="2088"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="273" invocations="454" avgMicrosecondsPerInvocation="602" maxMicrosecondsPerInvocation="13868" standardDeviationMircosecondsPerInvocation="1392"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="266" invocations="371" avgMicrosecondsPerInvocation="719" maxMicrosecondsPerInvocation="30239" standardDeviationMircosecondsPerInvocation="1947"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="262" invocations="297" avgMicrosecondsPerInvocation="884" maxMicrosecondsPerInvocation="64246" standardDeviationMircosecondsPerInvocation="4594"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="202" invocations="1728" avgMicrosecondsPerInvocation="117" maxMicrosecondsPerInvocation="1349" standardDeviationMircosecondsPerInvocation="81"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="197" invocations="518" avgMicrosecondsPerInvocation="380" maxMicrosecondsPerInvocation="14737" standardDeviationMircosecondsPerInvocation="928"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="171" invocations="454" avgMicrosecondsPerInvocation="376" maxMicrosecondsPerInvocation="14280" standardDeviationMircosecondsPerInvocation="1096"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ExplicitSerialization" totalMilliseconds="169" invocations="454" avgMicrosecondsPerInvocation="374" maxMicrosecondsPerInvocation="35750" standardDeviationMircosecondsPerInvocation="2700"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="144" invocations="454" avgMicrosecondsPerInvocation="318" maxMicrosecondsPerInvocation="8179" standardDeviationMircosecondsPerInvocation="800"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History>
+    <AppVersion sequence="0" timestamp="1418931074603" release="" codeSize="0" numClasses="0"/>
+  </History>
+</BugCollection>

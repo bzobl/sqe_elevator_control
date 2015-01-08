@@ -14,7 +14,7 @@ import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
 import com.sun.istack.internal.logging.Logger;
 
 public class Bootstrapper {
-	private static Logger LOG = Logger.getLogger(Bootstrapper.class); 
+	private final static Logger LOG = Logger.getLogger(Bootstrapper.class); 
 
 	private static final String APPLICATION_NAME = "E2C2 - Extended Elevator Control Center";
 	
@@ -22,22 +22,19 @@ public class Bootstrapper {
 		
 		LOG.info("starting up");
 		
-		final int num_elevators = 3;
-		final int num_floors = 5;
+		int numElevators= 3;
+		int numFloors = 5;
+	
+// 	Only for remote simulator
+//
+//		String rmiName = "rmi://10.29.17.240/ElevatorSim";
+//		ElevatorSimCommunication sim = new ElevatorSimCommunication();
+//		if (sim.connect(rmiName) == false)
+//		{
+//			LOG.info("simple simulator used");
+//		}		
 		
-		//SimpleElevatorSimulator sim = new SimpleElevatorSimulator(num_elevators, num_floors);
-		
-		ElevatorSimCommunication sim = new ElevatorSimCommunication();
-		
-		final String rmiName = "rmi://10.29.17.240/ElevatorSim";
-		
-		
-		
-		if (sim.connect(rmiName) == false)
-		{
-			//sim = new SimpleElevatorSimulator(4, 4);
-			LOG.info("simple simulator used");
-		}
+		SimpleElevatorSimulator sim = new SimpleElevatorSimulator(numElevators, numFloors);
 		
 		LOG.info("using " + sim.getClass().getCanonicalName() + " as connection interface");
 		ElevatorControlCenter ctrl = new ElevatorControlCenter(sim, sim);
