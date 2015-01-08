@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>SimpleElevatorSimulator.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.communication</a> &gt; <span class="el_source">SimpleElevatorSimulator.java</span></div><h1>SimpleElevatorSimulator.java</h1><pre class="source lang-java linenums">
+package at.fhhagenberg.sqe.project.sqelevator.communication;
+
+import sqelevator.IElevator;
+
+public class SimpleElevatorSimulator implements IElevatorStatus, IElevatorControl {
+
+	private static final int FLOOR_HEIGHT = 6;
+	public static final long CLOCK_TICK = 300;
+	private static final int DEFAULT_CAPACITY = 1000;
+	
+	public static final int DELAY_CLOSING = 1;
+	public static final int DELAY_CLOSED = 2;
+	public static final int DELAY_MOVE = 3;
+	public static final int DELAY_OPENING = 4;
+	public static final int DELAY_DONE = 5;
+
+	private final int NUM_ELEVATORS;
+	private final int NUM_FLOORS;
+	private final int CAPACITY[];
+	
+	private int mDelayTicks[];
+	
+	private int mCommitedDirection[];
+	private int mDoorstatus[];
+	private int mElevatorAccel[];
+	private int mFloor[];
+	private int mSpeed[];
+	private int mTarget[];
+	private int mWeight[];
+	private boolean mFloorButtonDown[];
+	private boolean mFloorButtonUp[];
+	private boolean mServicesFloors[][];
+	private boolean mElevatorButton[][];
+	
+<span class="fc" id="L36">	public SimpleElevatorSimulator(int elevators, int floors) {</span>
+<span class="fc" id="L37">		NUM_ELEVATORS = elevators;</span>
+<span class="fc" id="L38">        NUM_FLOORS = floors;</span>
+<span class="fc" id="L39">        CAPACITY = new int[NUM_ELEVATORS];</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (int e = 0; e &lt; NUM_ELEVATORS; e++) {</span>
+<span class="fc" id="L41">        	CAPACITY[e] = DEFAULT_CAPACITY;</span>
+        }
+        
+<span class="fc" id="L44">        mDelayTicks = new int[NUM_ELEVATORS];</span>
+<span class="fc" id="L45">        mCommitedDirection = new int[NUM_ELEVATORS];</span>
+<span class="fc" id="L46">        mDoorstatus = new int[NUM_ELEVATORS];;</span>
+<span class="fc" id="L47">        mElevatorAccel = new int[NUM_ELEVATORS];;</span>
+<span class="fc" id="L48">        mFloor = new int[NUM_ELEVATORS];</span>
+<span class="fc" id="L49">        mSpeed = new int[NUM_ELEVATORS];</span>
+<span class="fc" id="L50">        mTarget = new int[NUM_ELEVATORS];</span>
+<span class="fc" id="L51">        mWeight = new int[NUM_ELEVATORS];</span>
+<span class="fc" id="L52">        mFloorButtonDown = new boolean[NUM_FLOORS];</span>
+<span class="fc" id="L53">        mFloorButtonUp = new boolean[NUM_FLOORS];</span>
+
+<span class="fc" id="L55">        mServicesFloors = new boolean[NUM_ELEVATORS][NUM_FLOORS];</span>
+<span class="fc" id="L56">        mElevatorButton = new boolean[NUM_ELEVATORS][NUM_FLOORS];</span>
+
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        for (int e = 0; e &lt; NUM_ELEVATORS; e++) {</span>
+<span class="fc" id="L59">        	CAPACITY[e] = DEFAULT_CAPACITY;</span>
+<span class="fc" id="L60">        	mDelayTicks[e] = -1;</span>
+
+<span class="fc" id="L62">        	mCommitedDirection[e] = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L63">        	mDoorstatus[e] = IElevator.ELEVATOR_DOORS_OPEN;</span>
+<span class="fc" id="L64">        	mElevatorAccel[e] = 0;</span>
+<span class="fc" id="L65">        	mFloor[e] = 0;</span>
+<span class="fc" id="L66">        	mSpeed[e] = 0;</span>
+<span class="fc" id="L67">        	mTarget[e] = 0;</span>
+<span class="fc" id="L68">        	mWeight[e] = 0;</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        	for (int f = 0; f &lt; NUM_FLOORS; f++) {</span>
+<span class="fc" id="L70">        		mServicesFloors[e][f] = true;</span>
+<span class="fc" id="L71">        		mElevatorButton[e][f] = false;</span>
+        	}
+        }
+        
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (int f = 0; f &lt; NUM_FLOORS; f++) {</span>
+<span class="fc" id="L76">        	mFloorButtonUp[f] = false;</span>
+<span class="fc" id="L77">        	mFloorButtonDown[f] = false;</span>
+        }
+<span class="fc" id="L79">	}</span>
+
+	private int calcPosition(int e) {
+<span class="fc" id="L82">		return mFloor[e] * FLOOR_HEIGHT;</span>
+	}
+	
+	private void move(int elevatorNumber) {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		if (mDelayTicks[elevatorNumber] &lt; 0) return;</span>
+		
+<span class="fc" id="L88">		mDelayTicks[elevatorNumber]++;</span>
+		
+<span class="fc bfc" id="L90" title="All 2 branches covered.">		if (mDelayTicks[elevatorNumber] &gt;= DELAY_DONE) {</span>
+<span class="fc" id="L91">			mDoorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_OPEN;</span>
+<span class="fc" id="L92">			mCommitedDirection[elevatorNumber] = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L93">			mDelayTicks[elevatorNumber] = -1;</span>
+<span class="fc" id="L94">			return;</span>
+		}
+
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		if (mDelayTicks[elevatorNumber] == DELAY_MOVE) {</span>
+<span class="pc bpc" id="L98" title="1 of 4 branches missed.">			if ((  ((mCommitedDirection[elevatorNumber] == IElevator.ELEVATOR_DIRECTION_DOWN) &amp;&amp; (mFloor[elevatorNumber] &gt; mTarget[elevatorNumber]))</span>
+<span class="fc bfc" id="L99" title="All 4 branches covered.">			    || ((mCommitedDirection[elevatorNumber] == IElevator.ELEVATOR_DIRECTION_UP)   &amp;&amp; (mFloor[elevatorNumber] &lt; mTarget[elevatorNumber]))</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">			    || (mFloor[elevatorNumber] == mTarget[elevatorNumber]))</span>
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">			   &amp;&amp; (mServicesFloors[elevatorNumber][mTarget[elevatorNumber]])){</span>
+<span class="fc" id="L102">				mFloor[elevatorNumber] = mTarget[elevatorNumber];</span>
+			}
+		}
+<span class="fc" id="L105">	}</span>
+
+	@Override
+	public int getCommittedDirection(int elevatorNumber) {
+<span class="fc" id="L109">		return mCommitedDirection[elevatorNumber];</span>
+	}
+
+	@Override
+	public int getElevatorAccel(int elevatorNumber) {
+<span class="fc" id="L114">		return mElevatorAccel[elevatorNumber];</span>
+	}
+
+	@Override
+	public boolean getElevatorButton(int elevatorNumber, int floor) {
+<span class="fc" id="L119">		return mElevatorButton[elevatorNumber][floor];</span>
+	}
+
+	@Override
+	public int getElevatorDoorStatus(int elevatorNumber) {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">		if (mDelayTicks[elevatorNumber] == DELAY_CLOSING) {</span>
+<span class="fc" id="L125">			mDoorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_CLOSING;</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">		} else if (mDelayTicks[elevatorNumber] == DELAY_CLOSED) {</span>
+<span class="fc" id="L127">			mDoorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_CLOSED;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">		} else if (mDelayTicks[elevatorNumber] == DELAY_OPENING) {</span>
+<span class="fc" id="L129">			mDoorstatus[elevatorNumber] = IElevator.ELEVATOR_DOORS_OPENING;</span>
+		}
+<span class="fc" id="L131">		return mDoorstatus[elevatorNumber];</span>
+	}
+
+	@Override
+	public int getElevatorFloor(int elevatorNumber) {
+<span class="fc" id="L136">		move(elevatorNumber);</span>
+<span class="fc" id="L137">		return mFloor[elevatorNumber];</span>
+	}
+
+	@Override
+	public int getElevatorNum() {
+<span class="fc" id="L142">		return NUM_ELEVATORS;</span>
+	}
+
+	@Override
+	public int getElevatorPosition(int elevatorNumber) {
+<span class="fc" id="L147">		return calcPosition(elevatorNumber);</span>
+	}
+
+	@Override
+	public int getElevatorSpeed(int elevatorNumber) {
+<span class="fc" id="L152">		return mSpeed[elevatorNumber];</span>
+	}
+
+	@Override
+	public int getElevatorWeight(int elevatorNumber) {
+<span class="fc" id="L157">		return mWeight[elevatorNumber];</span>
+	}
+
+	@Override
+	public int getElevatorCapacity(int elevatorNumber) {
+<span class="fc" id="L162">		return CAPACITY[elevatorNumber];</span>
+	}
+
+	@Override
+	public boolean getFloorButtonDown(int floor) {
+<span class="fc" id="L167">		return mFloorButtonDown[floor];</span>
+	}
+
+	@Override
+	public boolean getFloorButtonUp(int floor) {
+<span class="fc" id="L172">		return mFloorButtonUp[floor];</span>
+	}
+
+	@Override
+	public int getFloorHeight() {
+<span class="fc" id="L177">		return FLOOR_HEIGHT;</span>
+	}
+
+	@Override
+	public int getFloorNum() {
+<span class="fc" id="L182">		return NUM_FLOORS;</span>
+	}
+
+	@Override
+	public boolean getServicesFloors(int elevatorNumber, int floor) {
+<span class="fc" id="L187">		return mServicesFloors[elevatorNumber][floor];</span>
+	}
+
+	@Override
+	public int getTarget(int elevatorNumber) {
+<span class="fc" id="L192">		return mTarget[elevatorNumber];</span>
+	}
+
+	@Override
+	public void setCommittedDirection(int elevatorNumber, int direction) {
+<span class="fc" id="L197">		mDelayTicks[elevatorNumber] = 0;</span>
+<span class="fc" id="L198">		mCommitedDirection[elevatorNumber] = direction;</span>
+<span class="fc" id="L199">	}</span>
+
+	@Override
+	public void setServicesFloors(int elevatorNumber, int floor, boolean service) {
+<span class="fc" id="L203">		mServicesFloors[elevatorNumber][floor] = service;</span>
+<span class="fc" id="L204">	}</span>
+
+	@Override
+	public void setTarget(int elevatorNumber, int target) {
+<span class="fc" id="L208">		mTarget[elevatorNumber] = target;</span>
+<span class="fc" id="L209">	}</span>
+
+	@Override
+	public long getClockTick() {
+<span class="fc" id="L213">		return CLOCK_TICK;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ElevatorSystemTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.model</a> &gt; <span class="el_source">ElevatorSystemTest.java</span></div><h1>ElevatorSystemTest.java</h1><pre class="source lang-java linenums">
+package at.fhhagenberg.sqe.project.sqelevator.model;
+
+import static org.junit.Assert.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel;
+import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
+import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.PollingTask;
+
+<span class="fc" id="L24">public class ElevatorSystemTest extends PollingTask</span>
+								implements Observer {
+
+<span class="fc" id="L27">	private final int FLOOR_HEIGHT = 6;</span>
+<span class="fc" id="L28">	private final int FLOOR_NUM = 3;</span>
+<span class="fc" id="L29">	private final long CLOCK_TICK = 1000;</span>
+<span class="fc" id="L30">	private final int CAPACITY = 1001;</span>
+	
+	private Object mLastObservable;
+	private Object mObserverArgument;
+
+	// Class under test
+	private ElevatorSystem mSystem;
+	private ElevatorConnectionTestShunt mShunt;
+
+	@Before
+	public void setUp() throws RemoteException, MalformedURLException, NotBoundException {
+<span class="fc" id="L41">		mShunt = new ElevatorConnectionTestShunt(FLOOR_NUM, FLOOR_HEIGHT, CLOCK_TICK, CAPACITY);</span>
+
+<span class="fc" id="L43">		mSystem = new ElevatorSystem(mShunt);</span>
+<span class="fc" id="L44">		setElevatorSystem(mSystem);</span>
+<span class="fc" id="L45">		this.mConnection = mShunt;</span>
+<span class="fc" id="L46">		mSystem.addObserver(this);</span>
+<span class="fc" id="L47">		poll();</span>
+<span class="fc" id="L48">	}</span>
+
+	// Observer functions
+	@Override
+	public void update(Observable o, Object arg) {
+<span class="fc" id="L53">		mLastObservable = o;</span>
+<span class="fc" id="L54">		mObserverArgument = arg;</span>
+<span class="fc" id="L55">	}</span>
+	
+	// Polling task functions
+	@Override
+	public void startPolling(long period) {
+		
+<span class="nc" id="L61">	}</span>
+	
+	public void poll() {
+<span class="fc" id="L64">		run();</span>
+<span class="fc" id="L65">	}</span>
+
+	private IElevatorModel checkObserverUpdate(int num, boolean changed)
+	{
+<span class="fc bfc" id="L69" title="All 2 branches covered.">		if (!changed) {</span>
+<span class="fc" id="L70">			assertNull(mLastObservable);</span>
+<span class="fc" id="L71">			assertNull(mObserverArgument);</span>
+<span class="fc" id="L72">			return null;</span>
+		}
+<span class="fc" id="L74">		assertEquals(new Integer(ElevatorSystem.ELEVATOR_PROPERTY_CHANGED), mObserverArgument);</span>
+<span class="fc" id="L75">		assertTrue(mLastObservable instanceof Elevator);</span>
+
+<span class="fc" id="L77">		Elevator elev = (Elevator) mLastObservable;</span>
+<span class="fc" id="L78">		assertEquals(num, elev.getElevatorNumber());</span>
+		
+<span class="fc" id="L80">		mLastObservable = null;</span>
+<span class="fc" id="L81">		mObserverArgument = null;</span>
+		
+<span class="fc" id="L83">		return elev;</span>
+	}
+	
+	private void checkElevatorProperties(IElevatorModel elev) throws FloorException {
+<span class="fc" id="L87">		assertEquals(mShunt.Target, elev.getTargetFloor());</span>
+<span class="fc" id="L88">		assertEquals(mShunt.CommitedDirection, elev.getDirection());</span>
+<span class="fc" id="L89">		assertEquals(mShunt.ElevatorAccel, elev.getAcceleration());</span>
+<span class="fc" id="L90">		assertEquals(mShunt.Doorstatus, elev.getDoorstatus());</span>
+<span class="fc" id="L91">		assertEquals(mShunt.Floor, elev.getFloor());</span>
+<span class="fc" id="L92">		assertEquals(mShunt.Position, elev.getPosition());</span>
+<span class="fc" id="L93">		assertEquals(mShunt.Speed, elev.getSpeed());</span>
+<span class="fc" id="L94">		assertEquals(mShunt.Weight, elev.getWeight());</span>
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">		for (int floor = 0; floor &lt; FLOOR_NUM; floor++) {</span>
+<span class="fc" id="L97">			assertEquals(mShunt.ElevatorButton[floor], elev.getButtonStatus(floor));</span>
+<span class="fc" id="L98">			assertEquals(mShunt.ServicesFloors[floor], elev.getServicesFloors(floor));</span>
+		}
+<span class="fc" id="L100">	}</span>
+	
+	private void checkElevator(int num, boolean observer_expected) throws ElevatorException, FloorException {
+<span class="fc" id="L103">		IElevatorModel elev = checkObserverUpdate(num, observer_expected);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">		if (elev != null) {</span>
+<span class="fc" id="L105">			checkElevatorProperties(elev);</span>
+		}
+
+<span class="fc" id="L108">		elev = mSystem.getElevator(num);</span>
+<span class="fc" id="L109">		checkElevatorProperties(elev);</span>
+<span class="fc" id="L110">	}</span>
+
+	private void checkSystem (boolean observer_expected) throws FloorException {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">		if (!observer_expected) {</span>
+<span class="fc" id="L114">			assertNull(mLastObservable);</span>
+<span class="fc" id="L115">			assertNull(mObserverArgument);</span>
+<span class="fc" id="L116">		} else {</span>
+<span class="fc" id="L117">			assertEquals(new Integer(ElevatorSystem.SYSTEM_PROPERTY_CHANGED), mObserverArgument);</span>
+<span class="fc" id="L118">			assertTrue(mLastObservable instanceof ElevatorSystem);</span>
+<span class="fc" id="L119">			mLastObservable = null;</span>
+<span class="fc" id="L120">			mObserverArgument = null;</span>
+		}
+		
+<span class="fc bfc" id="L123" title="All 2 branches covered.">		for (int f = 0; f &lt; mSystem.NUM_FLOORS; f++) {</span>
+<span class="fc" id="L124">			assertEquals(mShunt.FloorButtonUp[f], mSystem.getFloorButton(f, true));</span>
+<span class="fc" id="L125">			assertEquals(mShunt.FloorButtonDown[f], mSystem.getFloorButton(f, false));</span>
+		}
+<span class="fc" id="L127">	}</span>
+
+
+	@Test
+	public void testConstants() throws ElevatorException {
+<span class="fc" id="L132">		assertEquals(1, mSystem.NUM_ELEVATORS);</span>
+<span class="fc" id="L133">		assertEquals(FLOOR_NUM, mSystem.NUM_FLOORS);</span>
+<span class="fc" id="L134">		assertEquals(FLOOR_HEIGHT, mSystem.FLOOR_HEIGHT);</span>
+<span class="fc" id="L135">        assertEquals(CAPACITY, mSystem.getElevator(0).getCapacity());</span>
+<span class="fc" id="L136">        assertEquals(0, mSystem.getElevator(0).getElevatorNumber());</span>
+<span class="fc" id="L137">	}</span>
+	
+	@Test
+	public void testElevatorDirection() throws ElevatorException, FloorException {
+<span class="fc" id="L141">		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_DOWN;</span>
+<span class="fc" id="L142">		poll();</span>
+<span class="fc" id="L143">		checkElevator(0,true);</span>
+
+<span class="fc" id="L145">		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_UP;</span>
+<span class="fc" id="L146">		poll();</span>
+<span class="fc" id="L147">		checkElevator(0, true);</span>
+
+<span class="fc" id="L149">		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L150">		poll();</span>
+<span class="fc" id="L151">		checkElevator(0, true);</span>
+
+<span class="fc" id="L153">		mShunt.CommitedDirection = sqelevator.IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L154">		poll();</span>
+<span class="fc" id="L155">		checkElevator(0, false);</span>
+<span class="fc" id="L156">	}</span>
+
+	@Test
+	public void testElevatorAcceleration() throws ElevatorException, FloorException {
+<span class="fc" id="L160">		mShunt.ElevatorAccel = 100;</span>
+<span class="fc" id="L161">		poll();</span>
+<span class="fc" id="L162">		checkElevator(0, true);</span>
+
+<span class="fc" id="L164">		mShunt.ElevatorAccel = -1;</span>
+<span class="fc" id="L165">		poll();</span>
+<span class="fc" id="L166">		checkElevator(0, true);</span>
+		
+<span class="fc" id="L168">		mShunt.ElevatorAccel = 0;</span>
+<span class="fc" id="L169">		poll();</span>
+<span class="fc" id="L170">		checkElevator(0, true);</span>
+
+<span class="fc" id="L172">		mShunt.ElevatorAccel = 0;</span>
+<span class="fc" id="L173">		poll();</span>
+<span class="fc" id="L174">		checkElevator(0, false);</span>
+<span class="fc" id="L175">	}</span>
+	
+	@Test
+	public void testElevatorButton() throws ElevatorException, FloorException {
+<span class="fc" id="L179">		mShunt.ElevatorButton[0] = true;</span>
+<span class="fc" id="L180">		poll();</span>
+<span class="fc" id="L181">		checkElevator(0, true);</span>
+
+<span class="fc" id="L183">		mShunt.ElevatorButton[2] = true;</span>
+<span class="fc" id="L184">		poll();</span>
+<span class="fc" id="L185">		checkElevator(0, true);</span>
+
+<span class="fc" id="L187">		mShunt.ElevatorButton[1] = true;</span>
+<span class="fc" id="L188">		poll();</span>
+<span class="fc" id="L189">		checkElevator(0, true);</span>
+
+<span class="fc" id="L191">		mShunt.ElevatorButton[0] = false;</span>
+<span class="fc" id="L192">		poll();</span>
+<span class="fc" id="L193">		checkElevator(0, true);</span>
+
+<span class="fc" id="L195">		mShunt.ElevatorButton[1] = true;</span>
+<span class="fc" id="L196">		poll();</span>
+<span class="fc" id="L197">		checkElevator(0, false);</span>
+<span class="fc" id="L198">	}</span>
+	
+	@Test
+	public void testDoorStatus() throws ElevatorException, FloorException {
+<span class="fc" id="L202">		mShunt.Doorstatus = sqelevator.IElevator.ELEVATOR_DOORS_OPENING;</span>
+<span class="fc" id="L203">		poll();</span>
+<span class="fc" id="L204">		checkElevator(0, true);</span>
+
+<span class="fc" id="L206">		mShunt.Doorstatus = sqelevator.IElevator.ELEVATOR_DOORS_CLOSING;</span>
+<span class="fc" id="L207">		poll();</span>
+<span class="fc" id="L208">		checkElevator(0, true);</span>
+
+<span class="fc" id="L210">		poll();</span>
+<span class="fc" id="L211">		checkElevator(0, false);</span>
+<span class="fc" id="L212">	}</span>
+	
+	@Test
+	public void testFloor() throws ElevatorException, FloorException {
+<span class="fc" id="L216">		mShunt.Floor = 1;</span>
+<span class="fc" id="L217">		poll();</span>
+<span class="fc" id="L218">		checkElevator(0, true);</span>
+		
+<span class="fc" id="L220">		mShunt.Floor = 2;</span>
+<span class="fc" id="L221">		poll();</span>
+<span class="fc" id="L222">		checkElevator(0, true);</span>
+
+<span class="fc" id="L224">		mShunt.Floor = 0;</span>
+<span class="fc" id="L225">		poll();</span>
+<span class="fc" id="L226">		checkElevator(0, true);</span>
+
+<span class="fc" id="L228">		mShunt.Floor = 0;</span>
+<span class="fc" id="L229">		poll();</span>
+<span class="fc" id="L230">		checkElevator(0, false);</span>
+<span class="fc" id="L231">	}</span>
+	
+	@Test
+	public void testPosition() throws ElevatorException, FloorException {
+<span class="fc" id="L235">		mShunt.Position = 54;</span>
+<span class="fc" id="L236">		poll();</span>
+<span class="fc" id="L237">		checkElevator(0, true);</span>
+
+<span class="fc" id="L239">		mShunt.Position = 54;</span>
+<span class="fc" id="L240">		poll();</span>
+<span class="fc" id="L241">		checkElevator(0, false);</span>
+
+<span class="fc" id="L243">		mShunt.Position = 53;</span>
+<span class="fc" id="L244">		poll();</span>
+<span class="fc" id="L245">		checkElevator(0, true);</span>
+<span class="fc" id="L246">	}</span>
+	
+	@Test
+	public void testSpeed() throws ElevatorException, FloorException {
+<span class="fc" id="L250">		mShunt.Speed = 99;</span>
+<span class="fc" id="L251">		poll();</span>
+<span class="fc" id="L252">		checkElevator(0, true);</span>
+
+<span class="fc" id="L254">		mShunt.Speed = 98;</span>
+<span class="fc" id="L255">		poll();</span>
+<span class="fc" id="L256">		checkElevator(0, true);</span>
+
+<span class="fc" id="L258">		mShunt.Speed = 98;</span>
+<span class="fc" id="L259">		poll();</span>
+<span class="fc" id="L260">		checkElevator(0, false);</span>
+<span class="fc" id="L261">	}</span>
+	
+	@Test
+	public void testWeight() throws ElevatorException, FloorException {
+<span class="fc" id="L265">		mShunt.Weight = 412;</span>
+<span class="fc" id="L266">		poll();</span>
+<span class="fc" id="L267">		checkElevator(0, true);</span>
+
+<span class="fc" id="L269">		poll();</span>
+<span class="fc" id="L270">		checkElevator(0, false);</span>
+<span class="fc" id="L271">	}</span>
+	
+	@Test
+	public void testServicesFloors() throws ElevatorException, FloorException {
+<span class="fc" id="L275">		mShunt.ServicesFloors[0] = false;</span>
+<span class="fc" id="L276">		poll();</span>
+<span class="fc" id="L277">		checkElevator(0, true);</span>
+		
+<span class="fc" id="L279">		mShunt.ServicesFloors[1] = true;</span>
+<span class="fc" id="L280">		poll();</span>
+<span class="fc" id="L281">		checkElevator(0, false);</span>
+<span class="fc" id="L282">	}</span>
+	
+	@Test
+	public void testTarget() throws ElevatorException, FloorException {
+<span class="fc" id="L286">		mShunt.Target = 2;</span>
+<span class="fc" id="L287">		poll();</span>
+<span class="fc" id="L288">		checkElevator(0, true);</span>
+
+<span class="fc" id="L290">		mShunt.Target = 1;</span>
+<span class="fc" id="L291">		poll();</span>
+<span class="fc" id="L292">		checkElevator(0, true);</span>
+
+<span class="fc" id="L294">		mShunt.Target = 0;</span>
+<span class="fc" id="L295">		poll();</span>
+<span class="fc" id="L296">		checkElevator(0, true);</span>
+
+<span class="fc" id="L298">		mShunt.Target = 0;</span>
+<span class="fc" id="L299">		poll();</span>
+<span class="fc" id="L300">		checkElevator(0, false);</span>
+<span class="fc" id="L301">	}</span>
+	
+	@Test
+	public void testFloorButtonException() {
+		try {
+<span class="nc" id="L306">			mSystem.getFloorButton(4, true);</span>
+<span class="nc" id="L307">			fail(&quot;No floor exception thrown&quot;);</span>
+<span class="pc" id="L308">		} catch (FloorException e) {</span>
+<span class="fc" id="L309">			assertEquals(&quot;Floor 4 is invalid&quot;, e.getMessage());</span>
+		}
+
+		try {
+<span class="nc" id="L313">			mSystem.getFloorButton(-1, true);</span>
+<span class="nc" id="L314">			fail(&quot;No floor exception thrown&quot;);</span>
+<span class="pc" id="L315">		} catch (FloorException e) {</span>
+<span class="fc" id="L316">			assertEquals(&quot;Floor -1 is invalid&quot;, e.getMessage());</span>
+		}
+<span class="fc" id="L318">	}</span>
+	
+	@Test
+	public void testGetElevatorException() {
+		try {
+<span class="nc" id="L323">			mSystem.getElevator(2);</span>
+<span class="nc" id="L324">			fail(&quot;No elevator exception thrown&quot;);</span>
+<span class="pc" id="L325">		} catch (ElevatorException e) {</span>
+<span class="fc" id="L326">			assertEquals(&quot;Elevator 2 is invalid&quot;, e.getMessage());</span>
+		}
+
+		try {
+<span class="nc" id="L330">			mSystem.getElevator(-1);</span>
+<span class="nc" id="L331">			fail(&quot;No elevator exception thrown&quot;);</span>
+<span class="pc" id="L332">		} catch (ElevatorException e) {</span>
+<span class="fc" id="L333">			assertEquals(&quot;Elevator -1 is invalid&quot;, e.getMessage());</span>
+		}
+<span class="fc" id="L335">	}</span>
+	
+	@Test
+	public void testGetFloorButton() throws FloorException {
+		
+<span class="fc" id="L340">		mShunt.FloorButtonDown[1] = true;</span>
+<span class="fc" id="L341">		poll();</span>
+<span class="fc" id="L342">		checkSystem(true);</span>
+
+<span class="fc" id="L344">		mShunt.FloorButtonDown[1] = false;</span>
+<span class="fc" id="L345">		poll();</span>
+<span class="fc" id="L346">		checkSystem(true);</span>
+
+<span class="fc" id="L348">		mShunt.FloorButtonUp[1] = false;</span>
+<span class="fc" id="L349">		poll();</span>
+<span class="fc" id="L350">		checkSystem(false);</span>
+
+<span class="fc" id="L352">		mShunt.FloorButtonUp[0] = true;</span>
+<span class="fc" id="L353">		poll();</span>
+<span class="fc" id="L354">		checkSystem(true);</span>
+<span class="fc" id="L355">	}</span>
+
+	private Method getProtectedMethod(Class&lt;?&gt; clazz, String name, Class&lt;?&gt;...classes) throws NoSuchMethodException, SecurityException {
+<span class="fc" id="L358">		Method f = clazz.getDeclaredMethod(name, classes);</span>
+<span class="fc" id="L359">		f.setAccessible(true);</span>
+<span class="fc" id="L360">		return f;</span>
+	}
+	
+	@Test
+	public void testSetDownButton() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, FloorException {
+<span class="fc" id="L365">		getProtectedMethod(mSystem.getClass(), &quot;setDownButton&quot;, int.class, boolean.class).invoke(mSystem, 0, true);</span>
+<span class="fc" id="L366">		assertTrue(mSystem.getFloorButton(0, false));</span>
+
+<span class="fc" id="L368">		getProtectedMethod(mSystem.getClass(), &quot;setDownButton&quot;, int.class, boolean.class).invoke(mSystem, 1, false);</span>
+<span class="fc" id="L369">		assertFalse(mSystem.getFloorButton(1, false));</span>
+<span class="fc" id="L370">	}</span>
+
+	@Test
+	public void testSetUpButton() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, FloorException {
+<span class="fc" id="L374">		getProtectedMethod(mSystem.getClass(), &quot;setUpButton&quot;, int.class, boolean.class).invoke(mSystem, 0, true);</span>
+<span class="fc" id="L375">		assertTrue(mSystem.getFloorButton(0, true));</span>
+
+<span class="fc" id="L377">		getProtectedMethod(mSystem.getClass(), &quot;setUpButton&quot;, int.class, boolean.class).invoke(mSystem, 1, false);</span>
+<span class="fc" id="L378">		assertFalse(mSystem.getFloorButton(1, true));</span>
+<span class="fc" id="L379">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

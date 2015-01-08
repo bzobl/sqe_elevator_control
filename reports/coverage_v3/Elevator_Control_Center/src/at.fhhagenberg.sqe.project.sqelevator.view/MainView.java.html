@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>MainView.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.view</a> &gt; <span class="el_source">MainView.java</span></div><h1>MainView.java</h1><pre class="source lang-java linenums">package at.fhhagenberg.sqe.project.sqelevator.view;
+
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+
+import at.fhhagenberg.sqe.project.sqelevator.controller.IControl;
+import at.fhhagenberg.sqe.project.sqelevator.view.ElevatorButtonListener.ListenerType;
+
+import com.sun.istack.internal.logging.Logger;
+
+public class MainView extends JFrame implements IMainView
+{
+<span class="fc" id="L23">	private static Logger LOG = Logger.getLogger(MainView.class);</span>
+
+<span class="fc" id="L25">	private static final long serialVersionUID = -563161883789974073L;</span>
+
+	private final int NUM_ELEVATORS;
+	private final int NUM_FLOORS;
+
+	private JPanel mElevatorPane;
+	private JPanel mMainPanel;
+	private JLabel mLblStatus;
+	
+<span class="fc" id="L34">	public MainView(IControl control, int numElevators, int numFloors, String title)</span>
+	{
+<span class="fc" id="L36">		NUM_ELEVATORS = numElevators;</span>
+<span class="fc" id="L37">		NUM_FLOORS = numFloors;</span>
+
+<span class="fc" id="L39">		setTitle(title);</span>
+		
+<span class="fc" id="L41">		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="fc" id="L42">		setBounds(100, 100, 450, 300);</span>
+
+<span class="fc" id="L44">		mElevatorPane = new JPanel();</span>
+<span class="fc" id="L45">		mElevatorPane.setBorder(new EmptyBorder(5, 5, 5, 5));</span>
+		
+		// set more space between elevator panels
+<span class="fc" id="L48">		GridLayout gl = new GridLayout(1, 0, 0, 0);</span>
+<span class="fc" id="L49">		gl.setHgap(20);</span>
+<span class="fc" id="L50">		mElevatorPane.setLayout(gl);</span>
+		
+<span class="fc" id="L52">		GridBagLayout glb = new GridBagLayout();</span>
+<span class="fc" id="L53">		glb.rowWeights = new double[]{1.0, 0.0};</span>
+<span class="fc" id="L54">		glb.columnWeights = new double[]{1.0};</span>
+<span class="fc" id="L55">		glb.columnWidths = new int[]{0};</span>
+		
+<span class="fc" id="L57">		glb.rowHeights = new int[]{0, 22};</span>
+<span class="fc" id="L58">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="fc" id="L59">		gbc.gridx = 0;</span>
+<span class="fc" id="L60">		gbc.gridy = 0;</span>
+<span class="fc" id="L61">		gbc.fill = GridBagConstraints.BOTH;</span>
+		
+<span class="fc" id="L63">		GridBagConstraints gbcStatusBar = new GridBagConstraints();</span>
+<span class="fc" id="L64">		gbcStatusBar.fill = GridBagConstraints.BOTH;</span>
+<span class="fc" id="L65">		gbcStatusBar.gridx = 0;</span>
+<span class="fc" id="L66">		gbcStatusBar.gridy = 1;</span>
+<span class="fc" id="L67">		JPanel mStatusPanel = new JPanel();</span>
+<span class="fc" id="L68">		FlowLayout flowLayout = (FlowLayout) mStatusPanel.getLayout();</span>
+<span class="fc" id="L69">		flowLayout.setAlignment(FlowLayout.RIGHT);</span>
+<span class="fc" id="L70">		mStatusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));		</span>
+		
+<span class="fc" id="L72">		mMainPanel = new JPanel(glb);</span>
+<span class="fc" id="L73">		mMainPanel.setBorder(new EmptyBorder(5,5,5,5));</span>
+<span class="fc" id="L74">		mMainPanel.add(mElevatorPane, gbc);</span>
+<span class="fc" id="L75">		mMainPanel.add(mStatusPanel, gbcStatusBar);</span>
+		
+<span class="fc" id="L77">		mLblStatus = new JLabel(&quot;&quot;);</span>
+<span class="fc" id="L78">		mLblStatus.setName(&quot;statusText&quot;);</span>
+<span class="fc" id="L79">		mLblStatus.setHorizontalAlignment(SwingConstants.RIGHT);</span>
+<span class="fc" id="L80">		mStatusPanel.add(mLblStatus);</span>
+		
+<span class="fc" id="L82">		setContentPane(mMainPanel);</span>
+		
+<span class="fc" id="L84">		initializeAllViews(control);</span>
+<span class="fc" id="L85">	}</span>
+	
+	private void initializeAllViews(IControl control) {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        for (int e = 0; e &lt; NUM_ELEVATORS; e++) {</span>
+<span class="fc" id="L89">        	IElevatorView eleView = addNewElevator(e, NUM_FLOORS);</span>
+<span class="fc" id="L90">        	ElevatorButtonListener mbl = new ElevatorButtonListener(ListenerType.MODE_BUTTON_LISTENER, control, e, -1);</span>
+<span class="fc" id="L91">        	eleView.addModeButtonListener(mbl);</span>
+<span class="fc" id="L92">        	LOG.info(&quot;initialization of IElevatorView &quot; + e + &quot; almost done&quot;);</span>
+        	
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        	for (int f = 0; f &lt; NUM_FLOORS; f++) {</span>
+<span class="fc" id="L95">        		IFloorView floorView = eleView.getFloorView(f);</span>
+        		
+<span class="fc" id="L97">        		ElevatorButtonListener cbl = new ElevatorButtonListener(ListenerType.CALL_BUTTON_LISTENER, control, e, f);</span>
+<span class="fc" id="L98">        		ElevatorButtonListener sbl = new ElevatorButtonListener(ListenerType.SERVICE_BUTTON_LISTENER, control, e, f);</span>
+        		
+<span class="fc" id="L100">        		floorView.addCallButtonListener(cbl);</span>
+<span class="fc" id="L101">        		floorView.addServiceButtonListener(sbl);</span>
+<span class="fc" id="L102">        		floorView.enableCallButton(true);</span>
+        	}
+        }
+<span class="fc" id="L105">	}</span>
+	
+	private IElevatorView addNewElevator(int num, int floors) {
+<span class="fc" id="L108">		ElevatorPanel pane = new ElevatorPanel(num, floors);</span>
+<span class="fc" id="L109">		mElevatorPane.add(pane);</span>
+<span class="fc" id="L110">		return pane;</span>
+	}
+
+	@Override
+	public IElevatorView getElevatorView(int num)
+	{
+<span class="fc bfc" id="L116" title="All 2 branches covered.">		for (Component c : mElevatorPane.getComponents())</span>
+		{
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">			if (c instanceof IElevatorView)</span>
+			{
+<span class="fc bfc" id="L120" title="All 2 branches covered.">				if (((IElevatorView) c).getElevatorNumber() == num)</span>
+				{
+<span class="fc" id="L122">					return (IElevatorView) c;</span>
+				}
+			}
+		}
+<span class="fc" id="L126">		return null;</span>
+	}
+
+	@Override
+	public void setStatusText(String statusText)
+	{
+<span class="fc" id="L132">		mLblStatus.setText(statusText);	</span>
+<span class="fc" id="L133">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

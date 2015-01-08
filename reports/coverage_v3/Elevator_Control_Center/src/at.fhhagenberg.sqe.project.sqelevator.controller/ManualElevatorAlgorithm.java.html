@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ManualElevatorAlgorithm.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.controller</a> &gt; <span class="el_source">ManualElevatorAlgorithm.java</span></div><h1>ManualElevatorAlgorithm.java</h1><pre class="source lang-java linenums">/**
+ * Project: Elevator_Control_Center
+ * Author:  Bernd Zobl
+ *          S1310567025
+ */
+
+package at.fhhagenberg.sqe.project.sqelevator.controller;
+
+import sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
+
+import com.sun.istack.internal.logging.Logger;
+
+/** ManualElevatorAlgorithm
+ * 
+ */
+<span class="nc bnc" id="L19" title="All 2 branches missed.">public class ManualElevatorAlgorithm extends ElevatorAlgorithm {</span>
+<span class="nc" id="L20">	private static Logger LOG = Logger.getLogger(ManualElevatorAlgorithm.class);</span>
+	
+	public ManualElevatorAlgorithm(IElevatorSystem sys, IElevatorControl ctrl) {
+<span class="nc" id="L23">		super(sys, ctrl);</span>
+<span class="nc" id="L24">	}</span>
+
+	@Override
+	public void setElevatorRequest(int elevator, int floor) {
+<span class="nc bnc" id="L28" title="All 6 branches missed.">		assert((floor &lt; mModel.getNumberOfFloors()) &amp;&amp; (floor &gt;= 0)) : &quot;floor number is invalid&quot;;</span>
+
+<span class="nc" id="L30">		mControl.setTarget(elevator, floor);</span>
+
+		int curFloor;
+		try {
+<span class="nc" id="L34">			curFloor = mModel.getElevator(elevator).getFloor();</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">			if (curFloor &lt; floor) {</span>
+<span class="nc" id="L36">				mControl.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">			} else if (curFloor &gt; floor) {</span>
+<span class="nc" id="L38">				mControl.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_DOWN);</span>
+<span class="nc" id="L39">			} else {</span>
+<span class="nc" id="L40">				mControl.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);</span>
+			}
+<span class="nc" id="L42">		} catch (ElevatorException e) {</span>
+<span class="nc" id="L43">			LOG.severe(e.getMessage());</span>
+<span class="nc" id="L44">			return;</span>
+		}
+<span class="nc" id="L46">	}</span>
+
+	@Override
+	public void setFloorRequest(int floor, boolean up) {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">		assert(false) : &quot;Floor request cannot be called in manual mode&quot;;</span>
+<span class="nc" id="L51">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

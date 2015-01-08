@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FloorPanel.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.view</a> &gt; <span class="el_source">FloorPanel.java</span></div><h1>FloorPanel.java</h1><pre class="source lang-java linenums">package at.fhhagenberg.sqe.project.sqelevator.view;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+<span class="pc bpc" id="L15" title="1 of 2 branches missed.">public class FloorPanel extends JPanel implements IFloorView</span>
+{
+	/**
+	 * id for serialization
+	 */
+	private static final long serialVersionUID = -6790668946717203148L;
+
+	/**
+	 * path to the elevator icons
+	 */
+<span class="fc" id="L25">	private final String SRC_ELEVATOR_OPENED = &quot;/img/ellevator_door_opened_small.png&quot;;</span>
+<span class="fc" id="L26">	private final String SRC_ELEVATOR_OPENING = &quot;/img/ellevator_door_opening_small.png&quot;;</span>
+<span class="fc" id="L27">	private final String SRC_ELEVATOR_CLOSED = &quot;/img/ellevator_door_closed_small.png&quot;;</span>
+<span class="fc" id="L28">	private final String SRC_ELEVATOR_CLOSING = &quot;/img/ellevator_door_closing_small.png&quot;;</span>
+<span class="fc" id="L29">	private final String SRC_ELEVATOR_TARGET = &quot;/img/ellevator_target_small.png&quot;;</span>
+<span class="fc" id="L30">	private final String SRC_ELEVATOR_OUT_OF_ORDER = &quot;/img/ellevator_ooo_small.png&quot;;</span>
+
+	/**
+	 * path to the (moving) arrow icons
+	 */
+<span class="fc" id="L35">	private final String SRC_ARROW_UP = &quot;/img/upArrow_small.png&quot;;</span>
+<span class="fc" id="L36">	private final String SRC_ARROW_DOWN = &quot;/img/downArrow_small.png&quot;;</span>
+<span class="fc" id="L37">	private final String SRC_ARROW_NONE = &quot;/img/standing_small.png&quot;;</span>
+
+	/**
+	 * path to the floor button icons
+	 */
+<span class="fc" id="L42">	private final String SRC_FLOOR_BTN_UP_OFF = &quot;/img/colorArrowUp_off_small.png&quot;;</span>
+<span class="fc" id="L43">	private final String SRC_FLOOR_BTN_UP_ON = &quot;/img/colorArrowUp_small.png&quot;;</span>
+<span class="fc" id="L44">	private final String SRC_FLOOR_BTN_DOWN_OFF = &quot;/img/colorArrowDown_off_small.png&quot;;</span>
+<span class="fc" id="L45">	private final String SRC_FLOOR_BTN_DOWN_ON = &quot;/img/colorArrowDown_small.png&quot;;</span>
+
+	/**
+	 * check box serviced
+	 */
+	private JCheckBox chckbxServiced;
+	
+	/**
+	 * label with elevator image
+	 */
+	private JLabel mElevatorImage;
+
+	/**
+	 * label with moving up/down image
+	 */
+	private JLabel mMovingImage;
+
+	/**
+	 * label with floor button up image
+	 */
+	private JLabel mFloorUp;
+
+	/**
+	 * label with floor button down image
+	 */
+	private JLabel mFloorDown;
+
+	/**
+	 * current status of floor buttons
+	 */
+<span class="fc" id="L75">	private boolean mFloorButtonStates[] = new boolean[2];</span>
+	
+	/**
+	 * call button
+	 */
+	private JButton mCallButton;
+	
+	/**
+	 * current elevator status. see ELEVATOR_STATUS_xxx for valid states.
+	 */
+<span class="fc" id="L85">	private int mElevatorStatus = ELEVATOR_STATUS_AWAY;</span>
+
+	/**
+	 * current moving status. see MOVE_STATUS_xxx for valid states.
+	 */
+<span class="fc" id="L90">	private int mMoveStatus = MOVE_STATUS_AWAY;</span>
+
+	/**
+	 * width of a single floor panel
+	 */
+<span class="fc" id="L95">	public final static int FLOOR_PANEL_WIDTH = 240;</span>
+	
+	/**
+	 * floor number as shown in label
+	 */
+	private final int FLOOR_NUMBER;
+
+	@Override
+	public int getFloorNumber()
+	{
+<span class="fc" id="L105">		return FLOOR_NUMBER;</span>
+	}
+
+	@Override
+	public void enableCallButton(boolean on)
+	{
+<span class="fc" id="L111">		mCallButton.setEnabled(on);</span>
+<span class="fc" id="L112">	}</span>
+
+	@Override
+	public void setElevatorStatus(int elevatorStatus)
+	{
+<span class="fc" id="L117">		mElevatorStatus = elevatorStatus;</span>
+
+<span class="pc bpc" id="L119" title="1 of 8 branches missed.">		switch (elevatorStatus)</span>
+		{
+			case ELEVATOR_STATUS_CLOSED:
+<span class="fc" id="L122">				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L123">						.getResource(SRC_ELEVATOR_CLOSED)));</span>
+<span class="fc" id="L124">				mElevatorImage.setVisible(true);</span>
+<span class="fc" id="L125">				break;</span>
+
+			case ELEVATOR_STATUS_CLOSING:
+<span class="fc" id="L128">				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L129">						.getResource(SRC_ELEVATOR_CLOSING)));</span>
+<span class="fc" id="L130">				mElevatorImage.setVisible(true);</span>
+<span class="fc" id="L131">				break;</span>
+
+			case ELEVATOR_STATUS_OPENED:
+<span class="fc" id="L134">				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L135">						.getResource(SRC_ELEVATOR_OPENED)));</span>
+<span class="fc" id="L136">				mElevatorImage.setVisible(true);</span>
+<span class="fc" id="L137">				break;</span>
+
+			case ELEVATOR_STATUS_OPENING:
+<span class="fc" id="L140">				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L141">						.getResource(SRC_ELEVATOR_OPENING)));</span>
+<span class="fc" id="L142">				mElevatorImage.setVisible(true);</span>
+<span class="fc" id="L143">				break;</span>
+
+			case ELEVATOR_STATUS_TARGET:
+<span class="fc" id="L146">				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L147">						.getResource(SRC_ELEVATOR_TARGET)));</span>
+<span class="fc" id="L148">				mElevatorImage.setVisible(true);</span>
+<span class="fc" id="L149">				break;</span>
+
+			case ELEVATOR_STATUS_OUT_OF_ORDER:
+<span class="fc" id="L152">				mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L153">						.getResource(SRC_ELEVATOR_OUT_OF_ORDER)));</span>
+<span class="fc" id="L154">				mElevatorImage.setVisible(true);</span>
+<span class="fc" id="L155">				break;</span>
+				
+			case ELEVATOR_STATUS_AWAY:
+<span class="fc" id="L158">				mElevatorImage.setVisible(false);</span>
+<span class="fc" id="L159">				break;</span>
+
+			default:
+<span class="nc bnc" id="L162" title="All 2 branches missed.">				assert false : &quot;Unexpected elevator status&quot;;</span>
+
+<span class="nc" id="L164">				mElevatorStatus = ELEVATOR_STATUS_AWAY;</span>
+				break;
+		}
+<span class="fc" id="L167">	}</span>
+
+	@Override
+	public int getElevatorStatus()
+	{
+<span class="fc" id="L172">		return mElevatorStatus;</span>
+	}
+
+	@Override
+	public void setMoveStatus(int moveStatus)
+	{
+<span class="fc" id="L178">		mMoveStatus = moveStatus;</span>
+
+<span class="pc bpc" id="L180" title="1 of 5 branches missed.">		switch (moveStatus)</span>
+		{
+			case MOVE_STATUS_UP:
+<span class="fc" id="L183">				mMovingImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L184">						.getResource(SRC_ARROW_UP)));</span>
+<span class="fc" id="L185">				mMovingImage.setVisible(true);</span>
+<span class="fc" id="L186">				break;</span>
+
+			case MOVE_STATUS_DOWN:
+<span class="fc" id="L189">				mMovingImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L190">						.getResource(SRC_ARROW_DOWN)));</span>
+<span class="fc" id="L191">				mMovingImage.setVisible(true);</span>
+<span class="fc" id="L192">				break;</span>
+
+			case MOVE_STATUS_STANDING:
+<span class="fc" id="L195">				mMovingImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L196">						.getResource(SRC_ARROW_NONE)));</span>
+<span class="fc" id="L197">				mMovingImage.setVisible(true);</span>
+<span class="fc" id="L198">				break;</span>
+
+			case MOVE_STATUS_AWAY:
+<span class="fc" id="L201">				mMovingImage.setVisible(false);</span>
+<span class="fc" id="L202">				break;</span>
+
+			default:
+<span class="nc bnc" id="L205" title="All 2 branches missed.">				assert false : &quot;Unexpected move status&quot;;</span>
+<span class="nc" id="L206">				mMoveStatus = MOVE_STATUS_AWAY;</span>
+				break;
+		}
+<span class="fc" id="L209">	}</span>
+
+	@Override
+	public int getMoveStatus()
+	{
+<span class="fc" id="L214">		return mMoveStatus;</span>
+	}
+
+	@Override
+	public void addCallButtonListener(ActionListener l)
+	{
+<span class="fc" id="L220">		mCallButton.addActionListener(l);</span>
+<span class="fc" id="L221">	}</span>
+
+	@Override
+	public void removeCallButtonListener(ActionListener l)
+	{
+<span class="fc" id="L226">		mCallButton.removeActionListener(l);</span>
+<span class="fc" id="L227">	}</span>
+
+	@Override
+	public void setFloorButton(int btn, boolean status)
+	{
+<span class="fc bfc" id="L232" title="All 2 branches covered.">		if (btn == FLOOR_BUTTON_DOWN)</span>
+		{
+<span class="fc" id="L234">			mFloorButtonStates[btn] = status;</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">			if (status)</span>
+			{
+<span class="fc" id="L237">				mFloorDown.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L238">						.getResource(SRC_FLOOR_BTN_DOWN_ON)));</span>
+<span class="fc" id="L239">			}</span>
+			else
+			{
+<span class="fc" id="L242">				mFloorDown.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L243">						.getResource(SRC_FLOOR_BTN_DOWN_OFF)));</span>
+			}
+<span class="fc" id="L245">		}</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">		else if (btn == FLOOR_BUTTON_UP)</span>
+		{
+<span class="fc" id="L248">			mFloorButtonStates[btn] = status;</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">			if (status)</span>
+			{
+<span class="fc" id="L251">				mFloorUp.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L252">						.getResource(SRC_FLOOR_BTN_UP_ON)));</span>
+<span class="fc" id="L253">			}</span>
+			else
+			{
+<span class="fc" id="L256">				mFloorUp.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L257">						.getResource(SRC_FLOOR_BTN_UP_OFF)));</span>
+			}
+<span class="fc" id="L259">		}</span>
+		else
+		{
+<span class="nc bnc" id="L262" title="All 2 branches missed.">			assert false : &quot;Unexpected floor button&quot;;</span>
+		}
+<span class="fc" id="L264">	}</span>
+
+	@Override
+	public boolean getFloorButton(int btn)
+	{
+<span class="fc bfc" id="L269" title="All 2 branches covered.">		if (btn == FLOOR_BUTTON_DOWN)</span>
+		{
+<span class="fc" id="L271">			return mFloorButtonStates[btn];</span>
+		}
+<span class="pc bpc" id="L273" title="1 of 2 branches missed.">		else if (btn == FLOOR_BUTTON_UP)</span>
+		{
+<span class="fc" id="L275">			return mFloorButtonStates[btn];</span>
+		}
+		else
+		{
+<span class="nc bnc" id="L279" title="All 2 branches missed.">			assert false : &quot;Unexpected floor button&quot;;</span>
+
+			// makes compiler happy!
+<span class="nc" id="L282">			return false;</span>
+		}
+	}
+
+	/**
+	 * Create the panel and initialize states.
+	 */
+<span class="fc" id="L289">	public FloorPanel(int floorNumber)</span>
+	{
+<span class="fc" id="L291">		FLOOR_NUMBER = floorNumber;</span>
+
+<span class="fc" id="L293">		GridBagLayout gridBagLayout = new GridBagLayout();</span>
+<span class="fc" id="L294">		gridBagLayout.rowHeights = new int[] { 35, 30, 0 };</span>
+<span class="fc" id="L295">		gridBagLayout.columnWidths = new int[] { 45, 75, 40, 75 };</span>
+<span class="fc" id="L296">		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0 };</span>
+<span class="fc" id="L297">		gridBagLayout.rowWeights = new double[] { 0.0, 0.0 };</span>
+<span class="fc" id="L298">		setLayout(gridBagLayout);</span>
+		
+<span class="fc" id="L300">		JLabel lblFloorNumber = new JLabel(String.valueOf(floorNumber));</span>
+<span class="fc" id="L301">		lblFloorNumber.setFont(new Font(&quot;Dialog&quot;, Font.BOLD, 24));</span>
+<span class="fc" id="L302">		GridBagConstraints gbc_lblFloorNumber = new GridBagConstraints();</span>
+<span class="fc" id="L303">		gbc_lblFloorNumber.anchor = GridBagConstraints.SOUTH;</span>
+<span class="fc" id="L304">		gbc_lblFloorNumber.gridheight = 2;</span>
+<span class="fc" id="L305">		gbc_lblFloorNumber.insets = new Insets(0, 0, 5, 5);</span>
+<span class="fc" id="L306">		gbc_lblFloorNumber.gridx = 0;</span>
+<span class="fc" id="L307">		gbc_lblFloorNumber.gridy = 0;</span>
+<span class="fc" id="L308">		add(lblFloorNumber, gbc_lblFloorNumber);</span>
+
+<span class="fc" id="L310">		mElevatorImage = new JLabel(&quot;&quot;);</span>
+<span class="fc" id="L311">		mElevatorImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L312">				.getResource(SRC_ELEVATOR_OPENING)));</span>
+<span class="fc" id="L313">		mElevatorImage.setName(&quot;elevatorImage&quot;);</span>
+<span class="fc" id="L314">		GridBagConstraints gbc_lblElevatorImage = new GridBagConstraints();</span>
+<span class="fc" id="L315">		gbc_lblElevatorImage.gridheight = 3;</span>
+<span class="fc" id="L316">		gbc_lblElevatorImage.insets = new Insets(0, 0, 0, 5);</span>
+<span class="fc" id="L317">		gbc_lblElevatorImage.gridx = 1;</span>
+<span class="fc" id="L318">		gbc_lblElevatorImage.gridy = 0;</span>
+<span class="fc" id="L319">		add(mElevatorImage, gbc_lblElevatorImage);</span>
+
+<span class="fc" id="L321">		mMovingImage = new JLabel(&quot;&quot;);</span>
+<span class="fc" id="L322">		mMovingImage.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L323">				.getResource(SRC_ARROW_DOWN)));</span>
+<span class="fc" id="L324">		mMovingImage.setName(&quot;upDownImage&quot;);</span>
+<span class="fc" id="L325">		GridBagConstraints gbc_lblUpDownImage = new GridBagConstraints();</span>
+<span class="fc" id="L326">		gbc_lblUpDownImage.insets = new Insets(0, 0, 0, 5);</span>
+<span class="fc" id="L327">		gbc_lblUpDownImage.gridheight = 3;</span>
+<span class="fc" id="L328">		gbc_lblUpDownImage.gridx = 2;</span>
+<span class="fc" id="L329">		gbc_lblUpDownImage.gridy = 0;</span>
+<span class="fc" id="L330">		add(mMovingImage, gbc_lblUpDownImage);</span>
+		
+<span class="fc" id="L332">		mCallButton = new JButton(&quot;Call&quot;);</span>
+<span class="fc" id="L333">		GridBagConstraints gbc_mCallButton = new GridBagConstraints();</span>
+<span class="fc" id="L334">		gbc_mCallButton.insets = new Insets(0, 0, 5, 0);</span>
+<span class="fc" id="L335">		gbc_mCallButton.gridx = 3;</span>
+<span class="fc" id="L336">		gbc_mCallButton.gridy = 0;</span>
+<span class="fc" id="L337">		add(mCallButton, gbc_mCallButton);</span>
+
+<span class="fc" id="L339">		mFloorUp = new JLabel(&quot;&quot;);</span>
+<span class="fc" id="L340">		mFloorUp.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L341">				.getResource(&quot;/img/colorArrowUp_off_small.png&quot;)));</span>
+<span class="fc" id="L342">		mFloorUp.setName(&quot;floorUpImage&quot;);</span>
+<span class="fc" id="L343">		GridBagConstraints gbc_mFloorUp = new GridBagConstraints();</span>
+<span class="fc" id="L344">		gbc_mFloorUp.insets = new Insets(0, 0, 5, 0);</span>
+<span class="fc" id="L345">		gbc_mFloorUp.gridx = 3;</span>
+<span class="fc" id="L346">		gbc_mFloorUp.gridy = 1;</span>
+<span class="fc" id="L347">		add(mFloorUp, gbc_mFloorUp);</span>
+		
+<span class="fc" id="L349">		chckbxServiced = new JCheckBox(&quot;serviced&quot;);</span>
+<span class="fc" id="L350">		chckbxServiced.setSelected(true);</span>
+<span class="fc" id="L351">		GridBagConstraints gbc_chckbxServiced = new GridBagConstraints();</span>
+<span class="fc" id="L352">		gbc_chckbxServiced.insets = new Insets(0, 0, 0, 5);</span>
+<span class="fc" id="L353">		gbc_chckbxServiced.gridx = 0;</span>
+<span class="fc" id="L354">		gbc_chckbxServiced.gridy = 2;</span>
+<span class="fc" id="L355">		add(chckbxServiced, gbc_chckbxServiced);</span>
+
+<span class="fc" id="L357">		mFloorDown = new JLabel(&quot;&quot;);</span>
+<span class="fc" id="L358">		mFloorDown.setIcon(new ImageIcon(FloorPanel.class</span>
+<span class="fc" id="L359">				.getResource(&quot;/img/colorArrowDown_off_small.png&quot;)));</span>
+<span class="fc" id="L360">		mFloorDown.setName(&quot;floorDownImage&quot;);</span>
+<span class="fc" id="L361">		GridBagConstraints gbc_mFloorDown = new GridBagConstraints();</span>
+<span class="fc" id="L362">		gbc_mFloorDown.gridx = 3;</span>
+<span class="fc" id="L363">		gbc_mFloorDown.gridy = 2;</span>
+<span class="fc" id="L364">		add(mFloorDown, gbc_mFloorDown);</span>
+
+<span class="fc" id="L366">		setFloorButton(FLOOR_BUTTON_DOWN, false);</span>
+<span class="fc" id="L367">		setFloorButton(FLOOR_BUTTON_UP, false);</span>
+<span class="fc" id="L368">		setElevatorStatus(mElevatorStatus);</span>
+<span class="fc" id="L369">		setMoveStatus(mMoveStatus);</span>
+<span class="fc" id="L370">	}</span>
+
+	@Override
+	public void addServiceButtonListener(ActionListener l)
+	{
+<span class="fc" id="L375">		chckbxServiced.addActionListener(l);</span>
+<span class="fc" id="L376">	}</span>
+
+	@Override
+	public void removeServiceButtonListener(ActionListener l)
+	{
+<span class="fc" id="L381">		chckbxServiced.removeActionListener(l);</span>
+<span class="fc" id="L382">	}</span>
+
+	@Override
+	public void setServiceStatus(boolean on)
+	{
+<span class="fc" id="L387">		chckbxServiced.setSelected(on);</span>
+<span class="fc" id="L388">	}</span>
+
+	@Override
+	public boolean getServiceStatus()
+	{
+<span class="fc" id="L393">		return chckbxServiced.isSelected();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

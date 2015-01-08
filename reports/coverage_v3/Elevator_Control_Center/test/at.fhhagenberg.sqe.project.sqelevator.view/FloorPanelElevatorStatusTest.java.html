@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FloorPanelElevatorStatusTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.view</a> &gt; <span class="el_source">FloorPanelElevatorStatusTest.java</span></div><h1>FloorPanelElevatorStatusTest.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package at.fhhagenberg.sqe.project.sqelevator.view;</span>
+
+import java.awt.Component;
+
+import javax.swing.JLabel;
+
+import junit.extensions.abbot.ComponentTestFixture;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import abbot.finder.matchers.ClassMatcher;
+import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
+
+<span class="fc" id="L15">public class FloorPanelElevatorStatusTest extends ComponentTestFixture</span>
+{
+<span class="fc" id="L17">	private final String FILENAME_ELEVATOR_OPENED = &quot;ellevator_door_opened_small.png&quot;;</span>
+<span class="fc" id="L18">	private final String FILENAME_ELEVATOR_OPENING = &quot;ellevator_door_opening_small.png&quot;;</span>
+<span class="fc" id="L19">	private final String FILENAME_ELEVATOR_CLOSED = &quot;ellevator_door_closed_small.png&quot;;</span>
+<span class="fc" id="L20">	private final String FILENAME_ELEVATOR_CLOSING = &quot;ellevator_door_closing_small.png&quot;;</span>
+<span class="fc" id="L21">	private final String FILENAME_ELEVATOR_OUT_OF_ORDER = &quot;ellevator_ooo_small.png&quot;;</span>
+<span class="fc" id="L22">	private final String FILENAME_ELEVATOR_TARGET = &quot;ellevator_target_small.png&quot;;</span>
+
+	private FloorPanel mFloorPanel;
+	private JLabel mElevatorImage;
+
+	@Before
+	public void setUp() throws Exception 
+	{
+<span class="fc" id="L30">		mFloorPanel = new FloorPanel(1);</span>
+<span class="fc" id="L31">		showFrame(mFloorPanel);</span>
+
+<span class="fc" id="L33">		mElevatorImage = (JLabel) getFinder().find(new ClassMatcher(JLabel.class)</span>
+		{
+			public boolean matches(Component c)
+			{
+<span class="pc bpc" id="L37" title="1 of 6 branches missed.">				return super.matches(c) &amp;&amp; (((JLabel) c).getName() != null) &amp;&amp; ((JLabel) c).getName().equals(&quot;elevatorImage&quot;);</span>
+			}
+		});
+<span class="fc" id="L40">	}</span>
+
+	@Test
+	public void testInitialStatus() 
+	{
+<span class="fc" id="L45">		int status = mFloorPanel.getElevatorStatus();	</span>
+<span class="fc" id="L46">		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, status);</span>
+<span class="fc" id="L47">	}</span>
+
+	public void testEachStatus() 
+	{
+<span class="fc" id="L51">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_AWAY);</span>
+<span class="fc" id="L52">		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, mFloorPanel.getElevatorStatus());</span>
+
+<span class="fc" id="L54">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSED);</span>
+<span class="fc" id="L55">		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSED, mFloorPanel.getElevatorStatus());</span>
+
+<span class="fc" id="L57">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSING);</span>
+<span class="fc" id="L58">		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSING, mFloorPanel.getElevatorStatus());</span>
+
+<span class="fc" id="L60">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENED);</span>
+<span class="fc" id="L61">		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENED, mFloorPanel.getElevatorStatus());</span>
+
+<span class="fc" id="L63">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);</span>
+<span class="fc" id="L64">		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.getElevatorStatus());</span>
+		
+<span class="fc" id="L66">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER);</span>
+<span class="fc" id="L67">		assertEquals(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER, mFloorPanel.getElevatorStatus());</span>
+		
+<span class="fc" id="L69">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_TARGET);</span>
+<span class="fc" id="L70">		assertEquals(FloorPanel.ELEVATOR_STATUS_TARGET, mFloorPanel.getElevatorStatus());</span>
+<span class="fc" id="L71">	}</span>
+	
+	public void testStatusImages() 
+	{
+<span class="fc" id="L75">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_AWAY);</span>
+<span class="fc" id="L76">		assertEquals(FloorPanel.ELEVATOR_STATUS_AWAY, mFloorPanel.getElevatorStatus());</span>
+<span class="fc" id="L77">		assertFalse(mElevatorImage.isVisible());</span>
+
+<span class="fc" id="L79">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSED);</span>
+<span class="fc" id="L80">		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSED, mFloorPanel.getElevatorStatus());</span>
+<span class="fc" id="L81">		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_CLOSED));</span>
+<span class="fc" id="L82">		assertTrue(mElevatorImage.isVisible());</span>
+		
+<span class="fc" id="L84">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_CLOSING);</span>
+<span class="fc" id="L85">		assertEquals(FloorPanel.ELEVATOR_STATUS_CLOSING, mFloorPanel.getElevatorStatus());</span>
+<span class="fc" id="L86">		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_CLOSING));</span>
+<span class="fc" id="L87">		assertTrue(mElevatorImage.isVisible());</span>
+
+<span class="fc" id="L89">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENED);</span>
+<span class="fc" id="L90">		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENED, mFloorPanel.getElevatorStatus());</span>
+<span class="fc" id="L91">		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OPENED));</span>
+<span class="fc" id="L92">		assertTrue(mElevatorImage.isVisible());</span>
+		
+<span class="fc" id="L94">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OPENING);</span>
+<span class="fc" id="L95">		assertEquals(FloorPanel.ELEVATOR_STATUS_OPENING, mFloorPanel.getElevatorStatus());		</span>
+<span class="fc" id="L96">		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OPENING));</span>
+<span class="fc" id="L97">		assertTrue(mElevatorImage.isVisible());</span>
+		
+<span class="fc" id="L99">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER);</span>
+<span class="fc" id="L100">		assertEquals(FloorPanel.ELEVATOR_STATUS_OUT_OF_ORDER, mFloorPanel.getElevatorStatus());		</span>
+<span class="fc" id="L101">		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_OUT_OF_ORDER));</span>
+<span class="fc" id="L102">		assertTrue(mElevatorImage.isVisible());</span>
+		
+<span class="fc" id="L104">		mFloorPanel.setElevatorStatus(FloorPanel.ELEVATOR_STATUS_TARGET);</span>
+<span class="fc" id="L105">		assertEquals(FloorPanel.ELEVATOR_STATUS_TARGET, mFloorPanel.getElevatorStatus());		</span>
+<span class="fc" id="L106">		assertTrue(mElevatorImage.getIcon().toString().contains(FILENAME_ELEVATOR_TARGET));</span>
+<span class="fc" id="L107">		assertTrue(mElevatorImage.isVisible());</span>
+<span class="fc" id="L108">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>
