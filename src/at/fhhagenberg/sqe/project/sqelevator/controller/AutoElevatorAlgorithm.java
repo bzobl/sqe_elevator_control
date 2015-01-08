@@ -54,9 +54,11 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 
 	
 	private int getDirection(int curFloor, int targetFloor) {
-		int direction = 1;	// down
+		int direction = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		if (targetFloor > curFloor) {
-			direction = 0;	// up
+			direction = IElevator.ELEVATOR_DIRECTION_UP;	// up
+		} else if (targetFloor < curFloor) {
+			direction = IElevator.ELEVATOR_DIRECTION_DOWN;	// down
 		}
 		return direction;
 	}

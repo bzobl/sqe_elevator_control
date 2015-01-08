@@ -5,7 +5,7 @@ import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 
-final class ElevatorConnectionTestShunt implements IElevatorStatus, IElevatorControl {
+public final class ElevatorConnectionTestShunt implements IElevatorStatus, IElevatorControl {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
