@@ -45,7 +45,11 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 			mUpButtons[i] = false;
 			mDownButtons[i] = false;
 		}
+		
+		startPolling(status);
+	}
 
+	protected void startPolling(IElevatorStatus status) {
         PollingTask pTask = new PollingTask(status);
 		pTask.setElevatorSystem(this);
 		pTask.startPolling(status.getClockTick());

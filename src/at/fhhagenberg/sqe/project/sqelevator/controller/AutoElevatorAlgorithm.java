@@ -27,13 +27,14 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		}
 		assert (curFloor != floor);
 		
-		int nextFloor = 0, diff = mModel.getNumberOfElevators()+1;
-		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
+		// searching the smallest difference from current floor to all requested floors
+		int nextFloor = 0, diff = mModel.getNumberOfFloors()+1;
+		for (int i = 0; i < mModel.getNumberOfFloors(); ++i) {
 			try {
 				if (mModel.getElevator(elevator).getButtonStatus(i) && mModel.getElevator(elevator).getServicesFloors(curFloor)) {
-					if (diff > Math.abs(floor-i)) {
+					if (diff > Math.abs(curFloor-i)) {
 						nextFloor = i;
-						diff = Math.abs(floor-i);
+						diff = Math.abs(curFloor-i);
 					}
 				}
 			} catch (FloorException e) {
@@ -45,9 +46,9 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 			}
 		}
 		
-		if (diff < mModel.getNumberOfElevators()+1) {
+		if (diff < mModel.getNumberOfFloors()+1) {
 			mControl.setTarget(elevator, nextFloor);
-			mControl.setCommittedDirection(elevator, getDirection(floor, nextFloor));
+			mControl.setCommittedDirection(elevator, getDirection(curFloor, nextFloor));
 		}
 		// do nothing
 	}

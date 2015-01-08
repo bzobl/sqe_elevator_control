@@ -42,7 +42,8 @@ public final class ElevatorConnectionTestShunt implements IElevatorStatus, IElev
 		FloorButtonUp = new boolean[FLOOR_NUM];
 		ServicesFloors = new boolean[FLOOR_NUM];
 		SetServicesFloor = new boolean[FLOOR_NUM];
-
+		SetCommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		
 		for (int i = 0; i < floors; i++) {
 			FloorButtonDown[i] = false;
 			FloorButtonUp[i] = false;
