@@ -9,7 +9,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -17,14 +17,14 @@ class PollingTask extends TimerTask {
 	
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
-	protected IElevatorStatus mConnection;
+	protected IElevatorConnection mConnection;
 	private ElevatorSystem mElevators;
 	private Timer mTimer = new Timer();
 	
 	protected PollingTask() {
 	}
 
-	public PollingTask(IElevatorStatus connection) {
+	public PollingTask(IElevatorConnection connection) {
 		mConnection = connection;
 	}
 	
@@ -32,17 +32,21 @@ class PollingTask extends TimerTask {
 	public void run() {
 		if (mElevators == null) {
 			stopPolling();
+			mElevators.setConnectionStatus(false);
 			LOG.warning("Elevator system was deleted: stopping to poll");
 			return;
 		}
 
 		if (mConnection == null) {
 			stopPolling();
+			mElevators.setConnectionStatus(false);
 			LOG.warning("No connection set: stopping to poll");
 			return;
 		}
 
 		try {
+			mElevators.setConnectionStatus(mConnection.isConnected());
+			
 			for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
 				mElevators.setUpButton(floor, mConnection.getFloorButtonUp(floor));
 				mElevators.setDownButton(floor, mConnection.getFloorButtonDown(floor));

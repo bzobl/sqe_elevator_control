@@ -12,8 +12,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
@@ -52,10 +52,10 @@ public class ElevatorControlCenter implements IControl, Observer {
 	IElevatorAlgorithm mAutoAlgo;
 	IElevatorAlgorithm mManuAlgo;
 	
-	public ElevatorControlCenter(IElevatorControl control, IElevatorStatus status) {
-		mControl = control;
+	public ElevatorControlCenter(IElevatorConnection connection) {
+		mControl = connection;
 
-        mModel = new ElevatorSystem(status);
+        mModel = new ElevatorSystem(connection);
         mModel.addObserver(this);
 
 		mAuto = new boolean[mModel.getNumberOfElevators()];
@@ -259,6 +259,15 @@ public class ElevatorControlCenter implements IControl, Observer {
 	private void updateView(IElevatorSystem sys) {
 		assert (mView != null) : "update of view requested when no view was set";
 
+		if (sys.isConnected())
+		{
+			mView.setStatusText("Connected");
+		}
+		else
+		{
+			mView.setStatusText("Not connected");
+		}
+		
 		for (int e = 0; e < mModel.getNumberOfElevators(); e++) {
 			for (int f = 0; f < mModel.getNumberOfElevators(); f++) {
 				IFloorView floorView = mView.getElevatorView(e).getFloorView(f);

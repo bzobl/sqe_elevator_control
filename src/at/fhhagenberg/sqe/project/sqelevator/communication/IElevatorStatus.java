@@ -124,5 +124,4 @@ public interface IElevatorStatus {
 	 * @return clock tick
 	 */
 	public long getClockTick();
-
 }

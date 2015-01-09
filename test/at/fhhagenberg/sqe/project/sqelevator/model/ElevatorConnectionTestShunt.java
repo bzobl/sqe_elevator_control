@@ -2,10 +2,9 @@
 package at.fhhagenberg.sqe.project.sqelevator.model;
 
 import sqelevator.IElevator;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
-final class ElevatorConnectionTestShunt implements IElevatorStatus, IElevatorControl {
+final class ElevatorConnectionTestShunt implements IElevatorConnection {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
@@ -30,6 +29,9 @@ final class ElevatorConnectionTestShunt implements IElevatorStatus, IElevatorCon
 	public int SetCommitedDirection;
 	public boolean[] SetServicesFloor;
 	public int SetTarget;
+	
+	public boolean IsConnected;
+	public boolean Connect;
 	
 	public ElevatorConnectionTestShunt(int floors, int height, long period, int capacity) {
 		FLOOR_NUM = floors;
@@ -149,5 +151,18 @@ final class ElevatorConnectionTestShunt implements IElevatorStatus, IElevatorCon
 	@Override
 	public long getClockTick() {
 		return CLOCK_TICK;
+	}
+
+	@Override
+	public boolean isConnected()
+	{
+		return IsConnected;
+	}
+
+	@Override
+	public boolean connect()
+	{
+		Connect = true;
+		return Connect;
 	}
 }

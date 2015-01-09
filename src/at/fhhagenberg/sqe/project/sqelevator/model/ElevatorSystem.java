@@ -9,7 +9,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Observable;
 import java.util.Observer;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
 
@@ -27,17 +27,19 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	private boolean mUpButtons[];
 	private boolean mDownButtons[];
 
-	public ElevatorSystem(IElevatorStatus status) {
-		NUM_ELEVATORS = status.getElevatorNum();
-		NUM_FLOORS = status.getFloorNum();
-		FLOOR_HEIGHT = status.getFloorHeight();
+	private boolean mIsConnected = false;
+	
+	public ElevatorSystem(IElevatorConnection connection) {
+		NUM_ELEVATORS = connection.getElevatorNum();
+		NUM_FLOORS = connection.getFloorNum();
+		FLOOR_HEIGHT = connection.getFloorHeight();
 
 		mElevators = new Elevator[NUM_ELEVATORS];
 		mUpButtons = new boolean[NUM_FLOORS];
 		mDownButtons = new boolean[NUM_FLOORS];
 		
 		for (int i = 0; i < NUM_ELEVATORS; i++) {
-			int capacity = status.getElevatorCapacity(i);
+			int capacity = connection.getElevatorCapacity(i);
 			mElevators[i] = new Elevator(i, capacity, NUM_FLOORS);
 		}
 
@@ -46,9 +48,9 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 			mDownButtons[i] = false;
 		}
 
-        PollingTask pTask = new PollingTask(status);
+        PollingTask pTask = new PollingTask(connection);
 		pTask.setElevatorSystem(this);
-		pTask.startPolling(status.getClockTick());
+		pTask.startPolling(connection.getClockTick());
 	}
 	
 	/* (non-Javadoc)
@@ -130,5 +132,16 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 			setChanged();
 			mUpButtons[floor] = pressed;
 		}
+	}
+	
+	protected void setConnectionStatus(boolean connected)
+	{
+		mIsConnected = connected;
+	}
+	
+	@Override
+	public boolean isConnected()
+	{
+		return mIsConnected;
 	}
 }

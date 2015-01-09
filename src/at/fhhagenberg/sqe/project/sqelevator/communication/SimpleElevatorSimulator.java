@@ -3,7 +3,7 @@ package at.fhhagenberg.sqe.project.sqelevator.communication;
 
 import sqelevator.IElevator;
 
-public class SimpleElevatorSimulator implements IElevatorStatus, IElevatorControl {
+public class SimpleElevatorSimulator implements IElevatorConnection {
 
 	private static final int FLOOR_HEIGHT = 6;
 	public static final long CLOCK_TICK = 300;
@@ -213,4 +213,15 @@ public class SimpleElevatorSimulator implements IElevatorStatus, IElevatorContro
 		return CLOCK_TICK;
 	}
 
+	@Override
+	public boolean isConnected()
+	{
+		return true;
+	}
+	
+	@Override
+	public boolean connect()
+	{
+		return true;
+	}
 }

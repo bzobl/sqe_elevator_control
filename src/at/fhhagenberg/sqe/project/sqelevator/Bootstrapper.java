@@ -7,6 +7,7 @@
 package at.fhhagenberg.sqe.project.sqelevator;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.ElevatorSimCommunication;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 import at.fhhagenberg.sqe.project.sqelevator.controller.ElevatorControlCenter;
 import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
@@ -20,28 +21,34 @@ public class Bootstrapper {
 	
 	public static void main(String[] args) {
 		
+		// for test only
+		final boolean useRemoteSimulator = false;
+		
 		LOG.info("starting up");
 		
-		int numElevators= 3;
-		int numFloors = 5;
-	
-// 	Only for remote simulator
-//
-//		String rmiName = "rmi://10.29.17.240/ElevatorSim";
-//		ElevatorSimCommunication sim = new ElevatorSimCommunication();
-//		if (sim.connect(rmiName) == false)
-//		{
-//			LOG.info("simple simulator used");
-//		}		
+		IElevatorConnection sim = null;
 		
-		SimpleElevatorSimulator sim = new SimpleElevatorSimulator(numElevators, numFloors);
+		if (useRemoteSimulator)
+		{
+			LOG.info("use remote simulator");
+			String rmiName = "rmi://192.168.1.111/ElevatorSim";
+			sim = new ElevatorSimCommunication(rmiName);
+		}
+		else
+		{
+			LOG.info("use local simulator");
+			int numElevators= 3;
+			int numFloors = 5;
+			sim = new SimpleElevatorSimulator(numElevators, numFloors);
+		}
 		
-		LOG.info("using " + sim.getClass().getCanonicalName() + " as connection interface");
-		ElevatorControlCenter ctrl = new ElevatorControlCenter(sim, sim);
+		assert(sim != null) : "Simulator must not be null!";
+		
+		ElevatorControlCenter ctrl = new ElevatorControlCenter(sim);
 		MainView view = new MainView(ctrl, sim.getElevatorNum(), sim.getFloorNum(), APPLICATION_NAME);
 		ctrl.setView(view);
 		ctrl.updateView();
-
+		
 		view.setVisible(true);
 	}
 }

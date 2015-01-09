@@ -27,4 +27,6 @@ public interface IElevatorSystem {
 
 	public boolean getFloorButton(int floor, boolean up) throws FloorException;
 
+	public boolean isConnected();
+	
 }

@@ -7,20 +7,32 @@ import sqelevator.IElevator;
 
 import com.sun.istack.internal.logging.Logger;
 
-public class ElevatorSimCommunication implements IElevatorStatus,
-		IElevatorControl
+public class ElevatorSimCommunication implements IElevatorConnection
 {
 	private static Logger LOG = Logger
 			.getLogger(ElevatorSimCommunication.class);
 
 	private IElevator mRemote;
 
-	public boolean connect(String rmiName)
+	private boolean mIsConnected = false;
+	
+	private final String mRmiName;
+	
+	public ElevatorSimCommunication(String rmiName)
 	{
+		mRmiName = rmiName;
+	}
+	
+	@Override
+	public boolean connect()
+	{
+		mIsConnected = false;
+		
 		try
 		{
-			mRemote = (IElevator) Naming.lookup(rmiName);
-			return (mRemote != null);
+			mRemote = (IElevator) Naming.lookup(mRmiName);
+			mIsConnected = mRemote != null;
+			return mIsConnected;
 		}
 		catch (Exception e)
 		{
@@ -39,6 +51,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 	}
@@ -52,6 +65,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 	}
@@ -65,6 +79,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 	}
@@ -82,6 +97,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -97,6 +113,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -112,6 +129,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -132,6 +150,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -147,6 +166,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -162,6 +182,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -177,6 +198,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -192,6 +214,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -207,6 +230,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -222,6 +246,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -237,6 +262,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -252,6 +278,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -267,6 +294,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -282,6 +310,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -297,6 +326,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -312,6 +342,7 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
@@ -327,9 +358,16 @@ public class ElevatorSimCommunication implements IElevatorStatus,
 		}
 		catch (RemoteException e)
 		{
+			mIsConnected = false;
 			LOG.warning(e.getMessage());
 		}
 
 		return 0;
+	}
+
+	@Override
+	public boolean isConnected()
+	{
+		return mIsConnected;
 	}
 }
