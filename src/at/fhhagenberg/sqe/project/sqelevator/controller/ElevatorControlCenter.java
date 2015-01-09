@@ -86,7 +86,13 @@ public class ElevatorControlCenter implements IControl, Observer {
 		IElevatorView eleView = mView.getElevatorView(elevator);
 		
 		mAuto[elevator] = autoMode;
-		
+		if (mAutoAlgo != null) {
+			mAutoAlgo.enableElevator(elevator, autoMode);
+			if (autoMode) {
+				updateAlgorithm();
+			}
+		}
+
 		for (int i = 0; i < mModel.getNumberOfFloors(); i++) {
 			IFloorView floorView = eleView.getFloorView(i); 
 			floorView.enableCallButton(!mAuto[elevator]);
@@ -139,34 +145,23 @@ public class ElevatorControlCenter implements IControl, Observer {
 	public void update(Observable o, Object arg) {
 		if (arg.equals(IElevatorSystem.SYSTEM_PROPERTY_CHANGED)) {
 			assert (o instanceof IElevatorSystem);
+
 			IElevatorSystem sys = (IElevatorSystem) o;
 			if (mView != null) {
 				updateView(sys);
 			} else {
 				LOG.info("ElevatorSystem updated, but no view is set");
 			}
-			if (mAutoAlgo != null) {
-				if (isAnyElevatorAuto()) {
-					updateAlgorithm(sys);
-				}
-			} else {
-				LOG.info("ElevatorSystem updated, but no auto algo is set");
-			}
 		} else if (arg.equals(IElevatorSystem.ELEVATOR_PROPERTY_CHANGED)) {
 			assert (o instanceof IElevatorModel);
+
 			IElevatorModel elev = (IElevatorModel) o;
 			if (mView != null) {
 				updateView(elev);
 			} else {
 				LOG.info("Elevator updated, but no view is set");
 			}
-			if (mAuto[elev.getElevatorNumber()]) {
-				if (mAutoAlgo != null) {
-					updateAlgorithm(elev);
-				} else {
-					LOG.info("Elevator updated, but no auto algo is set");
-				}
-			} else {
+			if (!mAuto[elev.getElevatorNumber()]) {
 				// check whether or not the elevator is in the target floor and clear direction accordingly
 				if (elev.getFloor() == elev.getTargetFloor()) {
                     mManuAlgo.setElevatorRequest(elev.getElevatorNumber(), elev.getTargetFloor());
@@ -175,6 +170,27 @@ public class ElevatorControlCenter implements IControl, Observer {
 		} else {
 			LOG.warning("Unexpected class notified ElevatorControl: " + o.getClass().getCanonicalName());
 		}
+
+        if ((mAutoAlgo != null)
+            && isAnyElevatorAuto()) {
+        	updateAlgorithm();
+        }
+	}
+
+	private void updateAlgorithm() {
+		assert(isAnyElevatorAuto()) : "update Algorithm called with no elevator in auto mode";
+
+		for (int e = 0; e < mModel.getNumberOfElevators(); e++) {
+			try {
+				if (mAuto[e]) {
+					updateAlgorithm(mModel.getElevator(e));
+				}
+			} catch (ElevatorException exc) {
+				LOG.severe("invalid elevator number: " + exc.getMessage());
+			}
+		}
+
+		updateAlgorithm(mModel);
 	}
 
 	/**
@@ -183,6 +199,10 @@ public class ElevatorControlCenter implements IControl, Observer {
 	private void updateAlgorithm(IElevatorModel elev) {
 		assert (mAutoAlgo != null) : "Auto algorithm not set";
 		assert (mAuto[elev.getElevatorNumber()]) : "elevator is in manual mode";
+
+		if (elev.getFloor() == elev.getTargetFloor()) {
+			mControl.setCommittedDirection(elev.getElevatorNumber(), IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+		}
 
 		for (int f = 0; f < mModel.getNumberOfFloors(); f++) {
 			try {
