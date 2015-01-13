@@ -5,21 +5,21 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-
-import com.sun.xml.internal.ws.Closeable;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
-import java.awt.Window.Type;
+
+import com.sun.istack.internal.logging.Logger;
 
 public class ConnectingDialog extends JDialog
 {
-
+	private static Logger LOG = Logger.getLogger(ConnectingDialog.class);
+	
+	
 	private final JPanel contentPanel = new JPanel();
 
 	private final IElevatorConnection mConnection;
@@ -75,18 +75,36 @@ public class ConnectingDialog extends JDialog
 			@Override
 			public void run()
 			{			
-				// avoid race condition!
-				while (!isVisible());
-				
-				while (mConnection.connect() == false);	
+				// avoid race condition!				
+				//while ((mConnection.connect() == false) || (mConnection.getClockTick()))	
+				while (!mConnection.isConnected())
+				{
+					try
+					{
+						mConnection.connect();
+
+						//mConnection.getClockTick();
+					}
+					catch (Exception e)
+					{
+						LOG.warning("Connecting failed with exception.");
+					}
+				}
 				assert (mConnection.isConnected() == true);
-				
-				setVisible(false);
 			}
 		});
-		connThread.start();	
 		setVisible(true);
-		while (!mConnection.isConnected());
+		connThread.start();	
+		
+		try
+		{
+			connThread.join();
+		}
+		catch (InterruptedException ie)
+		{
+			LOG.warning("connection thread.join() failed");
+		}
+			
 		return mConnection.isConnected();
 	}
 }

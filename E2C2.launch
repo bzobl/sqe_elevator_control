@@ -2,7 +2,7 @@
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <stringAttribute key="bad_container_name" value="/E2C2_Run"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/Elevator_Control_Center/src/at/fhhagenberg/sqe/project/sqelevator/Bootstrapper.java"/>
+<listEntry value="/src/at/fhhagenberg/sqe/project/sqelevator/Bootstrapper.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>

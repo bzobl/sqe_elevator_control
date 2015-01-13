@@ -9,11 +9,12 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import at.fhhagenberg.sqe.project.sqelevator.Bootstrapper;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
 
-class PollingTask extends TimerTask {
+public class PollingTask extends TimerTask {
 	
 	private static Logger LOG = Logger.getLogger(PollingTask.class); 
 	
@@ -27,52 +28,56 @@ class PollingTask extends TimerTask {
 	public PollingTask(IElevatorConnection connection) {
 		mConnection = connection;
 	}
-	
+
 	@Override
 	public void run() {
 		if (mElevators == null) {
-			stopPolling();
-			mElevators.setConnectionStatus(false);
 			LOG.warning("Elevator system was deleted: stopping to poll");
-			return;
-		}
-
-		if (mConnection == null) {
 			stopPolling();
-			mElevators.setConnectionStatus(false);
-			LOG.warning("No connection set: stopping to poll");
-			return;
 		}
-
-		try {
-			mElevators.setConnectionStatus(mConnection.isConnected());
-			
-			for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
-				mElevators.setUpButton(floor, mConnection.getFloorButtonUp(floor));
-				mElevators.setDownButton(floor, mConnection.getFloorButtonDown(floor));
-			}
-	
-			for (int num = 0; num < mElevators.NUM_ELEVATORS; num++) {
-				Elevator elevator = mElevators.mElevators[num];
-				elevator.setDirection(mConnection.getCommittedDirection(num));
-				elevator.setAcceleration(mConnection.getElevatorAccel(num));
-				elevator.setDoorstatus(mConnection.getElevatorDoorStatus(num));
-				elevator.setFloor(mConnection.getElevatorFloor(num));
-				elevator.setPosition(mConnection.getElevatorPosition(num));
-				elevator.setSpeed(mConnection.getElevatorSpeed(num));
-				elevator.setWeight(mConnection.getElevatorWeight(num));
-				elevator.setTargetFloor(mConnection.getTarget(num));
-
+		else if (mConnection == null) {
+			LOG.warning("No connection set: stopping to poll");	
+			stopPolling();
+		}
+		else if (!mConnection.isConnected())
+		{
+			LOG.warning("No connection: stopping to poll");
+			stopPolling();
+		}
+		else
+		{
+			try {
+				mElevators.setConnectionStatus(mConnection.isConnected());
+				
+				LOG.info("ClockTick: " + String.valueOf(mConnection.getClockTick()));
+				
 				for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
-					elevator.setButtonStatus(floor, mConnection.getElevatorButton(num, floor));
-                    elevator.setServicesFloors(floor, mConnection.getServicesFloors(num, floor));
+					mElevators.setUpButton(floor, mConnection.getFloorButtonUp(floor));
+					mElevators.setDownButton(floor, mConnection.getFloorButtonDown(floor));
 				}
-			}
-		} catch (FloorException e) {
-			LOG.warning("Accessed invalid floor: " + e.getMessage());
-		}
 		
-		mElevators.pollingComplete();
+				for (int num = 0; num < mElevators.NUM_ELEVATORS; num++) {
+					Elevator elevator = mElevators.mElevators[num];
+					elevator.setDirection(mConnection.getCommittedDirection(num));
+					elevator.setAcceleration(mConnection.getElevatorAccel(num));
+					elevator.setDoorstatus(mConnection.getElevatorDoorStatus(num));
+					elevator.setFloor(mConnection.getElevatorFloor(num));
+					elevator.setPosition(mConnection.getElevatorPosition(num));
+					elevator.setSpeed(mConnection.getElevatorSpeed(num));
+					elevator.setWeight(mConnection.getElevatorWeight(num));
+					elevator.setTargetFloor(mConnection.getTarget(num));
+	
+					for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
+						elevator.setButtonStatus(floor, mConnection.getElevatorButton(num, floor));
+	                    elevator.setServicesFloors(floor, mConnection.getServicesFloors(num, floor));
+					}
+				}
+			} catch (FloorException e) {
+				LOG.warning("Accessed invalid floor: " + e.getMessage());
+			}
+			
+			mElevators.pollingComplete();
+		}
 	}
 	
 	public void setElevatorSystem(ElevatorSystem sys)
@@ -80,13 +85,26 @@ class PollingTask extends TimerTask {
 		mElevators = sys;
 	}
 	
-	public void startPolling(long period)
+	public boolean startPolling(long period)
 	{
-		mTimer.scheduleAtFixedRate(this, 0, period);
+		try
+		{			
+			mTimer.scheduleAtFixedRate(this, 0, period);
+			return true;
+		}
+		catch (Exception e)
+		{
+			LOG.warning("couldn't start polling task");
+			return false;
+		}
 	}
 
-	public void stopPolling()
+	private void stopPolling()
 	{
+		mElevators.setConnectionStatus(false);	
 		mTimer.cancel();
+		
+		// TODO hack
+		Bootstrapper.connectAndStart();
 	}
 }

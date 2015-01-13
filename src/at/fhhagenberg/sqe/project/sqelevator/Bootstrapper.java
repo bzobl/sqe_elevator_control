@@ -6,8 +6,6 @@
 
 package at.fhhagenberg.sqe.project.sqelevator;
 
-import javax.swing.JDialog;
-
 import at.fhhagenberg.sqe.project.sqelevator.communication.ElevatorSimCommunication;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
@@ -16,7 +14,6 @@ import at.fhhagenberg.sqe.project.sqelevator.view.ConnectingDialog;
 import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
 
 import com.sun.istack.internal.logging.Logger;
-import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
 
 public class Bootstrapper {
 	private final static Logger LOG = Logger.getLogger(Bootstrapper.class); 
@@ -24,6 +21,8 @@ public class Bootstrapper {
 	private static final String APPLICATION_NAME = "E2C2 - Extended Elevator Control Center";
 	
 	private static IElevatorConnection mSimulator;
+	
+	private static MainView mMainView;
 	
 	public static void main(String[] args) {
 		
@@ -52,6 +51,12 @@ public class Bootstrapper {
 	static public void connectAndStart()
 	{
 		assert(mSimulator != null) : "Simulator must not be null!";
+	
+		if (mMainView != null)
+		{
+			mMainView.setVisible(false);
+			mMainView.dispose();
+		}
 		
 		ConnectingDialog cd = new ConnectingDialog(mSimulator);
 		
@@ -68,10 +73,10 @@ public class Bootstrapper {
 		cd.dispose();
 		
 		ElevatorControlCenter ctrl = new ElevatorControlCenter(mSimulator);
-		MainView view = new MainView(ctrl, mSimulator.getElevatorNum(), mSimulator.getFloorNum(), APPLICATION_NAME);
-		ctrl.setView(view);
+		mMainView = new MainView(ctrl, mSimulator.getElevatorNum(), mSimulator.getFloorNum(), APPLICATION_NAME);
+		ctrl.setView(mMainView);
 		ctrl.updateView();
 		
-		view.setVisible(true);
+		mMainView.setVisible(true);
 	}
 }

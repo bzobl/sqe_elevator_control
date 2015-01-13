@@ -9,6 +9,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Observable;
 import java.util.Observer;
 
+import at.fhhagenberg.sqe.project.sqelevator.Bootstrapper;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
@@ -50,7 +51,14 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 
         PollingTask pTask = new PollingTask(connection);
 		pTask.setElevatorSystem(this);
-		pTask.startPolling(connection.getClockTick());
+		//if(!pTask.startPolling(connection.getClockTick()))
+		if (!pTask.startPolling(500))
+		{
+			// not connected
+		
+			// TODO hack
+			Bootstrapper.connectAndStart();
+		}
 	}
 	
 	/* (non-Javadoc)

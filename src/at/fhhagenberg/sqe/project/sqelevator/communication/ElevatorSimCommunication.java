@@ -36,8 +36,8 @@ public class ElevatorSimCommunication implements IElevatorConnection
 		}
 		catch (Exception e)
 		{
-			LOG.warning("cant connect to remotes.");
-			LOG.warning(e.getMessage());
+			LOG.info("can't connect to remotes.");
+			LOG.info(e.getMessage());
 		}
 		return false;
 	}

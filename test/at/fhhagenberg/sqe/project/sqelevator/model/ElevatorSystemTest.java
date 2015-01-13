@@ -55,10 +55,10 @@ public class ElevatorSystemTest extends PollingTask
 	}
 	
 	// Polling task functions
-	@Override
-	public void startPolling(long period) {
-		
-	}
+	//@Override
+	//public void startPolling(long period) {
+	//	
+	//}
 	
 	public void poll() {
 		run();
