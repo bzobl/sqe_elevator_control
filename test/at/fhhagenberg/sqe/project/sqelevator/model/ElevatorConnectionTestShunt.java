@@ -165,4 +165,10 @@ final class ElevatorConnectionTestShunt implements IElevatorConnection {
 		Connect = true;
 		return Connect;
 	}
+
+	@Override
+	public String getConnectionName()
+	{
+		return "Shunt";
+	}
 }

@@ -47,6 +47,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	IElevatorSystem mModel;
 	IMainView mView;
 	
+	
 	boolean mAuto[];
 
 	IElevatorAlgorithm mAutoAlgo;

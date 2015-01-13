@@ -224,4 +224,10 @@ public class SimpleElevatorSimulator implements IElevatorConnection {
 	{
 		return true;
 	}
+
+	@Override
+	public String getConnectionName()
+	{
+		return "Simulator";
+	}
 }

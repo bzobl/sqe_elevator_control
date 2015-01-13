@@ -370,4 +370,10 @@ public class ElevatorSimCommunication implements IElevatorConnection
 	{
 		return mIsConnected;
 	}
+
+	@Override
+	public String getConnectionName()
+	{
+		return mRmiName;
+	}
 }
