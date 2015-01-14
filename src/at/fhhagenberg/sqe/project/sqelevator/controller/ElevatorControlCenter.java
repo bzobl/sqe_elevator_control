@@ -59,16 +59,22 @@ public class ElevatorControlCenter implements IControl, Observer
 				IFloorView.ELEVATOR_STATUS_OPENING);
 	}
 
-	IElevatorConnection mElevatorConnection;
-	IElevatorSystem mModel;
-	IMainView mView;
+	private IElevatorConnection mElevatorConnection;
+	private IElevatorSystem mModel;
+	private IMainView mView;
 
+	/**
+	 * handle connection lost
+	 */
 	private void onConnectionLost()
 	{
 		mView.setVisible(false);
 		waitForConnection();
 	}
 	
+	/**
+	 * show connecting dialog and wait for a connection to the elevator.
+	 */
 	public void waitForConnection()
 	{
 		mConnectingView.setRemoteName(mElevatorConnection.getConnectionName());
@@ -121,6 +127,9 @@ public class ElevatorControlCenter implements IControl, Observer
 		connectionEstablished();
 	}
 
+	/**
+	 * build and show main view after a connection is established.
+	 */
 	private void connectionEstablished()
 	{
 		mModel = new ElevatorSystem(mElevatorConnection);

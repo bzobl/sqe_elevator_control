@@ -19,13 +19,13 @@ public class Bootstrapper {
 	private final static Logger LOG = Logger.getLogger(Bootstrapper.class); 
 
 	private static final String APPLICATION_NAME = "E2C2 - Extended Elevator Control Center";
-	
-	private static IElevatorConnection mSimulator;
 		
 	public static void main(String[] args) {
 		
 		// for test only
 		final boolean useRemoteSimulator = true;
+		
+		IElevatorConnection mSimulator;
 		
 		LOG.info("starting up");
 		

@@ -2,7 +2,6 @@ package at.fhhagenberg.sqe.project.sqelevator.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -18,7 +17,7 @@ public class ConnectingDialog extends JDialog implements IConnectingView
 	 */
 	private static final long serialVersionUID = 6107331954132616961L;
 
-	private final JPanel contentPanel = new JPanel();	
+	private final JPanel CONTENT_PANEL = new JPanel();	
 	
 	private JLabel mLabelRemoteName;
 	
@@ -34,17 +33,17 @@ public class ConnectingDialog extends JDialog implements IConnectingView
 		setTitle("Connecting");
 		setBounds(100, 100, 300, 120);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setLayout(new FlowLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		CONTENT_PANEL.setLayout(new FlowLayout());
+		CONTENT_PANEL.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(CONTENT_PANEL, BorderLayout.CENTER);
 		{
 			JLabel lblNewLabel = new JLabel("Connecting to remote simulator at");
-			contentPanel.add(lblNewLabel);
+			CONTENT_PANEL.add(lblNewLabel);
 		}
 		{
 			mLabelRemoteName = new JLabel();
 			mLabelRemoteName.setName("remoteLabel");
-			contentPanel.add(mLabelRemoteName);
+			CONTENT_PANEL.add(mLabelRemoteName);
 		}
 		{
 			JPanel buttonPane = new JPanel();

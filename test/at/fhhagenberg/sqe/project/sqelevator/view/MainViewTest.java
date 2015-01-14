@@ -15,6 +15,10 @@ import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
 
 public class MainViewTest extends ComponentTestFixture implements IControl
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 123456789876543211L;
 	private MainView mView;
 	private JLabel mStatusText;
 	
