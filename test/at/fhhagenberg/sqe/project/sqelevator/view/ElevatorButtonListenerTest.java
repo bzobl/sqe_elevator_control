@@ -24,6 +24,10 @@ import at.fhhagenberg.sqe.project.sqelevator.controller.IControl;
  */
 public class ElevatorButtonListenerTest implements IControl {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4968510114403232768L;
 	private int controlModeElevator = -1;
 	private boolean controlAutoMode = false;
 	

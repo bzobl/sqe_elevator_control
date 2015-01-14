@@ -48,7 +48,8 @@ public class PollingTask extends TimerTask {
 		}
 		else
 		{
-			try {							
+			try {
+				mElevators.setConnectionStatus(mConnection.isConnected());
 				mElevators.setSimulationTime(mConnection.getClockTick());
 				
 				for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {

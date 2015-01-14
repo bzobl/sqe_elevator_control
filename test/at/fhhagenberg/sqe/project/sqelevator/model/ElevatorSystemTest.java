@@ -26,7 +26,6 @@ public class ElevatorSystemTest extends PollingTask
 
 	private final int FLOOR_HEIGHT = 6;
 	private final int FLOOR_NUM = 3;
-	private final long CLOCK_TICK = 1000;
 	private final int CAPACITY = 1001;
 	
 	private Object mLastObservable;
@@ -38,7 +37,7 @@ public class ElevatorSystemTest extends PollingTask
 
 	@Before
 	public void setUp() throws RemoteException, MalformedURLException, NotBoundException {
-		mShunt = new ElevatorConnectionTestShunt(FLOOR_NUM, FLOOR_HEIGHT, CLOCK_TICK, CAPACITY);
+		mShunt = new ElevatorConnectionTestShunt(FLOOR_NUM, FLOOR_HEIGHT, CAPACITY);
 		mShunt.IsConnected = true;
 		mSystem = new ElevatorSystem(mShunt);
 		setElevatorSystem(mSystem);
@@ -54,12 +53,6 @@ public class ElevatorSystemTest extends PollingTask
 		mLastObservable = o;
 		mObserverArgument = arg;
 	}
-	
-	// Polling task functions
-	//@Override
-	//public void startPolling(long period) {
-	//	
-	//}
 	
 	public void poll() {
 		run();
@@ -378,5 +371,24 @@ public class ElevatorSystemTest extends PollingTask
 		getProtectedMethod(mSystem.getClass(), "setUpButton", int.class, boolean.class).invoke(mSystem, 1, false);
 		assertFalse(mSystem.getFloorButton(1, true));
 	}
-
+	
+	@Test
+	public void testNoConnection() {
+		poll();
+		assertTrue(mSystem.isConnected());
+		mShunt.IsConnected = false;
+		poll();
+		assertFalse(mSystem.isConnected());
+	}
+	
+	@Test
+	public void testSimulationTime() {
+		assertEquals(0, mSystem.getSimulationTime());
+		poll();
+		assertEquals(0, mSystem.getSimulationTime());
+		mShunt.ClockTick = 1;
+		assertEquals(0, mSystem.getSimulationTime());
+		poll();
+		assertEquals(1, mSystem.getSimulationTime());
+	}
 }

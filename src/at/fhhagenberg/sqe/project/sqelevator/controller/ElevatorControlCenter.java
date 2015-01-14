@@ -6,6 +6,8 @@
 
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -66,12 +68,12 @@ public class ElevatorControlCenter implements IControl, Observer
 		mView.setVisible(false);
 		waitForConnection();
 	}
-
+	
 	public void waitForConnection()
 	{
 		mConnectingView.setRemoteName(mElevatorConnection.getConnectionName());
 		mConnectingView.setVisible(true);
-
+		
 		Thread connThread = new Thread(new Runnable()
 		{
 			@Override
@@ -140,6 +142,18 @@ public class ElevatorControlCenter implements IControl, Observer
 	public void setConnectingDialog(IConnectingView cv)
 	{
 		mConnectingView = cv;
+		
+		// action listener for cancel button
+		mConnectingView.setCancelActionListener(new ActionListener()
+		{	
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				// shutdown application
+				mConnectingView.setVisible(false);
+				System.exit(0);
+			}
+		});
 	}
 
 	boolean mAuto[];

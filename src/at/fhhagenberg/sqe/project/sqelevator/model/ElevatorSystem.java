@@ -11,12 +11,7 @@ import java.util.Observer;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
-import com.sun.istack.internal.logging.Logger;
-
 public class ElevatorSystem extends Observable implements IElevatorSystem {
-	
-	@SuppressWarnings("unused")
-	private static Logger LOG = Logger.getLogger(ElevatorSystem.class);
 
 	public final int NUM_ELEVATORS;
 	public final int NUM_FLOORS;
@@ -57,8 +52,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
         pTask.setElevatorSystem(this);
 		if (!pTask.startPolling(500))
 		{
-			// TODO error handling
-			LOG.severe("Polling task no started!");
+			assert(false) : "Polling task no started!";
 		}
 	}
 	
@@ -159,7 +153,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 		return mIsConnected;
 	}
 	
-	private long mSimTime = 0;
+	private long mSimTime = -1;
 	
 	protected void setSimulationTime(long t)
 	{

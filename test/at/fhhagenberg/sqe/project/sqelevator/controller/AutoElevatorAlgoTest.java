@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
 import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorConnectionTestShunt;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
@@ -23,7 +22,6 @@ import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
 
 public class AutoElevatorAlgoTest {
 	private final int HEIGHT = 10;
-	private final long PERIOD = 10;
 	private final int CAPACITY = 1001;
 	
 	private IElevatorAlgorithm mAutoAlgo;
@@ -41,7 +39,7 @@ public class AutoElevatorAlgoTest {
 		final int NUM_FLOORS = 5;
 		IElevatorConnection status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);
 		mSys = new ElevatorSystemTestWrapper(status);
-		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);
+		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, CAPACITY);
 		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);
 		
 		// test
@@ -51,7 +49,7 @@ public class AutoElevatorAlgoTest {
 		
 		((ElevatorTestWrapper)mSys.getElevator(0)).setButtonStatus(1, true);
 		mAutoAlgo.setElevatorRequest(0, 1);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(1, mShunt.SetTarget);
 		
 		((ElevatorTestWrapper)mSys.getElevator(0)).setButtonStatus(1, false);
@@ -61,7 +59,7 @@ public class AutoElevatorAlgoTest {
 
 		((ElevatorTestWrapper)mSys.getElevator(0)).setButtonStatus(4, true);
 		mAutoAlgo.setElevatorRequest(0, 4);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(4, mShunt.SetTarget);
 	}
 
@@ -72,7 +70,7 @@ public class AutoElevatorAlgoTest {
 		final int NUM_FLOORS = 5;
 		IElevatorConnection status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);
 		mSys = new ElevatorSystemTestWrapper(status);
-		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);
+		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, CAPACITY);
 		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);
 		
 		// test
@@ -81,49 +79,49 @@ public class AutoElevatorAlgoTest {
 		mAutoAlgo.enableElevator(0, true);
 	
 		mAutoAlgo.setFloorRequest(1, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(1,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(1);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(1);
 		
 		mAutoAlgo.setFloorRequest(3, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(3,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(3);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(3);
 		
 		mAutoAlgo.setFloorRequest(4, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(4,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(4);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);
 
 		mAutoAlgo.setFloorRequest(1, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.CommitedDirection);
 		assertEquals(1,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(1);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(1);
 		
 		mAutoAlgo.setFloorRequest(0, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.CommitedDirection);
 		assertEquals(0,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(0);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(0);
 
 		mAutoAlgo.setFloorRequest(4, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(4,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(4);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);
 
 		mAutoAlgo.setFloorRequest(0, false);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.CommitedDirection);
 		assertEquals(0,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(0);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(0);
 
 		mAutoAlgo.setFloorRequest(4, false);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(4,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(4);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);
@@ -138,7 +136,7 @@ public class AutoElevatorAlgoTest {
 		final int NUM_FLOORS = 5;
 		IElevatorConnection status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);
 		mSys = new ElevatorSystemTestWrapper(status);
-		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);
+		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, CAPACITY);
 		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);
 		
 		// test
@@ -148,7 +146,7 @@ public class AutoElevatorAlgoTest {
 		
 		// request from forth floor
 		mAutoAlgo.setFloorRequest(4, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		assertEquals(4,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);	// change model
 		
@@ -158,7 +156,7 @@ public class AutoElevatorAlgoTest {
 		
 		// now request from third floor
 		mAutoAlgo.setFloorRequest(3, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.CommitedDirection);
 		// previous target should be overwritten
 		assertEquals(3,  mShunt.SetTarget);
 	}
@@ -172,7 +170,7 @@ public class AutoElevatorAlgoTest {
 		final int NUM_FLOORS = 5;
 		IElevatorConnection status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);
 		mSys = new ElevatorSystemTestWrapper(status);
-		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);
+		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, CAPACITY);
 		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);
 		
 		// test
@@ -181,7 +179,7 @@ public class AutoElevatorAlgoTest {
 		mAutoAlgo.enableElevator(0, true);
 		
 		mAutoAlgo.setFloorRequest(0, true);
-		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mShunt.SetCommitedDirection);
+		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mShunt.CommitedDirection);
 		assertEquals(0,  mShunt.SetTarget);
 		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(0);	// change model
 		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(0);

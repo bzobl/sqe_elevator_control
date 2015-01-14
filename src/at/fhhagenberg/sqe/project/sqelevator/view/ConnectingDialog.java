@@ -22,6 +22,8 @@ public class ConnectingDialog extends JDialog implements IConnectingView
 	
 	private JLabel mLabelRemoteName;
 	
+	private JButton mCancelButton;
+	
 	/**
 	 * Create the dialog.
 	 */
@@ -49,20 +51,8 @@ public class ConnectingDialog extends JDialog implements IConnectingView
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.addActionListener(new ActionListener()
-				{
-					@Override
-					public void actionPerformed(ActionEvent e)
-					{
-						// close application
-						dispose();
-						
-						// TODO
-						System.exit(0);
-					}
-				});
-				buttonPane.add(cancelButton);
+				mCancelButton = new JButton("Cancel");		
+				buttonPane.add(mCancelButton);
 			}
 		}
 		
@@ -74,5 +64,11 @@ public class ConnectingDialog extends JDialog implements IConnectingView
 	{
 		assert(mLabelRemoteName != null) : "label must exist";
 		mLabelRemoteName.setText(remote);;
+	}
+	
+	@Override
+	public void setCancelActionListener(ActionListener a)
+	{
+		mCancelButton.addActionListener(a);
 	}
 }

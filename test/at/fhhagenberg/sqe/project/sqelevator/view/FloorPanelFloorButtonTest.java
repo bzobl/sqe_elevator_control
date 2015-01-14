@@ -82,10 +82,5 @@ public class FloorPanelFloorButtonTest extends ComponentTestFixture
 		mFloorPanel.setFloorButton(FloorPanel.FLOOR_BUTTON_DOWN, false);
 		assertTrue(mFloorDownImage.getIcon().toString().contains(FILENAME_FLOOR_BTN_DOWN_OFF));
 		assertFalse(mFloorPanel.getFloorButton(FloorPanel.FLOOR_BUTTON_DOWN));
-	}
-	
-	// TODO:
-//	public void testInvalidButton() {
-//	}
-	
+	}	
 }

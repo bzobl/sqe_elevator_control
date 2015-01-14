@@ -7,7 +7,6 @@ import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 public final class ElevatorConnectionTestShunt implements IElevatorConnection {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
-	private final long CLOCK_TICK;
 	private final int CAPACITY;
 	
 	public int NUM_ELEVATORS = 1;
@@ -21,22 +20,21 @@ public final class ElevatorConnectionTestShunt implements IElevatorConnection {
 	public int Speed = 0;
 	public int Target = 0;
 	public int Weight = 0;
+	public long ClockTick = 0;
 	public boolean[] FloorButtonDown;
 	public boolean[] FloorButtonUp;
 	public boolean[] ServicesFloors;
 	public boolean[] ElevatorButton;
 
-	public int SetCommitedDirection;
 	public boolean[] SetServicesFloor;
 	public int SetTarget;
 	
 	public boolean IsConnected;
 	public boolean Connect;
 	
-	public ElevatorConnectionTestShunt(int floors, int height, long period, int capacity) {
+	public ElevatorConnectionTestShunt(int floors, int height, int capacity) {
 		FLOOR_NUM = floors;
 		FLOOR_HEIGHT = height;
-		CLOCK_TICK = period;
 		CAPACITY = capacity;
 		
 		ElevatorButton = new boolean[FLOOR_NUM];
@@ -44,7 +42,7 @@ public final class ElevatorConnectionTestShunt implements IElevatorConnection {
 		FloorButtonUp = new boolean[FLOOR_NUM];
 		ServicesFloors = new boolean[FLOOR_NUM];
 		SetServicesFloor = new boolean[FLOOR_NUM];
-		SetCommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		
 		for (int i = 0; i < floors; i++) {
 			FloorButtonDown[i] = false;
@@ -136,7 +134,7 @@ public final class ElevatorConnectionTestShunt implements IElevatorConnection {
 
 	@Override
 	public void setCommittedDirection(int elevatorNumber, int direction) {
-		SetCommitedDirection = direction;
+		CommitedDirection = direction;
 	}
 
 	@Override
@@ -151,7 +149,7 @@ public final class ElevatorConnectionTestShunt implements IElevatorConnection {
 
 	@Override
 	public long getClockTick() {
-		return CLOCK_TICK;
+		return ClockTick;
 	}
 
 	@Override
