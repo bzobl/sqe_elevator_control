@@ -139,8 +139,8 @@ public class ElevatorControlCenter implements IControl, Observer
 
 		mView.setNumElevators(mModel.getNumberOfElevators());
 		mView.setNumFloors(mModel.getNumberOfFloors());
-		mView.setStatusText("connected");
 		mView.resetView();
+		mView.setStatusText("connected");
 		mView.setVisible(true);
 
 		mModel.addObserver(this);
