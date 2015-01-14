@@ -21,9 +21,7 @@ public class Bootstrapper {
 	private static final String APPLICATION_NAME = "E2C2 - Extended Elevator Control Center";
 	
 	private static IElevatorConnection mSimulator;
-	
-	private static MainView mMainView;
-	
+		
 	public static void main(String[] args) {
 		
 		// for test only
@@ -45,9 +43,21 @@ public class Bootstrapper {
 			mSimulator = new SimpleElevatorSimulator(numElevators, numFloors);
 		}		
 		
-		connectAndStart();
+		assert(mSimulator != null) : "simulator must not be null";
+		
+		MainView mv = new MainView(APPLICATION_NAME);
+		ConnectingDialog connDlg = new ConnectingDialog();		
+		
+		ElevatorControlCenter ctrl = new ElevatorControlCenter(mSimulator);
+		mv.setController(ctrl);
+		ctrl.setView(mv);
+		ctrl.setConnectingDialog(connDlg);
+		
+		// start
+		ctrl.waitForConnection();
 	}
 	
+	/*
 	static public void connectAndStart()
 	{
 		assert(mSimulator != null) : "Simulator must not be null!";
@@ -78,5 +88,5 @@ public class Bootstrapper {
 		ctrl.updateView();
 		
 		mMainView.setVisible(true);
-	}
+	}*/
 }

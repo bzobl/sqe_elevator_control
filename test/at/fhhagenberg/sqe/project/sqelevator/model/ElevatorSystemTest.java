@@ -39,10 +39,11 @@ public class ElevatorSystemTest extends PollingTask
 	@Before
 	public void setUp() throws RemoteException, MalformedURLException, NotBoundException {
 		mShunt = new ElevatorConnectionTestShunt(FLOOR_NUM, FLOOR_HEIGHT, CLOCK_TICK, CAPACITY);
-
+		mShunt.IsConnected = true;
 		mSystem = new ElevatorSystem(mShunt);
 		setElevatorSystem(mSystem);
 		this.mConnection = mShunt;
+		poll();
 		mSystem.addObserver(this);
 		poll();
 	}

@@ -14,7 +14,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({ SimpleElevatorSimulatorTest.class })
+@SuiteClasses({ SimpleElevatorSimulatorTest.class,
+	ElevatorSimCommunicationTest.class
+})
 public class CommunicationTests {
 
 }

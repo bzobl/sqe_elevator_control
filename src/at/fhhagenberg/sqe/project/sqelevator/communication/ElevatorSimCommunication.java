@@ -1,6 +1,8 @@
 package at.fhhagenberg.sqe.project.sqelevator.communication;
 
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import sqelevator.IElevator;
@@ -34,7 +36,7 @@ public class ElevatorSimCommunication implements IElevatorConnection
 			mIsConnected = mRemote != null;
 			return mIsConnected;
 		}
-		catch (Exception e)
+		catch (RemoteException | NotBoundException | MalformedURLException e)
 		{
 			LOG.info("can't connect to remotes.");
 			LOG.info(e.getMessage());

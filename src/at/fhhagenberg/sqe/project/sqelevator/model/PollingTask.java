@@ -9,7 +9,6 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import at.fhhagenberg.sqe.project.sqelevator.Bootstrapper;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
@@ -34,22 +33,23 @@ public class PollingTask extends TimerTask {
 		if (mElevators == null) {
 			LOG.warning("Elevator system was deleted: stopping to poll");
 			stopPolling();
+			mElevators.setConnectionStatus(false);
 		}
 		else if (mConnection == null) {
 			LOG.warning("No connection set: stopping to poll");	
 			stopPolling();
+			mElevators.setConnectionStatus(false);
 		}
 		else if (!mConnection.isConnected())
 		{
 			LOG.warning("No connection: stopping to poll");
 			stopPolling();
+			mElevators.setConnectionStatus(false);
 		}
 		else
 		{
-			try {
-				mElevators.setConnectionStatus(mConnection.isConnected());
-				
-				LOG.info("ClockTick: " + String.valueOf(mConnection.getClockTick()));
+			try {							
+				mElevators.setSimulationTime(mConnection.getClockTick());
 				
 				for (int floor = 0; floor < mElevators.NUM_FLOORS; floor++) {
 					mElevators.setUpButton(floor, mConnection.getFloorButtonUp(floor));
@@ -72,6 +72,7 @@ public class PollingTask extends TimerTask {
 	                    elevator.setServicesFloors(floor, mConnection.getServicesFloors(num, floor));
 					}
 				}
+				
 			} catch (FloorException e) {
 				LOG.warning("Accessed invalid floor: " + e.getMessage());
 			}
@@ -89,7 +90,7 @@ public class PollingTask extends TimerTask {
 	{
 		try
 		{			
-			mTimer.scheduleAtFixedRate(this, 0, period);
+			mTimer.scheduleAtFixedRate(this, 1000, period);
 			return true;
 		}
 		catch (Exception e)
@@ -99,12 +100,8 @@ public class PollingTask extends TimerTask {
 		}
 	}
 
-	private void stopPolling()
+	public void stopPolling()
 	{
-		mElevators.setConnectionStatus(false);	
 		mTimer.cancel();
-		
-		// TODO hack
-		Bootstrapper.connectAndStart();
 	}
 }

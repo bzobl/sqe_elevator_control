@@ -9,7 +9,6 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import java.util.Observable;
 import java.util.Observer;
 
-import at.fhhagenberg.sqe.project.sqelevator.Bootstrapper;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
 import com.sun.istack.internal.logging.Logger;
@@ -29,7 +28,7 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 	private boolean mDownButtons[];
 
 	private boolean mIsConnected = false;
-	
+		
 	public ElevatorSystem(IElevatorConnection connection) {
 		NUM_ELEVATORS = connection.getElevatorNum();
 		NUM_FLOORS = connection.getFloorNum();
@@ -50,14 +49,15 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 		}
 
         PollingTask pTask = new PollingTask(connection);
-		pTask.setElevatorSystem(this);
-		//if(!pTask.startPolling(connection.getClockTick()))
+        pTask.setElevatorSystem(this);
 		if (!pTask.startPolling(500))
 		{
+			// TODO
+			assert(false) : "should not happen";
 			// not connected
 		
 			// TODO hack
-			Bootstrapper.connectAndStart();
+			//Bootstrapper.connectAndStart();
 		}
 	}
 	
@@ -142,14 +142,36 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 		}
 	}
 	
-	protected void setConnectionStatus(boolean connected)
+	protected void setConnectionStatus(boolean status)
 	{
-		mIsConnected = connected;
+		if (mIsConnected != status)
+		{
+			mIsConnected = status;
+			setChanged();
+			notifyObservers(CONNECTION_POPERTY_CHANGED);
+		}
 	}
 	
 	@Override
 	public boolean isConnected()
 	{
 		return mIsConnected;
+	}
+	
+	private long mSimTime = 0;
+	
+	protected void setSimulationTime(long t)
+	{
+		if (mSimTime != t)
+		{
+			mSimTime = t;
+			setChanged();
+			notifyObservers(SYSTEM_PROPERTY_CHANGED);
+		}
+	}
+	
+	public long getSimulationTime()
+	{
+		return mSimTime;
 	}
 }

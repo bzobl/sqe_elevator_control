@@ -12,6 +12,7 @@ public interface IElevatorSystem {
 
 	public static final int SYSTEM_PROPERTY_CHANGED = -1;
 	public static final int ELEVATOR_PROPERTY_CHANGED = -2;
+	public static final int CONNECTION_POPERTY_CHANGED = -3;
 
 	public void addObserver(Observer o);
 
@@ -28,5 +29,7 @@ public interface IElevatorSystem {
 	public boolean getFloorButton(int floor, boolean up) throws FloorException;
 
 	public boolean isConnected();
+	
+	public long getSimulationTime();
 	
 }

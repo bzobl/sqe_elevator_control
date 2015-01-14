@@ -11,27 +11,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
-
-import com.sun.istack.internal.logging.Logger;
-
-public class ConnectingDialog extends JDialog
+public class ConnectingDialog extends JDialog implements IConnectingView
 {
-	private static Logger LOG = Logger.getLogger(ConnectingDialog.class);
-	
-	
-	private final JPanel contentPanel = new JPanel();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6107331954132616961L;
 
-	private final IElevatorConnection mConnection;
+	private final JPanel contentPanel = new JPanel();	
+	
+	private JLabel mLabelRemoteName;
 	
 	/**
 	 * Create the dialog.
 	 */
-	public ConnectingDialog(IElevatorConnection conn)
+	public ConnectingDialog()
 	{		
 		setResizable(false);
 		setAlwaysOnTop(true);
-		mConnection = conn;
 		setTitle("Connecting");
 		setBounds(100, 100, 300, 120);
 		getContentPane().setLayout(new BorderLayout());
@@ -43,8 +40,9 @@ public class ConnectingDialog extends JDialog
 			contentPanel.add(lblNewLabel);
 		}
 		{
-			JLabel lblNewLabel_1 = new JLabel(mConnection.getConnectionName());
-			contentPanel.add(lblNewLabel_1);
+			mLabelRemoteName = new JLabel();
+			mLabelRemoteName.setName("remoteLabel");
+			contentPanel.add(mLabelRemoteName);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -57,7 +55,10 @@ public class ConnectingDialog extends JDialog
 					@Override
 					public void actionPerformed(ActionEvent e)
 					{
+						// close application
 						dispose();
+						
+						// TODO
 						System.exit(0);
 					}
 				});
@@ -65,46 +66,13 @@ public class ConnectingDialog extends JDialog
 			}
 		}
 		
-		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 	}
-	
-	public boolean waitForConnection()
-	{		
-		Thread connThread = new Thread(new Runnable()
-		{			
-			@Override
-			public void run()
-			{			
-				// avoid race condition!				
-				//while ((mConnection.connect() == false) || (mConnection.getClockTick()))	
-				while (!mConnection.isConnected())
-				{
-					try
-					{
-						mConnection.connect();
 
-						//mConnection.getClockTick();
-					}
-					catch (Exception e)
-					{
-						LOG.warning("Connecting failed with exception.");
-					}
-				}
-				assert (mConnection.isConnected() == true);
-			}
-		});
-		setVisible(true);
-		connThread.start();	
-		
-		try
-		{
-			connThread.join();
-		}
-		catch (InterruptedException ie)
-		{
-			LOG.warning("connection thread.join() failed");
-		}
-			
-		return mConnection.isConnected();
+	@Override
+	public void setRemoteName(String remote)
+	{
+		assert(mLabelRemoteName != null) : "label must exist";
+		mLabelRemoteName.setText(remote);;
 	}
 }

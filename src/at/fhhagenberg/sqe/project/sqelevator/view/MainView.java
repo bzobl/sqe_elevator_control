@@ -24,23 +24,18 @@ public class MainView extends JFrame implements IMainView
 
 	private static final long serialVersionUID = -563161883789974073L;
 
-	private final int NUM_ELEVATORS;
-	private final int NUM_FLOORS;
-
 	private JPanel mElevatorPane;
 	private JPanel mMainPanel;
 	private JLabel mLblStatus;
 	
-	public MainView(IControl control, int numElevators, int numFloors, String title)
+	private int mNumFloors = 0;
+	private int mNumElevators = 0;
+	
+	private IControl mController;
+	
+	@Override
+	public void resetView()
 	{
-		NUM_ELEVATORS = numElevators;
-		NUM_FLOORS = numFloors;
-
-		setTitle(title);
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-
 		mElevatorPane = new JPanel();
 		mElevatorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
@@ -81,21 +76,62 @@ public class MainView extends JFrame implements IMainView
 		
 		setContentPane(mMainPanel);
 		
-		initializeAllViews(control);
+		initializeAllViews();
 	}
 	
-	private void initializeAllViews(IControl control) {
-        for (int e = 0; e < NUM_ELEVATORS; e++) {
-        	IElevatorView eleView = addNewElevator(e, NUM_FLOORS);
-        	ElevatorButtonListener mbl = new ElevatorButtonListener(ListenerType.MODE_BUTTON_LISTENER, control, e, -1);
+	@Override
+	public void setNumFloors(int n)
+	{
+		if (n < 0)
+			n = 0;
+		
+		if (n != mNumFloors)
+		{
+			mNumFloors = n;
+		}
+	}
+	
+	@Override
+	public void setNumElevators(int n)
+	{
+		if (n < 0)
+			n = 0;
+		
+		if (n != mNumElevators)
+		{
+			mNumElevators = n;
+		}
+	}
+	
+	public void setController(IControl ctrl)
+	{
+	    mController = ctrl;
+	}
+	
+	public MainView(String title)
+	{	
+		setTitle(title);
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		
+		resetView();
+	}
+	
+	private void initializeAllViews() {
+		assert(mController != null) : "controller must not be null";
+		
+        for (int e = 0; e < mNumElevators; e++) {
+        	IElevatorView eleView = addNewElevator(e, mNumFloors);
+        	ElevatorButtonListener mbl = new ElevatorButtonListener(ListenerType.MODE_BUTTON_LISTENER, mController, e, -1);
         	eleView.addModeButtonListener(mbl);
         	LOG.info("initialization of IElevatorView " + e + " almost done");
         	
-        	for (int f = 0; f < NUM_FLOORS; f++) {
+        	for (int f = 0; f < mNumFloors; f++) {
         		IFloorView floorView = eleView.getFloorView(f);
         		
-        		ElevatorButtonListener cbl = new ElevatorButtonListener(ListenerType.CALL_BUTTON_LISTENER, control, e, f);
-        		ElevatorButtonListener sbl = new ElevatorButtonListener(ListenerType.SERVICE_BUTTON_LISTENER, control, e, f);
+        		ElevatorButtonListener cbl = new ElevatorButtonListener(ListenerType.CALL_BUTTON_LISTENER, mController, e, f);
+        		ElevatorButtonListener sbl = new ElevatorButtonListener(ListenerType.SERVICE_BUTTON_LISTENER, mController, e, f);
         		
         		floorView.addCallButtonListener(cbl);
         		floorView.addServiceButtonListener(sbl);

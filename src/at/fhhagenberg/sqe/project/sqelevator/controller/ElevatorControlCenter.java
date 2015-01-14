@@ -13,12 +13,12 @@ import java.util.Observer;
 
 import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
-import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel;
 import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
+import at.fhhagenberg.sqe.project.sqelevator.view.IConnectingView;
 import at.fhhagenberg.sqe.project.sqelevator.view.IElevatorView;
 import at.fhhagenberg.sqe.project.sqelevator.view.IFloorView;
 import at.fhhagenberg.sqe.project.sqelevator.view.IMainView;
@@ -27,6 +27,11 @@ import com.sun.istack.internal.logging.Logger;
 
 public class ElevatorControlCenter implements IControl, Observer {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1767952243101768193L;
+
 	private static Logger LOG = Logger.getLogger(ElevatorControlCenter.class);
 	
 	private static final Map<Integer, Integer> DIRECTION_LUT = new HashMap<>();
@@ -43,10 +48,99 @@ public class ElevatorControlCenter implements IControl, Observer {
 		DOORSTATUS_LUT.put(IElevator.ELEVATOR_DOORS_OPENING, IFloorView.ELEVATOR_STATUS_OPENING);
 	}
 	
-	IElevatorControl mControl;
+	IElevatorConnection mElevatorConnection;
 	IElevatorSystem mModel;
 	IMainView mView;
 	
+	
+	//-----------------
+	
+	private void onConnectionLost()
+	{
+		mView.setVisible(false);
+		waitForConnection();		
+		// polling task killen
+		// main view verstecken / disablen???
+		// wait for connection aufrufen
+	}
+	
+	public void waitForConnection()
+	{
+		mConnectingView.setRemoteName(mElevatorConnection.getConnectionName());
+		mConnectingView.setVisible(true);
+		
+		Thread connThread = new Thread(new Runnable()
+		{			
+			@Override
+			public void run()
+			{			
+				while (!mElevatorConnection.isConnected())
+				{
+					try
+					{
+						if (mElevatorConnection.connect())
+						{
+							// Workaround:
+							// once the simulator was started, always a connection can be established,
+							// also if the simulator was closed. calling a remote procedure without a 
+							// running simulator causes an exception and sets the connected flag to false.
+							mElevatorConnection.getClockTick();
+						}
+					}
+					catch (Exception e)
+					{
+						LOG.info("Connecting failed with exception (WORKAROUND).");
+					}
+				}
+				assert (mElevatorConnection.isConnected() == true);
+			}
+		});
+		
+		connThread.start();
+		
+		try
+		{
+			// wait until connected
+			connThread.join();
+		}
+		catch (InterruptedException ex)
+		{
+			LOG.severe("exception in connecting threa.join()");
+			
+			
+			// ASSERTION?
+		}
+		mConnectingView.setVisible(false);
+		connectionEstablished();
+	}
+	
+	private void connectionEstablished()
+	{
+        mModel = new ElevatorSystem(mElevatorConnection);
+        
+        mManuAlgo = new ManualElevatorAlgorithm(mModel, mElevatorConnection);
+		mAuto = new boolean[mModel.getNumberOfElevators()];
+		
+		mView.setNumElevators(mModel.getNumberOfElevators());
+		mView.setNumFloors(mModel.getNumberOfFloors());
+		mView.setStatusText("connected");
+		mView.resetView();
+		mView.setVisible(true);
+		
+		
+		mModel.addObserver(this);
+	}
+	
+	private IConnectingView mConnectingView;
+	
+	public void setConnectingDialog(IConnectingView cv)
+	{
+		mConnectingView = cv;
+	}
+	
+	
+	
+	//-----------------
 	
 	boolean mAuto[];
 
@@ -54,15 +148,9 @@ public class ElevatorControlCenter implements IControl, Observer {
 	IElevatorAlgorithm mManuAlgo;
 	
 	public ElevatorControlCenter(IElevatorConnection connection) {
-		mControl = connection;
-
-        mModel = new ElevatorSystem(connection);
-        mModel.addObserver(this);
-
-		mAuto = new boolean[mModel.getNumberOfElevators()];
-		
+		mElevatorConnection = connection;		
 		mAutoAlgo = null;
-		mManuAlgo = new ManualElevatorAlgorithm(mModel, mControl);
+		mManuAlgo = null;
         
         LOG.info("Elevator control successfully initialized, starting to poll");
 	}
@@ -115,7 +203,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	@Override
 	public void setServicedFloor(int elevator, int floor, boolean isServiced) {
 		LOG.info("Service Button of Elevator " + elevator + ", Floor " + floor + " clicked");
-		mControl.setServicesFloors(elevator, floor, isServiced);
+		mElevatorConnection.setServicesFloors(elevator, floor, isServiced);
 	}
 	
 	@Override
@@ -140,7 +228,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	public void update(Observable o, Object arg) {
 		if (arg.equals(IElevatorSystem.SYSTEM_PROPERTY_CHANGED)) {
 			assert (o instanceof IElevatorSystem);
-			IElevatorSystem sys = (IElevatorSystem) o;
+			IElevatorSystem sys = (IElevatorSystem) o;			
 			if (mView != null) {
 				updateView(sys);
 			} else {
@@ -168,7 +256,15 @@ public class ElevatorControlCenter implements IControl, Observer {
 					LOG.info("Elevator updated, but no auto algo is set");
 				}
 			}
-		} else {
+		} 
+		else if (arg.equals(IElevatorSystem.CONNECTION_POPERTY_CHANGED))
+		{
+			if (!mElevatorConnection.isConnected())
+			{
+				onConnectionLost();
+			}
+		}
+		else {
 			LOG.warning("Unexpected class notified ElevatorControl: " + o.getClass().getCanonicalName());
 		}
 	}
@@ -260,14 +356,7 @@ public class ElevatorControlCenter implements IControl, Observer {
 	private void updateView(IElevatorSystem sys) {
 		assert (mView != null) : "update of view requested when no view was set";
 
-		if (sys.isConnected())
-		{
-			mView.setStatusText("Connected");
-		}
-		else
-		{
-			mView.setStatusText("Not connected");
-		}
+		mView.setStatusText("Simulation time: " + String.valueOf(sys.getSimulationTime()));
 		
 		for (int e = 0; e < mModel.getNumberOfElevators(); e++) {
 			for (int f = 0; f < mModel.getNumberOfElevators(); f++) {

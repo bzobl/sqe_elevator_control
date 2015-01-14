@@ -20,7 +20,7 @@ public class MainViewTest extends ComponentTestFixture
 	@Before
 	public void setUp() throws Exception
 	{
-		mView = new MainView(null, 1, 1, "testTitle");
+		mView = new MainView("testTitle");
 		mView.setVisible(true);
 		
 		mStatusText = (JLabel) getFinder().find(
@@ -39,10 +39,7 @@ public class MainViewTest extends ComponentTestFixture
 	public void testInitState()
 	{
 		assertEquals("", mStatusText.getText());
-		assertEquals(0, mView.getElevatorView(0).getElevatorNumber());
-		assertNull(mView.getElevatorView(1));
-		assertEquals(0, mView.getElevatorView(0).getFloorView(0).getFloorNumber());
-		assertNull(mView.getElevatorView(0).getFloorView(1));
+		assertNull(mView.getElevatorView(0));
 	}
 	
 	@Test
@@ -50,5 +47,27 @@ public class MainViewTest extends ComponentTestFixture
 	{
 		mView.setStatusText("test");
 		assertEquals("test", mStatusText.getText());
+	}
+	
+	public void testElevatorViewNull()
+	{
+		assertNull(mView.getElevatorView(0));
+	}
+	
+	public void testElevatorViewOneElevator()
+	{
+		mView.setNumElevators(1);
+		mView.resetView();
+		assertNotNull(mView.getElevatorView(0));
+		assertNull(mView.getElevatorView(1));
+	}
+	
+	public void testElevatorViewSeveralElevators()
+	{
+		mView.setNumElevators(5);
+		mView.resetView();
+		assertNotNull(mView.getElevatorView(0));
+		assertNotNull(mView.getElevatorView(4));
+		assertNull(mView.getElevatorView(5));
 	}
 }
