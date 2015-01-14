@@ -135,6 +135,7 @@ public class ElevatorControlCenter implements IControl, Observer
 		mModel = new ElevatorSystem(mElevatorConnection);
 
 		mManuAlgo = new ManualElevatorAlgorithm(mModel, mElevatorConnection);
+		mAutoAlgo = new AutoElevatorAlgorithm(mModel, mElevatorConnection);
 		mAuto = new boolean[mModel.getNumberOfElevators()];
 
 		mView.setNumElevators(mModel.getNumberOfElevators());
