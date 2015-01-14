@@ -10,9 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import abbot.finder.matchers.ClassMatcher;
+import at.fhhagenberg.sqe.project.sqelevator.controller.IControl;
 import at.fhhagenberg.sqe.project.sqelevator.view.MainView;
 
-public class MainViewTest extends ComponentTestFixture
+public class MainViewTest extends ComponentTestFixture implements IControl
 {
 	private MainView mView;
 	private JLabel mStatusText;
@@ -22,6 +23,9 @@ public class MainViewTest extends ComponentTestFixture
 	{
 		mView = new MainView("testTitle");
 		mView.setVisible(true);
+		
+		mView.setController(this);
+		mView.resetView();
 		
 		mStatusText = (JLabel) getFinder().find(
 				new ClassMatcher(JLabel.class)
@@ -69,5 +73,35 @@ public class MainViewTest extends ComponentTestFixture
 		assertNotNull(mView.getElevatorView(0));
 		assertNotNull(mView.getElevatorView(4));
 		assertNull(mView.getElevatorView(5));
+	}
+
+	@Override
+	public void changeControlMode(int elevator, boolean autoMode)
+	{
+		// dummy
+	}
+
+	@Override
+	public void setCallRequest(int elevator, int floor)
+	{
+		// dummy
+	}
+
+	@Override
+	public void setServicedFloor(int elevator, int floor, boolean isServiced)
+	{
+		// dummy
+	}
+
+	@Override
+	public void updateView()
+	{
+		// dummy
+	}
+
+	@Override
+	public void setView(IMainView view)
+	{
+		// dummy
 	}
 }

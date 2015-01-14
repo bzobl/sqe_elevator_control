@@ -114,8 +114,6 @@ public class MainView extends JFrame implements IMainView
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		
-		resetView();
 	}
 	
 	private void initializeAllViews() {

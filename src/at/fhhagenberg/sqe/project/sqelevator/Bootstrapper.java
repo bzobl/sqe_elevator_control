@@ -49,6 +49,7 @@ public class Bootstrapper {
 		ConnectingDialog connDlg = new ConnectingDialog();		
 		
 		ElevatorControlCenter ctrl = new ElevatorControlCenter(mSimulator);
+		assert(ctrl != null) : "Some serious error";
 		mv.setController(ctrl);
 		ctrl.setView(mv);
 		ctrl.setConnectingDialog(connDlg);
