@@ -19,7 +19,7 @@ import sqelevator.IElevator;
  *  it to.
  * 
  */
-public class Elevator extends Observable implements IElevatorModel {
+class Elevator extends Observable implements IElevatorModel {
 	private final int NUM;
 	private final int CAPACITY;
 	
