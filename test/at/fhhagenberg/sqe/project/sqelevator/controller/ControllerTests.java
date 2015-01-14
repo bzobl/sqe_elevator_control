@@ -13,7 +13,9 @@ import org.junit.runners.Suite.SuiteClasses;
  * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({ AutoElevatorAlgoTest.class })
+@SuiteClasses({ AutoElevatorAlgoTest.class,
+				ManualElevatorAlgoTest.class,
+				ElevatorControlCenterTest.class })
 public class ControllerTests {
 
 }

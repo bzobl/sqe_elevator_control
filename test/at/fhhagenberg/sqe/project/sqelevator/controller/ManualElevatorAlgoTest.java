@@ -3,15 +3,13 @@ package at.fhhagenberg.sqe.project.sqelevator.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.lang.reflect.Field;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import sqelevator.IElevator;
-import at.fhhagenberg.sqe.project.sqelevator.model.Elevator;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorConnectionTestShunt;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystemTestWrapper;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorTestWrapper;
 
 public class ManualElevatorAlgoTest
 {
@@ -19,20 +17,6 @@ public class ManualElevatorAlgoTest
 	private ElevatorSystemTestWrapper mElevatorSystem;
 	
 	private ManualElevatorAlgorithm mManualAlgo;
-	
-	private void setCurrentFloor(Elevator el, int num)
-	{
-		try
-		{
-			Field field = Elevator.class.getDeclaredField("mFloor");
-			field.setAccessible(true);
-			field.set(el, num);
-		}
-		catch (Exception e)
-		{
-			fail();
-		}
-	}
 	
 	@Before
 	public void setUp() throws Exception
@@ -68,10 +52,42 @@ public class ManualElevatorAlgoTest
 	@Test
 	public void testSetRequestDown() throws Exception
 	{
-		setCurrentFloor((Elevator)mElevatorSystem.getElevator(0), 1);
+		((ElevatorTestWrapper)mElevatorSystem.getElevator(0)).setFloor(1);
 		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mElevatorConnectionShunt.getCommittedDirection(0));
 		mManualAlgo.setElevatorRequest(0, 0);
 		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mElevatorConnectionShunt.getCommittedDirection(0));
 	}
 	
+	@Test
+	public void testElevatorException()
+	{
+		// must not throw an elevator exception
+		mManualAlgo.setElevatorRequest(2, 0);
+	}
+
+	@Test
+	public void testElevatorRequestAssertions()
+	{
+		try {
+			mManualAlgo.setElevatorRequest(0, -1);
+			fail();
+		} catch (AssertionError e) {
+		}
+
+		try {
+			mManualAlgo.setElevatorRequest(0, 5);
+			fail();
+		} catch (AssertionError e) {
+		}
+	}
+	
+	@Test
+	public void testFloorRequestAssertion()
+	{
+		try {
+			mManualAlgo.setFloorRequest(0, true);
+			fail();
+		} catch (AssertionError e) {
+		}
+	}
 }
