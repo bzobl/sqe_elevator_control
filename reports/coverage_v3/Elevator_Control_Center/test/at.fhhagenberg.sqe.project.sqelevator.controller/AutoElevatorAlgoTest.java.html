@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AutoElevatorAlgoTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.controller</a> &gt; <span class="el_source">AutoElevatorAlgoTest.java</span></div><h1>AutoElevatorAlgoTest.java</h1><pre class="source lang-java linenums">/**
+ * Project: Elevator_Control_Center
+ * Author:  Bernhard Raab
+ *          S1310567022
+ */
+package at.fhhagenberg.sqe.project.sqelevator.controller;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
+import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorConnectionTestShunt;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystemTestWrapper;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorTestWrapper;
+import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
+
+<span class="fc" id="L23">public class AutoElevatorAlgoTest {</span>
+<span class="fc" id="L24">	private final int HEIGHT = 10;</span>
+<span class="fc" id="L25">	private final long PERIOD = 10;</span>
+<span class="fc" id="L26">	private final int CAPACITY = 1001;</span>
+	
+	private IElevatorAlgorithm mAutoAlgo;
+	private ElevatorConnectionTestShunt mShunt;
+	private IElevatorSystem mSys;
+
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L34">	}</span>
+
+	@Test
+	public void test1ElevatorRequest() throws FloorException, ElevatorException {
+		// setup
+<span class="nc" id="L39">		final int NUM_ELEVATORS = 1;</span>
+<span class="nc" id="L40">		final int NUM_FLOORS = 5;</span>
+<span class="nc" id="L41">		IElevatorStatus status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);</span>
+<span class="nc" id="L42">		mSys = new ElevatorSystemTestWrapper(status);</span>
+<span class="nc" id="L43">		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);</span>
+<span class="nc" id="L44">		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);</span>
+		
+		// test
+<span class="nc" id="L47">		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="nc" id="L48">		mShunt.Floor = 0;</span>
+<span class="nc" id="L49">		mAutoAlgo.enableElevator(0, true);</span>
+		
+<span class="nc" id="L51">		((ElevatorTestWrapper)mSys.getElevator(0)).setButtonStatus(1, true);</span>
+<span class="nc" id="L52">		mAutoAlgo.setElevatorRequest(0, 1);</span>
+<span class="nc" id="L53">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="nc" id="L54">		assertEquals(1, mShunt.SetTarget);</span>
+		
+<span class="nc" id="L56">		((ElevatorTestWrapper)mSys.getElevator(0)).setButtonStatus(1, false);</span>
+<span class="nc" id="L57">		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="nc" id="L58">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(1);	// change model</span>
+<span class="nc" id="L59">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(1);</span>
+
+<span class="nc" id="L61">		((ElevatorTestWrapper)mSys.getElevator(0)).setButtonStatus(4, true);</span>
+<span class="nc" id="L62">		mAutoAlgo.setElevatorRequest(0, 4);</span>
+<span class="nc" id="L63">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="nc" id="L64">		assertEquals(4, mShunt.SetTarget);</span>
+<span class="nc" id="L65">	}</span>
+
+	@Test
+	public void test1ElevatorFloorRequest() throws FloorException, ElevatorException {
+		// setup
+<span class="fc" id="L70">		final int NUM_ELEVATORS = 1;</span>
+<span class="fc" id="L71">		final int NUM_FLOORS = 5;</span>
+<span class="fc" id="L72">		IElevatorStatus status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);</span>
+<span class="fc" id="L73">		mSys = new ElevatorSystemTestWrapper(status);</span>
+<span class="fc" id="L74">		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);</span>
+<span class="fc" id="L75">		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);</span>
+		
+		// test
+<span class="fc" id="L78">		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L79">		mShunt.Floor = 0;</span>
+<span class="fc" id="L80">		mAutoAlgo.enableElevator(0, true);</span>
+	
+<span class="fc" id="L82">		mAutoAlgo.setFloorRequest(1, true);</span>
+<span class="fc" id="L83">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L84">		assertEquals(1,  mShunt.SetTarget);</span>
+<span class="fc" id="L85">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(1);	// change model</span>
+<span class="fc" id="L86">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(1);</span>
+		
+<span class="fc" id="L88">		mAutoAlgo.setFloorRequest(3, true);</span>
+<span class="fc" id="L89">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L90">		assertEquals(3,  mShunt.SetTarget);</span>
+<span class="fc" id="L91">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(3);	// change model</span>
+<span class="fc" id="L92">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(3);</span>
+		
+<span class="fc" id="L94">		mAutoAlgo.setFloorRequest(4, true);</span>
+<span class="fc" id="L95">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L96">		assertEquals(4,  mShunt.SetTarget);</span>
+<span class="fc" id="L97">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(4);	// change model</span>
+<span class="fc" id="L98">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);</span>
+
+<span class="fc" id="L100">		mAutoAlgo.setFloorRequest(1, true);</span>
+<span class="fc" id="L101">		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L102">		assertEquals(1,  mShunt.SetTarget);</span>
+<span class="fc" id="L103">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(1);	// change model</span>
+<span class="fc" id="L104">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(1);</span>
+		
+<span class="fc" id="L106">		mAutoAlgo.setFloorRequest(0, true);</span>
+<span class="fc" id="L107">		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L108">		assertEquals(0,  mShunt.SetTarget);</span>
+<span class="fc" id="L109">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(0);	// change model</span>
+<span class="fc" id="L110">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(0);</span>
+
+<span class="fc" id="L112">		mAutoAlgo.setFloorRequest(4, true);</span>
+<span class="fc" id="L113">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L114">		assertEquals(4,  mShunt.SetTarget);</span>
+<span class="fc" id="L115">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(4);	// change model</span>
+<span class="fc" id="L116">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);</span>
+
+<span class="fc" id="L118">		mAutoAlgo.setFloorRequest(0, false);</span>
+<span class="fc" id="L119">		assertEquals(IElevator.ELEVATOR_DIRECTION_DOWN, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L120">		assertEquals(0,  mShunt.SetTarget);</span>
+<span class="fc" id="L121">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(0);	// change model</span>
+<span class="fc" id="L122">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(0);</span>
+
+<span class="fc" id="L124">		mAutoAlgo.setFloorRequest(4, false);</span>
+<span class="fc" id="L125">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L126">		assertEquals(4,  mShunt.SetTarget);</span>
+<span class="fc" id="L127">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(4);	// change model</span>
+<span class="fc" id="L128">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);</span>
+<span class="fc" id="L129">	}</span>
+
+	@Test
+	public void test1ElevatorMovingFloorRequest() throws FloorException, ElevatorException {
+		/* test floor request of moving elevator
+		 */
+		// setup
+<span class="fc" id="L136">		final int NUM_ELEVATORS = 1;</span>
+<span class="fc" id="L137">		final int NUM_FLOORS = 5;</span>
+<span class="fc" id="L138">		IElevatorStatus status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);</span>
+<span class="fc" id="L139">		mSys = new ElevatorSystemTestWrapper(status);</span>
+<span class="fc" id="L140">		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);</span>
+<span class="fc" id="L141">		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);</span>
+		
+		// test
+<span class="fc" id="L144">		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L145">		mShunt.Floor = 0;</span>
+<span class="fc" id="L146">		mAutoAlgo.enableElevator(0, true);</span>
+		
+		// request from forth floor
+<span class="fc" id="L149">		mAutoAlgo.setFloorRequest(4, true);</span>
+<span class="fc" id="L150">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L151">		assertEquals(4,  mShunt.SetTarget);</span>
+<span class="fc" id="L152">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(4);	// change model</span>
+		
+		// simulate elevator, moving up
+<span class="fc" id="L155">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(1);	</span>
+<span class="fc" id="L156">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(2);	</span>
+		
+		// now request from third floor
+<span class="fc" id="L159">		mAutoAlgo.setFloorRequest(3, true);</span>
+<span class="fc" id="L160">		assertEquals(IElevator.ELEVATOR_DIRECTION_UP, mShunt.SetCommitedDirection);</span>
+		// previous target should be overwritten
+<span class="fc" id="L162">		assertEquals(3,  mShunt.SetTarget);</span>
+<span class="fc" id="L163">	}</span>
+	
+	@Test
+	public void test1ElevatorsInFloorFloorRequest() throws FloorException, ElevatorException {
+		/* test floor request, when elevator is already in requested floor
+		 */
+		// setup
+<span class="fc" id="L170">		final int NUM_ELEVATORS = 1;</span>
+<span class="fc" id="L171">		final int NUM_FLOORS = 5;</span>
+<span class="fc" id="L172">		IElevatorStatus status = new SimpleElevatorSimulator(NUM_ELEVATORS, NUM_FLOORS);</span>
+<span class="fc" id="L173">		mSys = new ElevatorSystemTestWrapper(status);</span>
+<span class="fc" id="L174">		mShunt = new ElevatorConnectionTestShunt(NUM_FLOORS, HEIGHT, PERIOD, CAPACITY);</span>
+<span class="fc" id="L175">		mAutoAlgo = new AutoElevatorAlgorithm(mSys, mShunt);</span>
+		
+		// test
+<span class="fc" id="L178">		mShunt.CommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc" id="L179">		mShunt.Floor = 0;</span>
+<span class="fc" id="L180">		mAutoAlgo.enableElevator(0, true);</span>
+		
+<span class="fc" id="L182">		mAutoAlgo.setFloorRequest(0, true);</span>
+<span class="fc" id="L183">		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mShunt.SetCommitedDirection);</span>
+<span class="fc" id="L184">		assertEquals(0,  mShunt.SetTarget);</span>
+<span class="fc" id="L185">		((ElevatorTestWrapper)mSys.getElevator(0)).setFloor(0);	// change model</span>
+<span class="fc" id="L186">		((ElevatorTestWrapper)mSys.getElevator(0)).setTargetFloor(0);</span>
+<span class="fc" id="L187">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

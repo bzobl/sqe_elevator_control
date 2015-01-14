@@ -47,17 +47,18 @@ public class ElevatorSystem extends Observable implements IElevatorSystem {
 			mUpButtons[i] = false;
 			mDownButtons[i] = false;
 		}
-
-        PollingTask pTask = new PollingTask(connection);
+		
+		startPolling(connection);
+	}
+	
+	protected void startPolling(IElevatorConnection conn)
+	{
+        PollingTask pTask = new PollingTask(conn);
         pTask.setElevatorSystem(this);
 		if (!pTask.startPolling(500))
 		{
-			// TODO
-			assert(false) : "should not happen";
-			// not connected
-		
-			// TODO hack
-			//Bootstrapper.connectAndStart();
+			// TODO error handling
+			LOG.severe("Polling task no started!");
 		}
 	}
 	

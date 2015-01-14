@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ElevatorExample.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">sqelevator</a> &gt; <span class="el_source">ElevatorExample.java</span></div><h1>ElevatorExample.java</h1><pre class="source lang-java linenums">package sqelevator;
+
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+
+
+public class ElevatorExample {
+
+	private IElevator controller;
+
+<span class="nc" id="L11">	public ElevatorExample(IElevator controller) {</span>
+<span class="nc" id="L12">		this.controller = controller;</span>
+<span class="nc" id="L13">	}</span>
+
+	public static void main(String[] args) {
+
+		try {
+<span class="nc" id="L18">			IElevator controller = (IElevator) Naming.lookup(&quot;rmi://10.29.17.240/ElevatorSim&quot;);</span>
+			//IElevator controller = (IElevator) Naming.lookup(&quot;rmi://localhost/ElevatorSim&quot;);
+			
+<span class="nc" id="L21">			System.out.println(&quot;he did have done the lookup do&quot;);</span>
+<span class="nc" id="L22">			ElevatorExample client = new ElevatorExample(controller);</span>
+
+<span class="nc" id="L24">			client.displayElevatorSettings();</span>
+<span class="nc" id="L25">			client.runExample();</span>
+
+<span class="nc" id="L27">		} catch (Exception e) {</span>
+<span class="nc" id="L28">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L30">	}</span>
+
+	private void displayElevatorSettings() throws RemoteException {
+<span class="nc" id="L33">		System.out.println(&quot;ELEVATOR SETTINGS&quot;);</span>
+		
+<span class="nc" id="L35">		System.out.println(&quot;Current clock tick: &quot; + controller.getClockTick());</span>
+		
+<span class="nc" id="L37">		System.out.println(&quot;Number of elevators: &quot; + controller.getElevatorNum());</span>
+<span class="nc" id="L38">		System.out.println(&quot;Number of floor: &quot; + controller.getFloorNum());</span>
+<span class="nc" id="L39">		System.out.println(&quot;Floor height: &quot; + controller.getFloorHeight());</span>
+		
+<span class="nc" id="L41">		System.out.print(&quot;Floor buttons Up pressed: &quot;);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">		for (int floor=0; floor&lt;controller.getFloorNum(); floor++) {</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">			System.out.print(controller.getFloorButtonUp(floor) ? &quot;1&quot; : &quot;0&quot;);</span>
+		}
+<span class="nc" id="L45">		System.out.println();</span>
+<span class="nc" id="L46">		System.out.print(&quot;Floor buttons Down pressed: &quot;);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">		for (int floor=0; floor&lt;controller.getFloorNum(); floor++) {</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">			System.out.print(controller.getFloorButtonDown(floor) ? &quot;1&quot; : &quot;0&quot;);</span>
+		}
+<span class="nc" id="L50">		System.out.println();		</span>
+		
+<span class="nc bnc" id="L52" title="All 2 branches missed.">		for (int elevator=0; elevator&lt;controller.getElevatorNum(); elevator++) {</span>
+<span class="nc" id="L53">			System.out.println(&quot;Settings of elevator number: &quot; + elevator);</span>
+<span class="nc" id="L54">			System.out.println(&quot;  Floor: &quot; + controller.getElevatorFloor(elevator));</span>
+<span class="nc" id="L55">			System.out.println(&quot;  Position: &quot; + controller.getElevatorPosition(elevator));</span>
+<span class="nc" id="L56">			System.out.println(&quot;  Target: &quot; + controller.getTarget(elevator));</span>
+<span class="nc" id="L57">			System.out.println(&quot;  Committed direction: &quot; + controller.getCommittedDirection(elevator));</span>
+<span class="nc" id="L58">			System.out.println(&quot;  Door status: &quot; + controller.getElevatorDoorStatus(elevator));		</span>
+<span class="nc" id="L59">			System.out.println(&quot;  Speed: &quot; + controller.getElevatorSpeed(elevator));</span>
+<span class="nc" id="L60">			System.out.println(&quot;  Acceleration: &quot; + controller.getElevatorAccel(elevator));</span>
+<span class="nc" id="L61">			System.out.println(&quot;  Capacity: &quot; + controller.getElevatorCapacity(elevator));</span>
+<span class="nc" id="L62">			System.out.println(&quot;  Weight: &quot; + controller.getElevatorWeight(elevator));</span>
+<span class="nc" id="L63">			System.out.print(&quot;  Buttons pressed: &quot;);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">			for (int floor=0; floor&lt;controller.getFloorNum(); floor++) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">				System.out.print(controller.getElevatorButton(elevator, floor) ? &quot;1&quot; : &quot;0&quot;);</span>
+			}
+<span class="nc" id="L67">			System.out.println();</span>
+		}
+		
+<span class="nc" id="L70">	}</span>
+
+	private void runExample() throws RemoteException {
+		
+<span class="nc" id="L74">		final int elevator = 0;</span>
+<span class="nc" id="L75">		final int numberOfFloors = controller.getFloorNum();</span>
+<span class="nc" id="L76">		final int sleepTime = 60;</span>
+		
+		// First: Starting from ground floor, go up to the top floor, stopping in each floor
+		
+		// Set the committed direction displayed on the elevator to up
+<span class="nc" id="L81">		controller.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);</span>
+		
+<span class="nc bnc" id="L83" title="All 2 branches missed.">		for (int nextFloor=1; nextFloor&lt;numberOfFloors; nextFloor++) {</span>
+			
+			// Set the target floor to the next floor above
+<span class="nc" id="L86">			controller.setTarget(elevator, nextFloor);</span>
+			
+			// Wait until closest floor is the target floor and speed is back to zero 
+<span class="nc bnc" id="L89" title="All 4 branches missed.">			while (controller.getElevatorFloor(elevator) &lt; nextFloor || controller.getElevatorSpeed(elevator) &gt; 0) {</span>
+				try { 
+<span class="nc" id="L91">					Thread.sleep(sleepTime);</span>
+<span class="nc" id="L92">				} catch (InterruptedException e) {}</span>
+			}
+			
+			// Wait until doors are open before setting the next direction
+<span class="nc bnc" id="L96" title="All 2 branches missed.">			while (controller.getElevatorDoorStatus(elevator) != IElevator.ELEVATOR_DOORS_OPEN) {</span>
+				try {
+<span class="nc" id="L98">					Thread.sleep(sleepTime);</span>
+<span class="nc" id="L99">				} catch (InterruptedException e) {}</span>
+			}
+		}
+		
+		// Second, go back from the top floor to the ground floor in one move
+		
+		// Set the committed direction displayed on the elevator to down
+<span class="nc" id="L106">		controller.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_DOWN);</span>
+		
+		// Set the target floor to the ground floor (floor number 0)
+<span class="nc" id="L109">		controller.setTarget(elevator, 0);</span>
+		
+		// Wait until ground floor has been reached
+<span class="nc bnc" id="L112" title="All 4 branches missed.">		while (controller.getElevatorFloor(elevator) &gt; 0 || controller.getElevatorSpeed(elevator) &gt; 0) {</span>
+			try { 
+<span class="nc" id="L114">				Thread.sleep(sleepTime);</span>
+<span class="nc" id="L115">			} catch (InterruptedException e) {}</span>
+		}
+		
+		// Set the committed direction to uncommitted when back at the ground floor
+<span class="nc" id="L119">		controller.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);</span>
+		
+<span class="nc" id="L121">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

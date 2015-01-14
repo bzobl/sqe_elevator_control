@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FloorPanelMoveStatusTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.view</a> &gt; <span class="el_source">FloorPanelMoveStatusTest.java</span></div><h1>FloorPanelMoveStatusTest.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package at.fhhagenberg.sqe.project.sqelevator.view;</span>
+
+import java.awt.Component;
+
+import javax.swing.JLabel;
+
+import junit.extensions.abbot.ComponentTestFixture;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import abbot.finder.matchers.ClassMatcher;
+import at.fhhagenberg.sqe.project.sqelevator.view.FloorPanel;
+
+<span class="fc" id="L15">public class FloorPanelMoveStatusTest extends ComponentTestFixture</span>
+{
+<span class="fc" id="L17">	private final String FILENAME_MOVE_STATUS_UP = &quot;upArrow_small.png&quot;;</span>
+<span class="fc" id="L18">	private final String FILENAME_MOVE_STATUS_DOWN = &quot;downArrow_small.png&quot;;</span>
+<span class="fc" id="L19">	private final String FILENAME_MOVE_STATUS_STANDING = &quot;standing_small.png&quot;;</span>
+	
+	private FloorPanel mFloorPanel;
+	private JLabel mUpDownImage;
+
+	@Before
+	public void setUp() throws Exception 
+	{
+<span class="fc" id="L27">		mFloorPanel = new FloorPanel(1);</span>
+<span class="fc" id="L28">		showFrame(mFloorPanel);</span>
+
+<span class="fc" id="L30">		mUpDownImage = (JLabel) getFinder().find(new ClassMatcher(JLabel.class)</span>
+		{
+			public boolean matches(Component c)
+			{
+<span class="fc bfc" id="L34" title="All 6 branches covered.">				return super.matches(c) &amp;&amp; (((JLabel) c).getName() != null) &amp;&amp; ((JLabel) c).getName().equals(&quot;upDownImage&quot;);</span>
+			}
+		});
+<span class="fc" id="L37">	}</span>
+
+	@Test
+	public void testInitialStatus() 
+	{
+<span class="fc" id="L42">		int status = mFloorPanel.getMoveStatus();	</span>
+<span class="fc" id="L43">		assertEquals(FloorPanel.MOVE_STATUS_AWAY, status);</span>
+<span class="fc" id="L44">	}</span>
+
+	public void testEachStatus() 
+	{
+<span class="fc" id="L48">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_AWAY);</span>
+<span class="fc" id="L49">		assertEquals(FloorPanel.MOVE_STATUS_AWAY, mFloorPanel.getMoveStatus());</span>
+
+<span class="fc" id="L51">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_DOWN);</span>
+<span class="fc" id="L52">		assertEquals(FloorPanel.MOVE_STATUS_DOWN, mFloorPanel.getMoveStatus());</span>
+
+<span class="fc" id="L54">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_STANDING);</span>
+<span class="fc" id="L55">		assertEquals(FloorPanel.MOVE_STATUS_STANDING, mFloorPanel.getMoveStatus());</span>
+
+<span class="fc" id="L57">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_UP);</span>
+<span class="fc" id="L58">		assertEquals(FloorPanel.MOVE_STATUS_UP, mFloorPanel.getMoveStatus());</span>
+<span class="fc" id="L59">	}</span>
+	
+	public void testStatusImages()  
+	{
+<span class="fc" id="L63">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_AWAY);</span>
+<span class="fc" id="L64">		assertEquals(FloorPanel.MOVE_STATUS_AWAY, mFloorPanel.getMoveStatus());</span>
+<span class="fc" id="L65">		assertFalse(mUpDownImage.isVisible());</span>
+
+<span class="fc" id="L67">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_DOWN);</span>
+<span class="fc" id="L68">		assertEquals(FloorPanel.MOVE_STATUS_DOWN, mFloorPanel.getMoveStatus());</span>
+<span class="fc" id="L69">		assertTrue(mUpDownImage.getIcon().toString().contains(FILENAME_MOVE_STATUS_DOWN));</span>
+<span class="fc" id="L70">		assertTrue(mUpDownImage.isVisible());</span>
+		
+<span class="fc" id="L72">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_STANDING);</span>
+<span class="fc" id="L73">		assertEquals(FloorPanel.MOVE_STATUS_STANDING, mFloorPanel.getMoveStatus());</span>
+<span class="fc" id="L74">		assertTrue(mUpDownImage.getIcon().toString().contains(FILENAME_MOVE_STATUS_STANDING));</span>
+<span class="fc" id="L75">		assertTrue(mUpDownImage.isVisible());</span>
+
+<span class="fc" id="L77">		mFloorPanel.setMoveStatus(FloorPanel.MOVE_STATUS_UP);</span>
+<span class="fc" id="L78">		assertEquals(FloorPanel.MOVE_STATUS_UP, mFloorPanel.getMoveStatus());</span>
+<span class="fc" id="L79">		assertTrue(mUpDownImage.getIcon().toString().contains(FILENAME_MOVE_STATUS_UP));</span>
+<span class="fc" id="L80">		assertTrue(mUpDownImage.isVisible());</span>
+<span class="fc" id="L81">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

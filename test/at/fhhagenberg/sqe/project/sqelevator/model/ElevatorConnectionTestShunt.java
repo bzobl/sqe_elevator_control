@@ -4,7 +4,7 @@ package at.fhhagenberg.sqe.project.sqelevator.model;
 import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorConnection;
 
-final class ElevatorConnectionTestShunt implements IElevatorConnection {
+public final class ElevatorConnectionTestShunt implements IElevatorConnection {
 	private final int FLOOR_HEIGHT;
 	private final int FLOOR_NUM;
 	private final long CLOCK_TICK;
@@ -44,7 +44,8 @@ final class ElevatorConnectionTestShunt implements IElevatorConnection {
 		FloorButtonUp = new boolean[FLOOR_NUM];
 		ServicesFloors = new boolean[FLOOR_NUM];
 		SetServicesFloor = new boolean[FLOOR_NUM];
-
+		SetCommitedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		
 		for (int i = 0; i < floors; i++) {
 			FloorButtonDown[i] = false;
 			FloorButtonUp[i] = false;

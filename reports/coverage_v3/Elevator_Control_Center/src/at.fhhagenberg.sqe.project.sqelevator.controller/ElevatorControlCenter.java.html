@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ElevatorControlCenter.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.controller</a> &gt; <span class="el_source">ElevatorControlCenter.java</span></div><h1>ElevatorControlCenter.java</h1><pre class="source lang-java linenums">/**
+ * Project: Elevator_Control_Center
+ * Author:  Bernd Zobl
+ *          S1310567025
+ */
+
+package at.fhhagenberg.sqe.project.sqelevator.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+
+import sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorSystem;
+import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
+import at.fhhagenberg.sqe.project.sqelevator.view.IElevatorView;
+import at.fhhagenberg.sqe.project.sqelevator.view.IFloorView;
+import at.fhhagenberg.sqe.project.sqelevator.view.IMainView;
+
+import com.sun.istack.internal.logging.Logger;
+
+<span class="nc bnc" id="L28" title="All 2 branches missed.">public class ElevatorControlCenter implements IControl, Observer {</span>
+	
+<span class="nc" id="L30">	private static Logger LOG = Logger.getLogger(ElevatorControlCenter.class);</span>
+	
+<span class="nc" id="L32">	private static final Map&lt;Integer, Integer&gt; DIRECTION_LUT = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L33">	private static final Map&lt;Integer, Integer&gt; DOORSTATUS_LUT = new HashMap&lt;&gt;();</span>
+	
+	static {
+<span class="nc" id="L36">		DIRECTION_LUT.put(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, IFloorView.MOVE_STATUS_STANDING);</span>
+<span class="nc" id="L37">		DIRECTION_LUT.put(IElevator.ELEVATOR_DIRECTION_UP, IFloorView.MOVE_STATUS_UP);</span>
+<span class="nc" id="L38">		DIRECTION_LUT.put(IElevator.ELEVATOR_DIRECTION_DOWN, IFloorView.MOVE_STATUS_DOWN);</span>
+
+<span class="nc" id="L40">		DOORSTATUS_LUT.put(IElevator.ELEVATOR_DOORS_CLOSED, IFloorView.ELEVATOR_STATUS_CLOSED);</span>
+<span class="nc" id="L41">		DOORSTATUS_LUT.put(IElevator.ELEVATOR_DOORS_CLOSING, IFloorView.ELEVATOR_STATUS_CLOSING);</span>
+<span class="nc" id="L42">		DOORSTATUS_LUT.put(IElevator.ELEVATOR_DOORS_OPEN, IFloorView.ELEVATOR_STATUS_OPENED);</span>
+<span class="nc" id="L43">		DOORSTATUS_LUT.put(IElevator.ELEVATOR_DOORS_OPENING, IFloorView.ELEVATOR_STATUS_OPENING);</span>
+<span class="nc" id="L44">	}</span>
+	
+	IElevatorControl mControl;
+	IElevatorSystem mModel;
+	IMainView mView;
+	
+	boolean mAuto[];
+
+	IElevatorAlgorithm mAutoAlgo;
+	IElevatorAlgorithm mManuAlgo;
+	
+<span class="nc" id="L55">	public ElevatorControlCenter(IElevatorControl control, IElevatorStatus status) {</span>
+<span class="nc" id="L56">		mControl = control;</span>
+
+<span class="nc" id="L58">        mModel = new ElevatorSystem(status);</span>
+<span class="nc" id="L59">        mModel.addObserver(this);</span>
+
+<span class="nc" id="L61">		mAuto = new boolean[mModel.getNumberOfElevators()];</span>
+		
+<span class="nc" id="L63">		mAutoAlgo = new AutoElevatorAlgorithm(mModel, mControl);</span>
+<span class="nc" id="L64">		mManuAlgo = new ManualElevatorAlgorithm(mModel, mControl);</span>
+        
+<span class="nc" id="L66">        LOG.info(&quot;Elevator control successfully initialized, starting to poll&quot;);</span>
+<span class="nc" id="L67">	}</span>
+
+	/**
+	 * @return whether or not any elevator is in auto mode
+	 */
+	private boolean isAnyElevatorAuto() {
+<span class="nc bnc" id="L73" title="All 2 branches missed.">		for (int e = 0; e &lt; mModel.getNumberOfElevators(); e++) {</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">			if (mAuto[e]) return true;</span>
+		}
+<span class="nc" id="L76">		return false;</span>
+	}
+
+	/**
+	 * @param elevator
+	 * @param btn
+	 */
+	@Override
+	public void changeControlMode(int elevator, boolean autoMode) {
+<span class="nc" id="L85">		LOG.info(&quot;Mode button of Elevator &quot; + elevator + &quot; clicked&quot;);</span>
+<span class="nc" id="L86">		IElevatorView eleView = mView.getElevatorView(elevator);</span>
+		
+<span class="nc" id="L88">		mAuto[elevator] = autoMode;</span>
+		
+<span class="nc bnc" id="L90" title="All 2 branches missed.">		for (int i = 0; i &lt; mModel.getNumberOfFloors(); i++) {</span>
+<span class="nc" id="L91">			IFloorView floorView = eleView.getFloorView(i); </span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">			floorView.enableCallButton(!mAuto[elevator]);</span>
+		}
+<span class="nc" id="L94">	}</span>
+
+	/**
+	 * @param elevator
+	 * @param floor
+	 * @param btn
+	 */
+	@Override
+	public void setCallRequest(int elevator, int floor) {
+<span class="nc bnc" id="L103" title="All 4 branches missed.">		assert(mAuto[elevator] == false) : &quot;Call Button cannot be pressed when in auto mode&quot;;</span>
+<span class="nc" id="L104">		LOG.info(&quot;Call Button of Elevator &quot; + elevator + &quot;, Floor &quot; + floor + &quot; clicked&quot;);</span>
+		
+<span class="nc" id="L106">		mManuAlgo.setElevatorRequest(elevator, floor);</span>
+<span class="nc" id="L107">	}</span>
+
+	/**
+	 * @param elevator
+	 * @param floor
+	 * @param btn
+	 */
+	@Override
+	public void setServicedFloor(int elevator, int floor, boolean isServiced) {
+<span class="nc" id="L116">		LOG.info(&quot;Service Button of Elevator &quot; + elevator + &quot;, Floor &quot; + floor + &quot; clicked&quot;);</span>
+<span class="nc" id="L117">		mControl.setServicesFloors(elevator, floor, isServiced);</span>
+<span class="nc" id="L118">	}</span>
+	
+	@Override
+	public void updateView() {
+        try {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        	for (int i = 0; i &lt; mModel.getNumberOfElevators(); i++) {</span>
+<span class="nc" id="L124">				updateView(mModel.getElevator(i));</span>
+        	}
+<span class="nc" id="L126">        } catch (ElevatorException e) {</span>
+<span class="nc" id="L127">        	LOG.severe(e.getMessage());</span>
+		}
+		
+<span class="nc" id="L130">		updateView(mModel);</span>
+<span class="nc" id="L131">	}</span>
+	
+	@Override
+	public void setView(IMainView view) {
+<span class="nc" id="L135">		mView = view;</span>
+<span class="nc" id="L136">	}</span>
+
+	@Override
+	public void update(Observable o, Object arg) {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">		if (arg.equals(IElevatorSystem.SYSTEM_PROPERTY_CHANGED)) {</span>
+<span class="nc bnc" id="L141" title="All 4 branches missed.">			assert (o instanceof IElevatorSystem);</span>
+<span class="nc" id="L142">			LOG.info(&quot;system property changed&quot;);</span>
+
+<span class="nc" id="L144">			IElevatorSystem sys = (IElevatorSystem) o;</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">			if (mView != null) {</span>
+<span class="nc" id="L146">				updateView(sys);</span>
+<span class="nc" id="L147">			} else {</span>
+<span class="nc" id="L148">				LOG.info(&quot;ElevatorSystem updated, but no view is set&quot;);</span>
+			}
+<span class="nc bnc" id="L150" title="All 2 branches missed.">			if (mAutoAlgo != null) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">				if (isAnyElevatorAuto()) {</span>
+<span class="nc" id="L152">					updateAlgorithm(sys);</span>
+				}
+<span class="nc" id="L154">			} else {</span>
+<span class="nc" id="L155">				LOG.info(&quot;ElevatorSystem updated, but no auto algo is set&quot;);</span>
+			}
+<span class="nc bnc" id="L157" title="All 2 branches missed.">		} else if (arg.equals(IElevatorSystem.ELEVATOR_PROPERTY_CHANGED)) {</span>
+<span class="nc bnc" id="L158" title="All 4 branches missed.">			assert (o instanceof IElevatorModel);</span>
+<span class="nc" id="L159">			LOG.info(&quot;elevator property changed&quot;);</span>
+
+<span class="nc" id="L161">			IElevatorModel elev = (IElevatorModel) o;</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">			if (mView != null) {</span>
+<span class="nc" id="L163">				updateView(elev);</span>
+<span class="nc" id="L164">			} else {</span>
+<span class="nc" id="L165">				LOG.info(&quot;Elevator updated, but no view is set&quot;);</span>
+			}
+<span class="nc bnc" id="L167" title="All 2 branches missed.">			if (mAuto[elev.getElevatorNumber()]) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">				if (mAutoAlgo != null) {</span>
+<span class="nc" id="L169">					updateAlgorithm(elev);</span>
+<span class="nc" id="L170">				} else {</span>
+<span class="nc" id="L171">					LOG.info(&quot;Elevator updated, but no auto algo is set&quot;);</span>
+				}
+				// check whether or not the elevator is in the target floor and clear direction accordingly
+<span class="nc bnc" id="L174" title="All 2 branches missed.">				if (elev.getFloor() == elev.getTargetFloor()) {</span>
+<span class="nc" id="L175">                    mAutoAlgo.setElevatorRequest(elev.getElevatorNumber(), elev.getTargetFloor());</span>
+				}
+<span class="nc" id="L177">			} else {</span>
+				// check whether or not the elevator is in the target floor and clear direction accordingly
+<span class="nc bnc" id="L179" title="All 2 branches missed.">				if (elev.getFloor() == elev.getTargetFloor()) {</span>
+<span class="nc" id="L180">                    mManuAlgo.setElevatorRequest(elev.getElevatorNumber(), elev.getTargetFloor());</span>
+				}
+			}
+<span class="nc" id="L183">		} else {</span>
+<span class="nc" id="L184">			LOG.warning(&quot;Unexpected class notified ElevatorControl: &quot; + o.getClass().getCanonicalName());</span>
+		}
+<span class="nc" id="L186">	}</span>
+
+	/**
+	 * @param elev
+	 */
+	private void updateAlgorithm(IElevatorModel elev) {
+<span class="nc bnc" id="L192" title="All 4 branches missed.">		assert (mAutoAlgo != null) : &quot;Auto algorithm not set&quot;;</span>
+<span class="nc bnc" id="L193" title="All 4 branches missed.">		assert (mAuto[elev.getElevatorNumber()]) : &quot;elevator is in manual mode&quot;;</span>
+
+<span class="nc bnc" id="L195" title="All 2 branches missed.">		for (int f = 0; f &lt; mModel.getNumberOfFloors(); f++) {</span>
+			try {
+<span class="nc bnc" id="L197" title="All 2 branches missed.">				if (elev.getButtonStatus(f)) {</span>
+<span class="nc" id="L198">					mAutoAlgo.setElevatorRequest(elev.getElevatorNumber(), f);</span>
+				}
+<span class="nc" id="L200">			} catch (FloorException e) {</span>
+<span class="nc" id="L201">				LOG.severe(e.getMessage());</span>
+			}
+		}
+<span class="nc" id="L204">	}</span>
+	
+	/**
+	 * @param sys
+	 */
+	private void updateAlgorithm(IElevatorSystem sys) {
+<span class="nc bnc" id="L210" title="All 4 branches missed.">		assert (mAutoAlgo != null) : &quot;Auto algorithm not set&quot;;</span>
+<span class="nc bnc" id="L211" title="All 4 branches missed.">		assert (isAnyElevatorAuto()) : &quot;all elevators are in manual mode&quot;;</span>
+
+<span class="nc bnc" id="L213" title="All 2 branches missed.">		for (int f = 0; f &lt; mModel.getNumberOfFloors(); f++) {</span>
+			try {
+<span class="nc bnc" id="L215" title="All 2 branches missed.">				if (sys.getFloorButton(f, true)) {</span>
+<span class="nc" id="L216">					mAutoAlgo.setFloorRequest(f, true);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">				} else if (sys.getFloorButton(f, false)) {</span>
+<span class="nc" id="L218">					mAutoAlgo.setFloorRequest(f, false);</span>
+				}
+<span class="nc" id="L220">			} catch (FloorException e) {</span>
+<span class="nc" id="L221">				LOG.severe(e.getMessage());</span>
+			}
+		}
+<span class="nc" id="L224">	}</span>
+
+	private void updateView(IElevatorModel elev) {
+<span class="nc bnc" id="L227" title="All 4 branches missed.">		assert (mView != null) : &quot;update of view requested when no view was set&quot;;</span>
+		
+<span class="nc" id="L229">		IElevatorView eleView = mView.getElevatorView(elev.getElevatorNumber());</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">		if (eleView == null) {</span>
+<span class="nc" id="L231">			LOG.severe(&quot;Could not find ElevatorView for elevator &quot; + elev.getElevatorNumber());</span>
+<span class="nc" id="L232">			return;</span>
+		}
+
+<span class="nc" id="L235">		eleView.setPosition(elev.getPosition());</span>
+<span class="nc" id="L236">		eleView.setAcceleration(elev.getAcceleration());</span>
+<span class="nc" id="L237">		eleView.setPayload(elev.getWeight());</span>
+<span class="nc" id="L238">		eleView.setSpeed(elev.getSpeed());</span>
+		
+<span class="nc bnc" id="L240" title="All 2 branches missed.">		for (int i = 0; i &lt; mModel.getNumberOfFloors(); i++) {</span>
+<span class="nc" id="L241">			IFloorView floorView = eleView.getFloorView(i);</span>
+			
+<span class="nc" id="L243">			int moveStatus = IFloorView.MOVE_STATUS_AWAY;</span>
+<span class="nc" id="L244">			int elevatorStatus = IFloorView.ELEVATOR_STATUS_AWAY;</span>
+			
+<span class="nc bnc" id="L246" title="All 2 branches missed.">			if (elev.getFloor() == i) {</span>
+<span class="nc" id="L247">				elevatorStatus = DOORSTATUS_LUT.get(elev.getDoorstatus());</span>
+<span class="nc" id="L248">				moveStatus = DIRECTION_LUT.get(elev.getDirection());</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">			} else if ((elev.getTargetFloor() == i)) {</span>
+<span class="nc" id="L250">				elevatorStatus = IFloorView.ELEVATOR_STATUS_TARGET;</span>
+			}
+
+			try {
+<span class="nc bnc" id="L254" title="All 2 branches missed.">				if (!elev.getServicesFloors(i)) {</span>
+<span class="nc" id="L255">					elevatorStatus = IFloorView.ELEVATOR_STATUS_OUT_OF_ORDER;</span>
+<span class="nc" id="L256">					floorView.setServiceStatus(false);</span>
+<span class="nc" id="L257">				} else {</span>
+<span class="nc" id="L258">					floorView.setServiceStatus(true);</span>
+				}
+
+<span class="nc" id="L261">				eleView.setElevatorButton(i, elev.getButtonStatus(i));</span>
+<span class="nc" id="L262">			} catch (FloorException e) {</span>
+<span class="nc" id="L263">				LOG.severe(e.getMessage());</span>
+			}
+
+<span class="nc" id="L266">			floorView.setMoveStatus(moveStatus);</span>
+<span class="nc" id="L267">			floorView.setElevatorStatus(elevatorStatus);</span>
+		}
+<span class="nc" id="L269">	}</span>
+
+	private void updateView(IElevatorSystem sys) {
+<span class="nc bnc" id="L272" title="All 4 branches missed.">		assert (mView != null) : &quot;update of view requested when no view was set&quot;;</span>
+
+<span class="nc bnc" id="L274" title="All 2 branches missed.">		for (int e = 0; e &lt; mModel.getNumberOfElevators(); e++) {</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">			for (int f = 0; f &lt; mModel.getNumberOfFloors(); f++) {</span>
+<span class="nc" id="L276">				IFloorView floorView = mView.getElevatorView(e).getFloorView(f);</span>
+				try {
+<span class="nc" id="L278">					floorView.setFloorButton(IFloorView.FLOOR_BUTTON_UP, sys.getFloorButton(f, true));</span>
+<span class="nc" id="L279">					floorView.setFloorButton(IFloorView.FLOOR_BUTTON_DOWN, sys.getFloorButton(f, false));</span>
+<span class="nc" id="L280">				} catch (FloorException ex) {</span>
+<span class="nc" id="L281">					LOG.severe(ex.getMessage());</span>
+				}
+			}
+		}
+<span class="nc" id="L285">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

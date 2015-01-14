@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ElevatorSystemTestWrapper.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.model</a> &gt; <span class="el_source">ElevatorSystemTestWrapper.java</span></div><h1>ElevatorSystemTestWrapper.java</h1><pre class="source lang-java linenums">/**
+ * Project: Elevator_Control_Center
+ * Author:  Bernhard Raab
+ *          S1310567022
+ */
+package at.fhhagenberg.sqe.project.sqelevator.model;
+
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorStatus;
+
+/** ElevatorSystemTestWrapper
+ *  This class is a wrapper of the ElevatorSystem class. 
+ *  The public ElevatorSystemTestWrapper extends the package protected Elevator to get access.
+ */
+public class ElevatorSystemTestWrapper extends ElevatorSystem {
+
+	public ElevatorSystemTestWrapper(IElevatorStatus status) {
+<span class="fc" id="L17">		super(status);</span>
+		
+<span class="fc bfc" id="L19" title="All 2 branches covered.">		for (int i = 0; i &lt; NUM_ELEVATORS; i++) {</span>
+<span class="fc" id="L20">			int capacity = status.getElevatorCapacity(i);</span>
+<span class="fc" id="L21">			mElevators[i] = new ElevatorTestWrapper(i, capacity, NUM_FLOORS);</span>
+		}
+<span class="fc" id="L23">	}</span>
+	
+	@Override
+	protected void startPolling(IElevatorStatus status) {
+<span class="fc" id="L27">	}</span>
+
+	protected void setDownButton(int floor, boolean pressed) {
+<span class="nc" id="L30">		super.setDownButton(floor, pressed);</span>
+<span class="nc" id="L31">	}</span>
+
+	protected void setUpButton(int floor, boolean pressed) {
+<span class="nc" id="L34">		super.setUpButton(floor, pressed);</span>
+<span class="nc" id="L35">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

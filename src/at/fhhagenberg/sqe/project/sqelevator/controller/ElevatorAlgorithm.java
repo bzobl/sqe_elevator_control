@@ -1,3 +1,8 @@
+/**
+ * Project: Elevator_Control_Center
+ * Author:  Bernhard Raab
+ *          S1310567022
+ */
 package at.fhhagenberg.sqe.project.sqelevator.controller;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;

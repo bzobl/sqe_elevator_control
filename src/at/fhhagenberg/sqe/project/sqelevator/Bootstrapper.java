@@ -56,37 +56,4 @@ public class Bootstrapper {
 		// start
 		ctrl.waitForConnection();
 	}
-	
-	/*
-	static public void connectAndStart()
-	{
-		assert(mSimulator != null) : "Simulator must not be null!";
-	
-		if (mMainView != null)
-		{
-			mMainView.setVisible(false);
-			mMainView.dispose();
-		}
-		
-		ConnectingDialog cd = new ConnectingDialog(mSimulator);
-		
-		// Wait for connection
-		if (cd.waitForConnection() == true)
-		{
-			LOG.info("connected!");
-		}
-		else
-		{
-			LOG.warning("couldn't connect! Exit");
-			System.exit(0);
-		}
-		cd.dispose();
-		
-		ElevatorControlCenter ctrl = new ElevatorControlCenter(mSimulator);
-		mMainView = new MainView(ctrl, mSimulator.getElevatorNum(), mSimulator.getFloorNum(), APPLICATION_NAME);
-		ctrl.setView(mMainView);
-		ctrl.updateView();
-		
-		mMainView.setVisible(true);
-	}*/
 }

@@ -4,6 +4,7 @@ import sqelevator.IElevator;
 import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
 import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
 import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel;
 import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
 
 import com.sun.istack.internal.logging.Logger;
@@ -16,124 +17,108 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 		super(sys, ctrl);
 	}
 
+	private int getDirection(int curFloor, int targetFloor) {
+		int direction = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
+		if (targetFloor > curFloor) {
+			direction = IElevator.ELEVATOR_DIRECTION_UP;
+		} else if (targetFloor < curFloor) {
+			direction = IElevator.ELEVATOR_DIRECTION_DOWN;
+		}
+		return direction;
+	}
+
 	@Override
 	public void setElevatorRequest(int elevator, int floor) {
-		int curFloor;
+		assert(mEnabledElevators[elevator]) : "elevator is not in auto mode";
 		try {
-			curFloor = mModel.getElevator(elevator).getFloor();
+			IElevatorModel elev = mModel.getElevator(elevator);
+			int curFloor = elev.getFloor();
+			int nextFloor = curFloor;
+			int diff = mModel.getNumberOfFloors()+1;
+
+			// searching the smallest difference from current floor to all requested floors
+			for (int i = 0; i < mModel.getNumberOfFloors(); ++i) {
+				if (elev.getButtonStatus(i)
+				    && elev.getServicesFloors(i)) {
+					if (diff > Math.abs(curFloor-i)) {
+						nextFloor = i;
+						diff = Math.abs(curFloor-i);
+					}
+				}
+			}
+			
+			mControl.setTarget(elevator, nextFloor);
+			mControl.setCommittedDirection(elevator, getDirection(curFloor, nextFloor));
+			LOG.info("elevator request: elevator " + elevator + " to floor:" + nextFloor);
+	
+		} catch (FloorException e) {
+			LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
+			return;
 		} catch (ElevatorException e) {
 			LOG.severe("AutoElevatorAlgorithm: got invalid elevator number");
 			return;
 		}
-		assert (curFloor != floor);
-		
-		int nextFloor = 0, diff = mModel.getNumberOfElevators()+1;
-		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
-			try {
-				if (mModel.getElevator(elevator).getButtonStatus(i) && mModel.getElevator(elevator).getServicesFloors(curFloor)) {
-					if (diff > Math.abs(floor-i)) {
-						nextFloor = i;
-						diff = Math.abs(floor-i);
-					}
-				}
-			} catch (FloorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
-				return;
-			} catch (ElevatorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid elevator number");
-				return;
-			}
-		}
-		
-		if (diff < mModel.getNumberOfElevators()+1) {
-			mControl.setTarget(elevator, nextFloor);
-			mControl.setCommittedDirection(elevator, getDirection(floor, nextFloor));
-		}
-		// do nothing
 	}
 
-	
-	private int getDirection(int curFloor, int targetFloor) {
-		int direction = 1;	// down
-		if (targetFloor > curFloor) {
-			direction = 0;	// up
-		}
-		return direction;
-	}
-	
 	/**
 	 * very poor automatic algorithm
 	 * 
 	 */
 	@Override
 	public void setFloorRequest(int floor, boolean up) {
-		// check if there is already a elevator in this floor
-		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
-			try {																	// check if
-				if (mEnabledElevators[i]		 									// elevator is in automatic mode
-					&& mModel.getElevator(i).getServicesFloors(floor) 				// floor is serviced
-					&& ((mModel.getElevator(i).getFloor() == floor) 				// elevator is in this floor
-						 || (mModel.getElevator(i).getTargetFloor() == floor))) {	// elevator is moving to this floor
-					// nothing to do
+        try {
+        	
+        	for (int e = 0; e < mModel.getNumberOfElevators(); e++) {
+        		IElevatorModel elev = mModel.getElevator(e);
+        		if (!mEnabledElevators[e]) {
+        			LOG.info("elevator " + e + " is not in auto mode");
+        			continue;
+        		}
+        		if (!elev.getServicesFloors(floor)) {
+        			LOG.info("elevator " + e + " does not service floor " + floor);
+        			continue;
+        		}
+        		
+        		if (elev.getFloor() == floor) {
+					LOG.info("Request floor " + floor + " Elevator is already here");
 					return;
-				}
-			} catch (FloorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
-				return;
-			} catch (ElevatorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid elevator number");
-				return;
-			} 
-		}
-		
-		// check if there is an elevator without a job
-		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
-			try {																								// check if
-				if (mEnabledElevators[i] 																		// elevator is in automatic mode
-					&& mModel.getElevator(i).getServicesFloors(floor)									 		// floor is serviced
-					&& (mModel.getElevator(i).getDirection() == IElevator.ELEVATOR_DIRECTION_UNCOMMITTED)) {	// elevator has no job
-					
-					mControl.setTarget(i, floor);
-					mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));
+        		}
+
+        		if (elev.getTargetFloor() == floor) {
+					LOG.info("Request floor " + floor + " Elevator is already coming");
 					return;
-				}
-			} catch (FloorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
-				return;
-			} catch (ElevatorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid elevator number");
-				return;
-			} 
-		}
-		
-		// check if an elevator can pick up passengers
-		for (int i = 0; i < mModel.getNumberOfElevators(); ++i) {
-			try {																// check if
-				if (mEnabledElevators[i] 										// elevator is in automatic mode
-					&& mModel.getElevator(i).getServicesFloors(floor) 			// floor is serviced
-					&& mModel.getElevator(i).getDirection() == (up ? IElevator.ELEVATOR_DIRECTION_UP : IElevator.ELEVATOR_DIRECTION_DOWN)) { 		// elevator drives in the same direction as requested
-					
-					int curFloor = mModel.getElevator(i).getFloor();
-					
+        		}
+        		
+        		// elevator without job
+        		if (elev.getDirection() == IElevator.ELEVATOR_DIRECTION_UNCOMMITTED) {
+					mControl.setTarget(e, floor);
+					mControl.setCommittedDirection(e, getDirection(elev.getFloor(), floor));
+					LOG.info("Request floor " + floor + ": Elevator " + e + " has no job.");
+					return;
+        		}
+        		
+        		/*
+        		// check if an elevator can pick up passengers
+        		if (elev.getDirection() ==  (up ? IElevator.ELEVATOR_DIRECTION_UP : IElevator.ELEVATOR_DIRECTION_DOWN)) {
+        			int curFloor = elev.getFloor();
+
 					if (up && (curFloor+1 < floor)) {
-							mControl.setTarget(i, floor);
-							mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));
+							mControl.setTarget(e, floor);
+							LOG.info("Request floor " + floor + ": Elevator " + e + " going up. new target: " + floor);
 					} else if (!up && (curFloor-1 > floor)) {
-							mControl.setTarget(i, floor);
-							mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));
+							mControl.setTarget(e, floor);
+							LOG.info("Request floor " + floor + ": Elevator " + e + " going down. new target: " + floor);
 					}
-					
 					return;
-				}
-			} catch (FloorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
-				return;
-			} catch (ElevatorException e) {
-				LOG.severe("AutoElevatorAlgorithm: got invalid elevator number");
-				return;
-			} 
-		}		
-
+        		}
+        		*/
+        	}
+		} catch (FloorException e) {
+			LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
+			return;
+		} catch (ElevatorException e) {
+			LOG.severe("AutoElevatorAlgorithm: got invalid elevator number");
+			return;
+		} 
 	}
-
 }

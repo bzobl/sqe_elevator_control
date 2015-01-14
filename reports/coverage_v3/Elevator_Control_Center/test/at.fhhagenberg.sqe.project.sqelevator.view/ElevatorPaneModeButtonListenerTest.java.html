@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ElevatorPaneModeButtonListenerTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.view</a> &gt; <span class="el_source">ElevatorPaneModeButtonListenerTest.java</span></div><h1>ElevatorPaneModeButtonListenerTest.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package at.fhhagenberg.sqe.project.sqelevator.view;</span>
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JToggleButton;
+
+import junit.extensions.abbot.ComponentTestFixture;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import abbot.finder.matchers.ClassMatcher;
+
+<span class="fc" id="L16">public class ElevatorPaneModeButtonListenerTest extends ComponentTestFixture</span>
+{
+
+	private ElevatorPanel mElevatorView;
+	private JToggleButton mModeButton;
+	
+	@Before
+	public void setUp() throws Exception
+	{
+<span class="fc" id="L25">		ElevatorPanel elevatorPanel = new ElevatorPanel(1, 2);</span>
+<span class="fc" id="L26">		showFrame(elevatorPanel);</span>
+	
+<span class="fc" id="L28">		mElevatorView = elevatorPanel;</span>
+		
+<span class="fc" id="L30">		mModeButton = (JToggleButton) getFinder().find(</span>
+<span class="fc" id="L31">				new ClassMatcher(JToggleButton.class)</span>
+				{
+					public boolean matches(Component c)
+					{
+<span class="fc bfc" id="L35" title="All 2 branches covered.">						return super.matches(c)</span>
+<span class="fc" id="L36">								&amp;&amp; ((JToggleButton) c).getText().equals(</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">										&quot;Auto Mode&quot;);</span>
+					}
+				});
+<span class="fc" id="L40">	}</span>
+	
+	@Test
+	public void testRegisterSingleListener()
+	{
+<span class="fc" id="L45">		TestActionListener al = new TestActionListener();</span>
+<span class="fc" id="L46">		mElevatorView.addModeButtonListener(al);</span>
+<span class="fc" id="L47">		mModeButton.doClick();</span>
+<span class="fc" id="L48">		assertEquals(1, al.ActionCounter);</span>
+<span class="fc" id="L49">		assertTrue(al.ButtonStatus);</span>
+<span class="fc" id="L50">		mModeButton.doClick();</span>
+<span class="fc" id="L51">		assertEquals(2, al.ActionCounter);</span>
+<span class="fc" id="L52">		assertFalse(al.ButtonStatus);</span>
+<span class="fc" id="L53">	}</span>
+	
+	@Test
+	public void testRegisterSeveralListener()
+	{
+<span class="fc" id="L58">		TestActionListener al = new TestActionListener();</span>
+<span class="fc" id="L59">		TestActionListener al2 = new TestActionListener();</span>
+		
+<span class="fc" id="L61">		mElevatorView.addModeButtonListener(al);</span>
+<span class="fc" id="L62">		mElevatorView.addModeButtonListener(al2);</span>
+<span class="fc" id="L63">		mModeButton.doClick();</span>
+<span class="fc" id="L64">		assertEquals(1, al.ActionCounter);</span>
+<span class="fc" id="L65">		assertTrue(al.ButtonStatus);</span>
+<span class="fc" id="L66">		assertEquals(1, al2.ActionCounter);</span>
+<span class="fc" id="L67">		assertTrue(al2.ButtonStatus);</span>
+<span class="fc" id="L68">		mModeButton.doClick();</span>
+<span class="fc" id="L69">		assertEquals(2, al.ActionCounter);</span>
+<span class="fc" id="L70">		assertFalse(al.ButtonStatus);</span>
+<span class="fc" id="L71">		assertEquals(2, al2.ActionCounter);</span>
+<span class="fc" id="L72">		assertFalse(al2.ButtonStatus);</span>
+<span class="fc" id="L73">	}</span>
+
+	@Test
+	public void testAddAndRemoveListener()
+	{
+<span class="fc" id="L78">		TestActionListener al = new TestActionListener();</span>
+<span class="fc" id="L79">		TestActionListener al2 = new TestActionListener();</span>
+		
+<span class="fc" id="L81">		mElevatorView.addModeButtonListener(al);</span>
+<span class="fc" id="L82">		mElevatorView.addModeButtonListener(al2);</span>
+<span class="fc" id="L83">		mModeButton.doClick();</span>
+<span class="fc" id="L84">		assertEquals(1, al.ActionCounter);</span>
+<span class="fc" id="L85">		assertTrue(al.ButtonStatus);</span>
+<span class="fc" id="L86">		assertEquals(1, al2.ActionCounter);</span>
+<span class="fc" id="L87">		assertTrue(al2.ButtonStatus);</span>
+<span class="fc" id="L88">		mElevatorView.removeModeButtonListener(al);</span>
+<span class="fc" id="L89">		mModeButton.doClick();</span>
+<span class="fc" id="L90">		assertEquals(1, al.ActionCounter);</span>
+<span class="fc" id="L91">		assertTrue(al.ButtonStatus);</span>
+<span class="fc" id="L92">		assertEquals(2, al2.ActionCounter);</span>
+<span class="fc" id="L93">		assertFalse(al2.ButtonStatus);</span>
+<span class="fc" id="L94">	}</span>
+	
+<span class="fc" id="L96">	private class TestActionListener implements ActionListener</span>
+	{
+<span class="fc" id="L98">		public boolean ButtonStatus = false;</span>
+<span class="fc" id="L99">		public int ActionCounter = 0;</span>
+		
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+<span class="fc" id="L104">			ActionCounter++;</span>
+<span class="fc" id="L105">			ButtonStatus = ((JToggleButton)e.getSource()).isSelected();</span>
+<span class="fc" id="L106">		}</span>
+		
+	};
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AutoElevatorAlgorithm.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.controller</a> &gt; <span class="el_source">AutoElevatorAlgorithm.java</span></div><h1>AutoElevatorAlgorithm.java</h1><pre class="source lang-java linenums">package at.fhhagenberg.sqe.project.sqelevator.controller;
+
+import sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.IElevatorControl;
+import at.fhhagenberg.sqe.project.sqelevator.model.ElevatorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.FloorException;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorModel;
+import at.fhhagenberg.sqe.project.sqelevator.model.IElevatorSystem;
+
+import com.sun.istack.internal.logging.Logger;
+
+public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
+
+<span class="fc" id="L14">	private static Logger LOG = Logger.getLogger(AutoElevatorAlgorithm.class); </span>
+
+	public AutoElevatorAlgorithm(IElevatorSystem sys, IElevatorControl ctrl) {
+<span class="fc" id="L17">		super(sys, ctrl);</span>
+<span class="fc" id="L18">	}</span>
+
+	@Override
+	public void setElevatorRequest(int elevator, int floor) {
+<span class="fc" id="L22">		LOG.info(&quot;elevator request &quot; + elevator + &quot; floor:&quot; + floor);</span>
+		int curFloor;
+		try {
+<span class="fc" id="L25">			curFloor = mModel.getElevator(elevator).getFloor();</span>
+<span class="pc" id="L26">		} catch (ElevatorException e) {</span>
+<span class="nc" id="L27">			LOG.severe(&quot;AutoElevatorAlgorithm: got invalid elevator number&quot;);</span>
+<span class="nc" id="L28">			return;</span>
+		}
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">		if (curFloor != floor) {</span>
+<span class="fc" id="L31">			return;</span>
+		}
+		
+		// searching the smallest difference from current floor to all requested floors
+<span class="nc" id="L35">		int nextFloor = 0, diff = mModel.getNumberOfFloors()+1;</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">		for (int i = 0; i &lt; mModel.getNumberOfFloors(); ++i) {</span>
+			try {
+<span class="nc bnc" id="L38" title="All 4 branches missed.">				if (mModel.getElevator(elevator).getButtonStatus(i) &amp;&amp; mModel.getElevator(elevator).getServicesFloors(curFloor)) {</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">					if (diff &gt; Math.abs(curFloor-i)) {</span>
+<span class="nc" id="L40">						nextFloor = i;</span>
+<span class="nc" id="L41">						diff = Math.abs(curFloor-i);</span>
+					}
+				}
+<span class="nc" id="L44">			} catch (FloorException e) {</span>
+<span class="nc" id="L45">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid floor number&quot;);</span>
+<span class="nc" id="L46">				return;</span>
+<span class="nc" id="L47">			} catch (ElevatorException e) {</span>
+<span class="nc" id="L48">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid elevator number&quot;);</span>
+<span class="nc" id="L49">				return;</span>
+			}
+		}
+		
+<span class="nc bnc" id="L53" title="All 2 branches missed.">		if (diff &lt; mModel.getNumberOfFloors()+1) {</span>
+<span class="nc" id="L54">			mControl.setTarget(elevator, nextFloor);</span>
+<span class="nc" id="L55">			mControl.setCommittedDirection(elevator, getDirection(curFloor, nextFloor));</span>
+		}
+		// do nothing
+<span class="nc" id="L58">	}</span>
+
+	
+	private int getDirection(int curFloor, int targetFloor) {
+<span class="fc" id="L62">		int direction = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">		if (targetFloor &gt; curFloor) {</span>
+<span class="fc" id="L64">			direction = IElevator.ELEVATOR_DIRECTION_UP;	// up</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">		} else if (targetFloor &lt; curFloor) {</span>
+<span class="fc" id="L66">			direction = IElevator.ELEVATOR_DIRECTION_DOWN;	// down</span>
+		}
+<span class="fc" id="L68">		return direction;</span>
+	}
+	
+	/**
+	 * very poor automatic algorithm
+	 * 
+	 */
+	@Override
+	public void setFloorRequest(int floor, boolean up) {
+<span class="fc" id="L77">		LOG.info(&quot;floor request &quot; + floor + &quot; up:&quot; + up);</span>
+		// check if there is already a elevator in this floor
+<span class="fc bfc" id="L79" title="All 2 branches covered.">		for (int i = 0; i &lt; mModel.getNumberOfElevators(); ++i) {</span>
+			try {
+<span class="fc" id="L81">                IElevatorModel elev = mModel.getElevator(i);</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">				if (mEnabledElevators[i]		 										// elevator is in automatic mode</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">					&amp;&amp; elev.getServicesFloors(floor) 									// floor is serviced</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">					&amp;&amp; ((elev.getFloor() == floor) 										// elevator is in this floor</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">						 || (elev.getTargetFloor() == floor))) {						// elevator is moving to this floor</span>
+<span class="fc" id="L86">					mControl.setCommittedDirection(i, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);</span>
+<span class="fc" id="L87">					return;</span>
+				}
+<span class="nc" id="L89">			} catch (FloorException e) {</span>
+<span class="nc" id="L90">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid floor number&quot;);</span>
+<span class="nc" id="L91">				return;</span>
+<span class="nc" id="L92">			} catch (ElevatorException e) {</span>
+<span class="nc" id="L93">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid elevator number&quot;);</span>
+<span class="nc" id="L94">				return;</span>
+			} 
+		}
+		
+		// check if there is an elevator without a job
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">		for (int i = 0; i &lt; mModel.getNumberOfElevators(); ++i) {</span>
+			try {
+<span class="fc" id="L101">				IElevatorModel elev = mModel.getElevator(i);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">				if (mEnabledElevators[i] 													// elevator is in automatic mode</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">					&amp;&amp; elev.getServicesFloors(floor)									 	// floor is serviced</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">					&amp;&amp; (elev.getDirection() == IElevator.ELEVATOR_DIRECTION_UNCOMMITTED)) {	// elevator has no job</span>
+					
+<span class="fc" id="L106">					mControl.setTarget(i, floor);</span>
+<span class="fc" id="L107">					mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));</span>
+<span class="fc" id="L108">					return;</span>
+				}
+<span class="nc" id="L110">			} catch (FloorException e) {</span>
+<span class="nc" id="L111">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid floor number&quot;);</span>
+<span class="nc" id="L112">				return;</span>
+<span class="nc" id="L113">			} catch (ElevatorException e) {</span>
+<span class="nc" id="L114">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid elevator number&quot;);</span>
+<span class="nc" id="L115">				return;</span>
+			} 
+		}
+		
+		// check if an elevator can pick up passengers
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		for (int i = 0; i &lt; mModel.getNumberOfElevators(); ++i) {</span>
+			try {
+<span class="nc" id="L122">				IElevatorModel elev = mModel.getElevator(i);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">				if (mEnabledElevators[i] 														// elevator is in automatic mode</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">					&amp;&amp; elev.getServicesFloors(floor) 											// floor is serviced</span>
+<span class="nc bnc" id="L125" title="All 4 branches missed.">					&amp;&amp; elev.getDirection() == (up ? IElevator.ELEVATOR_DIRECTION_UP : IElevator.ELEVATOR_DIRECTION_DOWN)) {	// elevator drives in the same direction as requested</span>
+					
+<span class="nc" id="L127">					int curFloor = mModel.getElevator(i).getFloor();</span>
+					
+<span class="nc bnc" id="L129" title="All 4 branches missed.">					if (up &amp;&amp; (curFloor+1 &lt; floor)) {</span>
+<span class="nc" id="L130">							mControl.setTarget(i, floor);</span>
+<span class="nc" id="L131">							mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));</span>
+<span class="nc bnc" id="L132" title="All 4 branches missed.">					} else if (!up &amp;&amp; (curFloor-1 &gt; floor)) {</span>
+<span class="nc" id="L133">							mControl.setTarget(i, floor);</span>
+<span class="nc" id="L134">							mControl.setCommittedDirection(i, getDirection(mModel.getElevator(i).getFloor(), floor));</span>
+					}
+<span class="nc" id="L136">					return;</span>
+				}
+<span class="nc" id="L138">			} catch (FloorException e) {</span>
+<span class="nc" id="L139">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid floor number&quot;);</span>
+<span class="nc" id="L140">				return;</span>
+<span class="nc" id="L141">			} catch (ElevatorException e) {</span>
+<span class="nc" id="L142">				LOG.severe(&quot;AutoElevatorAlgorithm: got invalid elevator number&quot;);</span>
+<span class="nc" id="L143">				return;</span>
+			} 
+		}		
+<span class="nc" id="L146">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

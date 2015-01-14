@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>SimpleElevatorSimulatorTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.communication</a> &gt; <span class="el_source">SimpleElevatorSimulatorTest.java</span></div><h1>SimpleElevatorSimulatorTest.java</h1><pre class="source lang-java linenums">/**
+ * Project: Elevator_Control_Center
+ * Author:  Bernd Zobl
+ *          S1310567025
+ */
+
+package at.fhhagenberg.sqe.project.sqelevator.communication;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import sqelevator.IElevator;
+import at.fhhagenberg.sqe.project.sqelevator.communication.SimpleElevatorSimulator;
+
+/** SimpleElevatorSimulatorTest
+ * 
+ */
+<span class="fc" id="L19">public class SimpleElevatorSimulatorTest {</span>
+	
+<span class="fc" id="L21">	SimpleElevatorSimulator mSim = new SimpleElevatorSimulator(3, 5);</span>
+
+	@Test
+	public void testNumElevators() {
+<span class="fc" id="L25">		assertEquals(3, mSim.getElevatorNum());</span>
+<span class="fc" id="L26">	}</span>
+
+	@Test
+	public void testNumFloors() {
+<span class="fc" id="L30">		assertEquals(5, mSim.getFloorNum());</span>
+<span class="fc" id="L31">	}</span>
+	
+	@Test
+	public void testMovementConstants() {
+<span class="fc" id="L35">		assertEquals(1, SimpleElevatorSimulator.DELAY_CLOSING);</span>
+<span class="fc" id="L36">		assertEquals(2, SimpleElevatorSimulator.DELAY_CLOSED);</span>
+<span class="fc" id="L37">		assertEquals(3, SimpleElevatorSimulator.DELAY_MOVE);</span>
+<span class="fc" id="L38">		assertEquals(4, SimpleElevatorSimulator.DELAY_OPENING);</span>
+<span class="fc" id="L39">		assertEquals(5, SimpleElevatorSimulator.DELAY_DONE);</span>
+<span class="fc" id="L40">	}</span>
+	
+	private void moveElevatorToFloor(int elevator, int start, int floor) {
+<span class="fc" id="L43">		assertEquals(start, mSim.getElevatorFloor(elevator));</span>
+<span class="fc" id="L44">		assertEquals(start, mSim.getTarget(elevator));</span>
+<span class="fc" id="L45">		assertEquals(IElevator.ELEVATOR_DOORS_OPEN, mSim.getElevatorDoorStatus(elevator));</span>
+
+<span class="fc" id="L47">		mSim.setTarget(elevator, floor);</span>
+<span class="fc" id="L48">		mSim.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UP);</span>
+
+<span class="fc" id="L50">		assertEquals(floor, mSim.getTarget(elevator));</span>
+		
+		//every call of getElevatorFloor() triggers the move action to increase the delay
+<span class="fc" id="L53">		assertEquals(start, mSim.getElevatorFloor(elevator));</span>
+<span class="fc" id="L54">		assertEquals(IElevator.ELEVATOR_DOORS_CLOSING, mSim.getElevatorDoorStatus(elevator));</span>
+
+<span class="fc" id="L56">		assertEquals(start, mSim.getElevatorFloor(elevator));</span>
+<span class="fc" id="L57">		assertEquals(IElevator.ELEVATOR_DOORS_CLOSED, mSim.getElevatorDoorStatus(elevator));</span>
+
+<span class="fc" id="L59">		assertEquals(floor, mSim.getElevatorFloor(elevator));</span>
+<span class="fc" id="L60">		assertEquals(IElevator.ELEVATOR_DOORS_CLOSED, mSim.getElevatorDoorStatus(elevator));</span>
+		
+<span class="fc" id="L62">		assertEquals(floor, mSim.getElevatorFloor(elevator));</span>
+<span class="fc" id="L63">		assertEquals(IElevator.ELEVATOR_DOORS_OPENING, mSim.getElevatorDoorStatus(elevator));</span>
+
+<span class="fc" id="L65">		assertEquals(floor, mSim.getElevatorFloor(elevator));</span>
+<span class="fc" id="L66">		assertEquals(IElevator.ELEVATOR_DOORS_OPEN, mSim.getElevatorDoorStatus(elevator));</span>
+
+<span class="fc" id="L68">		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mSim.getCommittedDirection(elevator));</span>
+<span class="fc" id="L69">	}</span>
+	
+	@Test
+	public void testMovement() {
+<span class="fc" id="L73">		moveElevatorToFloor(0, 0, 3);</span>
+<span class="fc" id="L74">	}</span>
+	
+	@Test
+	public void testTargetOnSameFloor() {
+<span class="fc" id="L78">		moveElevatorToFloor(1, 0, 0);</span>
+<span class="fc" id="L79">	}</span>
+	
+	@Test
+	public void testWrongCommitedDirectionUp() {
+<span class="fc" id="L83">		moveElevatorToFloor(0, 0, 2);</span>
+		
+<span class="fc" id="L85">		mSim.setTarget(0, 3);</span>
+<span class="fc" id="L86">		mSim.setCommittedDirection(0, IElevator.ELEVATOR_DIRECTION_DOWN);</span>
+
+<span class="fc" id="L88">		assertEquals(2, mSim.getElevatorFloor(0));</span>
+<span class="fc" id="L89">		assertEquals(2, mSim.getElevatorFloor(0));</span>
+<span class="fc" id="L90">		assertEquals(2, mSim.getElevatorFloor(0));</span>
+<span class="fc" id="L91">		assertEquals(2, mSim.getElevatorFloor(0));</span>
+<span class="fc" id="L92">		assertEquals(2, mSim.getElevatorFloor(0));</span>
+
+<span class="fc" id="L94">		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mSim.getCommittedDirection(0));</span>
+<span class="fc" id="L95">	}</span>
+	
+	@Test
+	public void testWrongCommitedDirectionDown() {
+<span class="fc" id="L99">		moveElevatorToFloor(2, 0, 2);</span>
+		
+<span class="fc" id="L101">		mSim.setTarget(2, 1);</span>
+<span class="fc" id="L102">		mSim.setCommittedDirection(2, IElevator.ELEVATOR_DIRECTION_UP);</span>
+
+<span class="fc" id="L104">		assertEquals(2, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L105">		assertEquals(2, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L106">		assertEquals(2, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L107">		assertEquals(2, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L108">		assertEquals(2, mSim.getElevatorFloor(2));</span>
+
+<span class="fc" id="L110">		assertEquals(IElevator.ELEVATOR_DIRECTION_UNCOMMITTED, mSim.getCommittedDirection(2));</span>
+<span class="fc" id="L111">	}</span>
+	
+	@Test
+	public void testPosition() {
+<span class="fc" id="L115">		assertEquals(6, mSim.getFloorHeight());</span>
+
+<span class="fc" id="L117">		assertEquals(0, mSim.getElevatorPosition(2));</span>
+<span class="fc" id="L118">		assertEquals(0, mSim.getElevatorFloor(2));</span>
+		
+<span class="fc" id="L120">		mSim.setTarget(2, 3);</span>
+<span class="fc" id="L121">		mSim.setCommittedDirection(2, IElevator.ELEVATOR_DIRECTION_UP);</span>
+		
+<span class="fc" id="L123">		assertEquals(5, SimpleElevatorSimulator.DELAY_DONE);</span>
+<span class="fc" id="L124">		assertEquals(0, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L125">		assertEquals(0, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L126">		assertEquals(3, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L127">		assertEquals(3, mSim.getElevatorFloor(2));</span>
+<span class="fc" id="L128">		assertEquals(3, mSim.getElevatorFloor(2));</span>
+		
+<span class="fc" id="L130">		assertEquals(18, mSim.getElevatorPosition(2));</span>
+<span class="fc" id="L131">	}</span>
+	
+	@Test
+	public void testAcceleration() {
+<span class="fc" id="L135">		assertEquals(0, mSim.getElevatorAccel(0));</span>
+<span class="fc" id="L136">	}</span>
+	
+	@Test
+	public void testElevatorButton() {
+<span class="fc" id="L140">		assertFalse(mSim.getElevatorButton(0, 1));</span>
+<span class="fc" id="L141">		assertFalse(mSim.getElevatorButton(0, 2));</span>
+<span class="fc" id="L142">		assertFalse(mSim.getElevatorButton(0, 4));</span>
+<span class="fc" id="L143">		assertFalse(mSim.getElevatorButton(1, 0));</span>
+<span class="fc" id="L144">	}</span>
+	
+	@Test
+	public void testSpeed() {
+<span class="fc" id="L148">		assertEquals(0, mSim.getElevatorSpeed(0));</span>
+<span class="fc" id="L149">	}</span>
+
+	@Test
+	public void testWeight() {
+<span class="fc" id="L153">		assertEquals(0, mSim.getElevatorWeight(0));</span>
+<span class="fc" id="L154">	}</span>
+
+	@Test
+	public void testCapacity() {
+<span class="fc" id="L158">		assertEquals(1000, mSim.getElevatorCapacity(0));</span>
+<span class="fc" id="L159">	}</span>
+
+	@Test
+	public void testButtonDown() {
+<span class="fc" id="L163">		assertFalse(mSim.getFloorButtonDown(0));</span>
+<span class="fc" id="L164">		assertFalse(mSim.getFloorButtonDown(1));</span>
+<span class="fc" id="L165">		assertFalse(mSim.getFloorButtonDown(2));</span>
+<span class="fc" id="L166">		assertFalse(mSim.getFloorButtonDown(3));</span>
+<span class="fc" id="L167">		assertFalse(mSim.getFloorButtonDown(4));</span>
+<span class="fc" id="L168">	}</span>
+
+	@Test
+	public void testButtonUp() {
+<span class="fc" id="L172">		assertFalse(mSim.getFloorButtonUp(0));</span>
+<span class="fc" id="L173">		assertFalse(mSim.getFloorButtonUp(1));</span>
+<span class="fc" id="L174">		assertFalse(mSim.getFloorButtonUp(2));</span>
+<span class="fc" id="L175">		assertFalse(mSim.getFloorButtonUp(3));</span>
+<span class="fc" id="L176">		assertFalse(mSim.getFloorButtonUp(4));</span>
+<span class="fc" id="L177">	}</span>
+	
+	@Test
+	public void testSetServicesFloors() {
+<span class="fc" id="L181">		assertTrue(mSim.getServicesFloors(0, 1));</span>
+<span class="fc" id="L182">		mSim.setServicesFloors(0, 1, false);</span>
+<span class="fc" id="L183">		assertFalse(mSim.getServicesFloors(0, 1));</span>
+<span class="fc" id="L184">	}</span>
+
+	@Test
+	public void testServicesFloors() {
+<span class="fc" id="L188">		assertTrue(mSim.getServicesFloors(0, 0));</span>
+<span class="fc" id="L189">		assertTrue(mSim.getServicesFloors(1, 1));</span>
+<span class="fc" id="L190">		assertTrue(mSim.getServicesFloors(2, 2));</span>
+<span class="fc" id="L191">		assertTrue(mSim.getServicesFloors(0, 3));</span>
+<span class="fc" id="L192">		assertTrue(mSim.getServicesFloors(1, 4));</span>
+<span class="fc" id="L193">	}</span>
+	
+	@Test
+	public void testClockTick() {
+<span class="fc" id="L197">		assertEquals(SimpleElevatorSimulator.CLOCK_TICK, mSim.getClockTick());</span>
+<span class="fc" id="L198">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>FloorPanelCallButtonTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">AllTests (3) (Jan 8, 2015 11:52:22 PM)</a> &gt; <a href="../../index.html" class="el_group">Elevator_Control_Center</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">at.fhhagenberg.sqe.project.sqelevator.view</a> &gt; <span class="el_source">FloorPanelCallButtonTest.java</span></div><h1>FloorPanelCallButtonTest.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package at.fhhagenberg.sqe.project.sqelevator.view;</span>
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+
+import junit.extensions.abbot.ComponentTestFixture;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import abbot.finder.matchers.ClassMatcher;
+
+<span class="fc" id="L16">public class FloorPanelCallButtonTest extends ComponentTestFixture</span>
+{
+	private FloorPanel mFloorPanel;
+	private JButton mCallButton;
+<span class="fc" id="L20">	private int mActionCounter = 0;</span>
+
+	@Before
+	public void setUp() throws Exception 
+	{
+<span class="fc" id="L25">		mFloorPanel = new FloorPanel(1);</span>
+<span class="fc" id="L26">		showFrame(mFloorPanel);</span>
+
+<span class="fc" id="L28">		mCallButton = (JButton) getFinder().find(new ClassMatcher(JButton.class)</span>
+		{
+			public boolean matches(Component c)
+			{
+<span class="pc bpc" id="L32" title="1 of 4 branches missed.">				return super.matches(c) &amp;&amp; (((JButton) c).getText() != null) </span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">										&amp;&amp; ((JButton) c).getText().equals(&quot;Call&quot;);</span>
+			}
+		});
+<span class="fc" id="L36">	}</span>
+
+	@Test
+	public void testCallButton() 
+	{
+<span class="fc" id="L41">		ActionListener l = new ActionListener()</span>
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+<span class="fc" id="L46">				mActionCounter++;</span>
+<span class="fc" id="L47">			}</span>
+		};
+<span class="fc" id="L49">		mFloorPanel.addCallButtonListener(l);</span>
+		
+<span class="fc" id="L51">		assertEquals(0,  mActionCounter);</span>
+<span class="fc" id="L52">        mCallButton.doClick();</span>
+<span class="fc" id="L53">		assertEquals(1, mActionCounter);</span>
+
+<span class="fc" id="L55">        mCallButton.doClick();</span>
+<span class="fc" id="L56">		assertEquals(2, mActionCounter);</span>
+<span class="fc" id="L57">	}</span>
+	
+	@Test
+	public void testCallButtonRemoveListener() 
+	{
+<span class="fc" id="L62">		ActionListener l = new ActionListener()</span>
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+<span class="fc" id="L67">				mActionCounter++;</span>
+<span class="fc" id="L68">			}</span>
+		};
+<span class="fc" id="L70">		mFloorPanel.addCallButtonListener(l);</span>
+		
+<span class="fc" id="L72">		assertEquals(0,  mActionCounter);</span>
+<span class="fc" id="L73">        mCallButton.doClick();</span>
+<span class="fc" id="L74">		assertEquals(1, mActionCounter);</span>
+		
+<span class="fc" id="L76">		mFloorPanel.removeCallButtonListener(l);</span>
+		
+<span class="fc" id="L78">        mCallButton.doClick();</span>
+<span class="fc" id="L79">		assertEquals(1, mActionCounter);</span>
+<span class="fc" id="L80">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>AllTests (3) (Jan 8, 2015 11:52:22 PM)</div></body></html>

@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import at.fhhagenberg.sqe.project.sqelevator.communication.CommunicationTests;
+import at.fhhagenberg.sqe.project.sqelevator.controller.ControllerTests;
 import at.fhhagenberg.sqe.project.sqelevator.model.ModelTests;
 import at.fhhagenberg.sqe.project.sqelevator.view.ViewTests;
 
@@ -20,6 +21,7 @@ import at.fhhagenberg.sqe.project.sqelevator.view.ViewTests;
 @RunWith(Suite.class)
 @SuiteClasses({ModelTests.class,
 			   ViewTests.class,
+			   ControllerTests.class,
 			   CommunicationTests.class})
 public class AllTests {
 
