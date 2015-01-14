@@ -47,9 +47,12 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
 				}
 			}
 			
-			mControl.setTarget(elevator, nextFloor);
-			mControl.setCommittedDirection(elevator, getDirection(curFloor, nextFloor));
-			LOG.info("elevator request: elevator " + elevator + " to floor:" + nextFloor);
+			if ((elev.getDoorstatus() == IElevator.ELEVATOR_DOORS_OPEN)
+			    || (elev.getDoorstatus() == IElevator.ELEVATOR_DOORS_CLOSED)) {
+				mControl.setTarget(elevator, nextFloor);
+				mControl.setCommittedDirection(elevator, getDirection(curFloor, nextFloor));
+				LOG.info("elevator request: elevator " + elevator + " to floor:" + nextFloor);
+			}
 	
 		} catch (FloorException e) {
 			LOG.severe("AutoElevatorAlgorithm: got invalid floor number");
@@ -78,6 +81,11 @@ public class AutoElevatorAlgorithm extends ElevatorAlgorithm {
         			LOG.info("elevator " + e + " does not service floor " + floor);
         			continue;
         		}
+                if ((elev.getDoorstatus() != IElevator.ELEVATOR_DOORS_OPEN)
+                	&& (elev.getDoorstatus() != IElevator.ELEVATOR_DOORS_CLOSED)) {
+        			LOG.info("elevator " + e + " now opening or closing doors");
+                	continue;
+                }
         		
         		if (elev.getFloor() == floor) {
 					LOG.info("Request floor " + floor + " Elevator is already here");
